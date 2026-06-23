@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teste · O Seu Psico Testes</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">Testes</span>
+        </a>
+        <span id="nav-tema" style="font-size:0.85rem;color:var(--text-mid);font-weight:500;"></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Barra de progresso -->
+  <div class="progress-bar-wrap">
+    <div class="container">
+      <div class="progress-bar-inner">
+        <div class="progress-bar-info">
+          <div class="progress-bar-label" id="progress-label">Escala 1 de 1</div>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="progress-bar-count" id="progress-count">0%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Área do teste -->
+  <section class="scale-section">
+    <div class="container" style="max-width:760px;">
+      <div id="scale-container"></div>
+
+      <div class="scale-nav">
+        <button class="btn btn--outline" id="btn-anterior" onclick="anteriorEscala()">← Anterior</button>
+        <button class="btn btn--yellow btn--lg" id="btn-proximo" onclick="proximaEscala()">Próxima escala →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Loading -->
+  <div class="loading-overlay" id="loading">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Calculando seus resultados...</div>
+  </div>
+
+  <script src="data/testes.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const temaId = params.get('tema');
+    const dadosRaw = sessionStorage.getItem('psico_cadastro');
+
+    if (!dadosRaw || !TEMAS[temaId]) { location.href = '/'; }
+
+    const dados = JSON.parse(dadosRaw);
+    const tema = TEMAS[temaId];
+    const escalasIds = tema.escalas;
+    let escalaAtual = dados.escalaIndex || 0;
+    let respostas = {}; // { escalaId: { qIndex: valor } }
+
+    document.getElementById('nav-tema').textContent = tema.icon + ' ' + tema.nome;
+
+    function getEscala() { return ESCALAS[escalasIds[escalaAtual]]; }
+
+    function calcularScore(escala, respostasEscala) {
+      const vals = Object.values(respostasEscala);
+      if (escala.id === 'pss10') {
+        // Itens 3,4,6,7 (índice 3,4,6,7) são invertidos (0→4, 1→3, 2→2, 3→1, 4→0)
+        const invertidos = [3, 4, 6, 7];
+        return Object.entries(respostasEscala).reduce((sum, [idx, val]) => {
+          return sum + (invertidos.includes(Number(idx)) ? 4 - val : val);
+        }, 0);
+      }
+      return vals.reduce((a, b) => a + b, 0);
+    }
+
+    function getFaixa(escala, score) {
+      return escala.faixas.find(f => score >= f.min && score <= f.max) || escala.faixas[escala.faixas.length - 1];
+    }
+
+    function atualizarProgresso() {
+      const total = escalasIds.length;
+      const pct = Math.round((escalaAtual / total) * 100);
+      document.getElementById('progress-label').textContent = `Escala ${escalaAtual + 1} de ${total}`;
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('progress-count').textContent = pct + '%';
+      document.getElementById('btn-anterior').style.display = escalaAtual === 0 ? 'none' : '';
+    }
+
+    function renderEscala() {
+      const escala = getEscala();
+      if (!respostas[escala.id]) respostas[escala.id] = {};
+      const container = document.getElementById('scale-container');
+      container.innerHTML = '';
+
+      // Intro
+      const intro = document.createElement('div');
+      intro.className = 'scale-intro';
+      intro.innerHTML = `
+        <div class="scale-intro__eyebrow">${escala.publico}</div>
+        <div class="scale-intro__title">${escala.nomeCompleto}</div>
+        <div class="scale-intro__desc">${escala.instrucao}</div>
+      `;
+      container.appendChild(intro);
+
+      // Instrução de opções (para escalas com opcoes globais)
+      if (escala.opcoes) {
+        const instr = document.createElement('div');
+        instr.className = 'scale-instruction';
+        instr.textContent = 'Selecione uma opção para cada afirmação:';
+        container.appendChild(instr);
+      }
+
+      // Perguntas
+      const perguntas = escala.perguntas;
+
+      perguntas.forEach((pergunta, qi) => {
+        const block = document.createElement('div');
+        block.className = 'question-block';
+        block.id = `q-block-${qi}`;
+
+        const isObjeto = typeof pergunta === 'object';
+        const texto = isObjeto ? pergunta.texto : pergunta;
+        const opcoes = isObjeto ? pergunta.opcoes : escala.opcoes;
+
+        block.innerHTML = `
+          <div class="question-block__num">Pergunta ${qi + 1}</div>
+          <div class="question-block__text">${texto}</div>
+          <div class="options-list" id="opts-${qi}"></div>
+        `;
+        container.appendChild(block);
+
+        const optsList = block.querySelector(`#opts-${qi}`);
+
+        opcoes.forEach((opt, oi) => {
+          const item = document.createElement('label');
+          item.className = 'option-item' + (respostas[escala.id][qi] === opt.valor && respostas[escala.id][`_oi_${qi}`] === oi ? ' selected' : '');
+          item.innerHTML = `
+            <input type="radio" name="q${qi}" value="${opt.valor}" data-oi="${oi}" />
+            <div class="option-item__dot"></div>
+            <span class="option-item__label">${opt.label}</span>
+          `;
+          item.addEventListener('click', () => {
+            respostas[escala.id][qi] = opt.valor;
+            respostas[escala.id][`_oi_${qi}`] = oi;
+            block.classList.add('answered');
+            block.classList.remove('required-error');
+            optsList.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+            item.classList.add('selected');
+          });
+          optsList.appendChild(item);
+        });
+
+        // Restaurar seleção anterior
+        if (respostas[escala.id][qi] !== undefined) {
+          block.classList.add('answered');
+          const prevOi = respostas[escala.id][`_oi_${qi}`];
+          optsList.querySelectorAll('.option-item')[prevOi]?.classList.add('selected');
+        }
+      });
+
+      // Botão
+      const isUltima = escalaAtual === escalasIds.length - 1;
+      document.getElementById('btn-proximo').textContent = isUltima ? 'Ver meus resultados →' : 'Próxima escala →';
+
+      atualizarProgresso();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function validarEscala() {
+      const escala = getEscala();
+      const numPerguntas = escala.perguntas.length;
+      let todasRespondidas = true;
+      for (let i = 0; i < numPerguntas; i++) {
+        if (respostas[escala.id][i] === undefined) {
+          document.getElementById(`q-block-${i}`)?.classList.add('required-error');
+          todasRespondidas = false;
+        }
+      }
+      if (!todasRespondidas) {
+        document.querySelector('.required-error')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return todasRespondidas;
+    }
+
+    function proximaEscala() {
+      if (!validarEscala()) return;
+
+      if (escalaAtual < escalasIds.length - 1) {
+        escalaAtual++;
+        renderEscala();
+      } else {
+        finalizarTestes();
+      }
+    }
+
+    function anteriorEscala() {
+      if (escalaAtual > 0) {
+        escalaAtual--;
+        renderEscala();
+      }
+    }
+
+    async function finalizarTestes() {
+      document.getElementById('loading').classList.add('visible');
+
+      // Calcula scores
+      const resultados = {};
+      escalasIds.forEach(id => {
+        const escala = ESCALAS[id];
+        const score = calcularScore(escala, respostas[id] || {});
+        const faixa = getFaixa(escala, score);
+        resultados[id] = { score, scoreMax: escala.scoreMax, faixa: faixa.label, classe: faixa.classe, texto: faixa.texto };
+      });
+
+      // Determina faixa geral (pior resultado)
+      const ordemGravidade = ['severe', 'moderate', 'mild', 'minimal'];
+      let faixaGeral = 'minimal';
+      Object.values(resultados).forEach(r => {
+        if (ordemGravidade.indexOf(r.classe) < ordemGravidade.indexOf(faixaGeral)) {
+          faixaGeral = r.classe;
+        }
+      });
+
+      // Envia para a API
+      try {
+        await fetch('/api/resultado', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nome: dados.nome,
+            email: dados.email,
+            telefone: dados.telefone,
+            idade: dados.idade,
+            tema: temaId,
+            resultados,
+            faixaGeral,
+          }),
+        });
+      } catch (e) {
+        console.error('Erro ao enviar resultado:', e);
+      }
+
+      // Salva resultado e redireciona
+      sessionStorage.setItem('psico_resultado', JSON.stringify({ tema: temaId, resultados, faixaGeral, nome: dados.nome }));
+      location.href = 'resultado.html';
+    }
+
+    renderEscala();
+  </script>
+</body>
+</html>

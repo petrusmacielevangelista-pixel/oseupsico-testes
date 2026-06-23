@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · O Seu Psico Testes</title>
+  <link rel="icon" href="../assets/logo.png" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+  <div class="admin-login">
+    <div class="admin-login__card">
+      <div class="admin-login__logo">
+        <img src="../assets/logo.png" alt="O Seu Psico" />
+        <span class="admin-login__logo-text">O Seu Psico · Testes</span>
+      </div>
+      <h1 class="admin-login__title">Painel Admin</h1>
+      <p class="admin-login__sub">Acesso restrito. Insira suas credenciais.</p>
+
+      <div class="admin-login__error" id="login-error">Usuário ou senha incorretos.</div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label for="usuario">Usuário</label>
+          <input type="text" id="usuario" autocomplete="username" placeholder="admin" />
+        </div>
+        <div class="form-group">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" autocomplete="current-password" placeholder="••••••••" />
+        </div>
+        <button type="submit" class="btn btn--yellow btn--full" style="margin-top:8px;">Entrar</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const usuario = document.getElementById('usuario').value.trim();
+      const senha = document.getElementById('senha').value;
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ usuario, senha }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          sessionStorage.setItem('psico_admin_token', data.token);
+          location.href = '/admin/dashboard.html';
+        } else {
+          document.getElementById('login-error').classList.add('visible');
+        }
+      } catch {
+        document.getElementById('login-error').classList.add('visible');
+      }
+    });
+  </script>
+</body>
+</html>

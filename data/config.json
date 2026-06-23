@@ -1,0 +1,59 @@
+{
+  "brand": {
+    "name": "O Seu Psico",
+    "tagline": "Testes & Rastreio",
+    "whatsapp": "5511999999999",
+    "whatsappMessage": "Olá! Acabei de fazer os testes no O Seu Psico e gostaria de conversar sobre meus resultados.",
+    "instagram": "https://instagram.com/oseupsico"
+  },
+  "hero": {
+    "eyebrow": "Avaliação gratuita e confidencial",
+    "title": "Entenda melhor a sua <mark>saúde mental</mark>",
+    "subtitle": "Aplique escalas de rastreio validadas internacionalmente, usadas por psicólogos em todo o mundo. Receba seu resultado por e-mail com orientações personalizadas.",
+    "disclaimer": "Estes instrumentos são de rastreio, não de diagnóstico. Os resultados não substituem a avaliação de um profissional de saúde mental."
+  },
+  "themes": {
+    "title": "Escolha o tema que deseja explorar",
+    "subtitle": "Cada bateria leva de 5 a 15 minutos e inclui uma ou mais escalas validadas."
+  },
+  "footer": {
+    "tagline": "Rastreio em saúde mental com escalas validadas internacionalmente.",
+    "disclaimer": "Estes instrumentos são exclusivamente para fins de rastreio e não substituem avaliação ou diagnóstico clínico por profissional habilitado."
+  },
+  "email": {
+    "from": "testes@oseupsico.com.br",
+    "fromName": "O Seu Psico — Testes",
+    "subject": "Seus resultados estão aqui · O Seu Psico",
+    "intro": "Olá {nome}, obrigado por realizar os testes no O Seu Psico. Aqui estão seus resultados de rastreio para {tema}.",
+    "disclaimer": "Estes resultados são de instrumentos de rastreio e não constituem diagnóstico clínico. Recomendamos sempre a avaliação por um profissional de saúde mental.",
+    "cta_url": "https://oseupsico.com.br",
+    "cta_label": "Encontrar meu psicólogo",
+    "whatsapp_label": "Falar com especialista"
+  },
+  "emailTemplates": {
+    "minimal": {
+      "titulo": "Seus indicadores estão dentro do esperado 🌱",
+      "mensagem": "Ótima notícia! Seus resultados de rastreio não indicam sintomas significativos no momento. Isso não significa que você não possa se beneficiar de apoio psicológico — muitas pessoas buscam psicoterapia para autoconhecimento e desenvolvimento pessoal.",
+      "cta_label": "Conhecer nossos psicólogos",
+      "mostrar_whatsapp": false
+    },
+    "mild": {
+      "titulo": "Seus resultados merecem atenção 💛",
+      "mensagem": "Identificamos alguns indicadores que valem uma conversa com um profissional. Sintomas leves, quando acompanhados cedo, têm excelente resposta ao tratamento. Você deu um passo importante ao buscar entender como está se sentindo.",
+      "cta_label": "Encontrar meu psicólogo",
+      "mostrar_whatsapp": true
+    },
+    "moderate": {
+      "titulo": "Recomendamos buscar apoio profissional 🧡",
+      "mensagem": "Seus resultados indicam sintomas moderados que se beneficiariam de avaliação e acompanhamento por um psicólogo. Você não precisa passar por isso sozinho(a). Nossa equipe pode te ajudar a encontrar o profissional certo.",
+      "cta_label": "Falar com um psicólogo agora",
+      "mostrar_whatsapp": true
+    },
+    "severe": {
+      "titulo": "Seus resultados pedem atenção urgente ❤️",
+      "mensagem": "Identificamos indicadores que sugerem sintomas significativos. É importante buscar apoio profissional o quanto antes. Nossos psicólogos estão disponíveis para uma primeira conversa ainda hoje.",
+      "cta_label": "Falar com psicólogo hoje",
+      "mostrar_whatsapp": true
+    }
+  }
+}

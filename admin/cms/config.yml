@@ -1,0 +1,107 @@
+backend:
+  name: github
+  repo: petrusmacielevangelista-pixel/oseupsico-testes
+  branch: master
+  base_url: https://testes.oseupsico.com.br
+
+media_folder: assets
+public_folder: assets
+
+locale: pt
+
+collections:
+  - name: configuracoes
+    label: "⚙️ Configurações do Site"
+    files:
+
+      - name: geral
+        label: Textos e Conteúdo
+        file: data/config.json
+        format: json
+        fields:
+
+          - label: Marca
+            name: brand
+            widget: object
+            fields:
+              - { label: Nome do site, name: name, widget: string }
+              - { label: Tagline, name: tagline, widget: string }
+              - { label: WhatsApp (só números com DDI), name: whatsapp, widget: string }
+              - { label: Mensagem padrão do WhatsApp, name: whatsappMessage, widget: string }
+              - { label: Instagram (URL completa), name: instagram, widget: string }
+
+          - label: Hero (seção principal)
+            name: hero
+            widget: object
+            fields:
+              - { label: Eyebrow (texto pequeno acima do título), name: eyebrow, widget: string }
+              - { label: Título principal (use <mark>texto</mark> para destaque amarelo), name: title, widget: string }
+              - { label: Subtítulo, name: subtitle, widget: text }
+              - { label: Aviso legal abaixo do subtítulo, name: disclaimer, widget: text }
+
+          - label: Seção de Temas
+            name: themes
+            widget: object
+            fields:
+              - { label: Título da seção, name: title, widget: string }
+              - { label: Subtítulo da seção, name: subtitle, widget: string }
+
+          - label: Rodapé
+            name: footer
+            widget: object
+            fields:
+              - { label: Tagline do rodapé, name: tagline, widget: string }
+              - { label: Aviso legal do rodapé, name: disclaimer, widget: text }
+
+          - label: Configurações de E-mail
+            name: email
+            widget: object
+            fields:
+              - { label: "E-mail remetente (deve estar verificado no Resend)", name: from, widget: string }
+              - { label: Nome do remetente, name: fromName, widget: string }
+              - { label: Assunto do e-mail, name: subject, widget: string }
+              - { label: "Introdução do e-mail (use {nome} e {tema} como variáveis)", name: intro, widget: text }
+              - { label: Aviso legal no e-mail, name: disclaimer, widget: text }
+              - { label: URL do botão CTA, name: cta_url, widget: string }
+              - { label: Texto do botão CTA, name: cta_label, widget: string }
+              - { label: Texto do botão WhatsApp, name: whatsapp_label, widget: string }
+
+          - label: Templates de E-mail por Resultado
+            name: emailTemplates
+            widget: object
+            fields:
+              - label: "🟢 Resultado Mínimo / Baixo"
+                name: minimal
+                widget: object
+                fields:
+                  - { label: Título do e-mail, name: titulo, widget: string }
+                  - { label: Mensagem principal, name: mensagem, widget: text }
+                  - { label: Texto do botão CTA, name: cta_label, widget: string }
+                  - { label: Mostrar botão WhatsApp?, name: mostrar_whatsapp, widget: boolean, default: false }
+
+              - label: "🟡 Resultado Leve"
+                name: mild
+                widget: object
+                fields:
+                  - { label: Título do e-mail, name: titulo, widget: string }
+                  - { label: Mensagem principal, name: mensagem, widget: text }
+                  - { label: Texto do botão CTA, name: cta_label, widget: string }
+                  - { label: Mostrar botão WhatsApp?, name: mostrar_whatsapp, widget: boolean, default: true }
+
+              - label: "🟠 Resultado Moderado"
+                name: moderate
+                widget: object
+                fields:
+                  - { label: Título do e-mail, name: titulo, widget: string }
+                  - { label: Mensagem principal, name: mensagem, widget: text }
+                  - { label: Texto do botão CTA, name: cta_label, widget: string }
+                  - { label: Mostrar botão WhatsApp?, name: mostrar_whatsapp, widget: boolean, default: true }
+
+              - label: "🔴 Resultado Grave"
+                name: severe
+                widget: object
+                fields:
+                  - { label: Título do e-mail, name: titulo, widget: string }
+                  - { label: Mensagem principal, name: mensagem, widget: text }
+                  - { label: Texto do botão CTA, name: cta_label, widget: string }
+                  - { label: Mostrar botão WhatsApp?, name: mostrar_whatsapp, widget: boolean, default: true }

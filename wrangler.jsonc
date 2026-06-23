@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "oseupsico-testes",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-06-23",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "."
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "oseupsico-testes-db",
+      "database_id": "13e0e96c-87b0-4af8-8bbd-e79e98f589d1"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

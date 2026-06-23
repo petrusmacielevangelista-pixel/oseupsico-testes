@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testes · O Seu Psico</title>
+  <meta name="description" content="Escalas de rastreio em saúde mental validadas internacionalmente. Gratuito e confidencial." />
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">Testes</span>
+        </a>
+        <a href="https://oseupsico.com.br" class="navbar__back">
+          ← Voltar ao site
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="home-hero">
+    <div class="container">
+      <div class="home-hero__eyebrow" data-cms="hero.eyebrow">Avaliação gratuita e confidencial</div>
+      <h1 class="home-hero__title" data-cms="hero.title">Entenda melhor a sua <mark>saúde mental</mark></h1>
+      <p class="home-hero__sub" data-cms="hero.subtitle">
+        Aplique escalas de rastreio validadas internacionalmente, usadas por psicólogos em todo o mundo. Receba seu resultado por e-mail com orientações personalizadas.
+      </p>
+      <p class="home-hero__disclaimer" data-cms="hero.disclaimer">
+        Estes instrumentos são de rastreio, não de diagnóstico. Os resultados não substituem a avaliação de um profissional de saúde mental.
+      </p>
+    </div>
+  </section>
+
+  <!-- Temas -->
+  <section class="themes-section">
+    <div class="container">
+      <div class="themes-section__header">
+        <h2 class="themes-section__title" data-cms="themes.title">Escolha o tema que deseja explorar</h2>
+        <p class="themes-section__sub" data-cms="themes.subtitle">Cada bateria leva de 5 a 15 minutos e inclui uma ou mais escalas validadas.</p>
+      </div>
+
+      <div class="themes-grid" id="themes-grid">
+        <!-- Gerado por JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="footer__logo-text">O Seu Psico</span>
+        </div>
+        <p class="footer__copy" data-cms="footer.tagline">Rastreio em saúde mental com escalas validadas internacionalmente.</p>
+        <p class="footer__disclaimer" data-cms="footer.disclaimer">Estes instrumentos são exclusivamente para fins de rastreio e não substituem avaliação ou diagnóstico clínico por profissional habilitado.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="data/testes.js"></script>
+  <script>
+    // Renderiza os temas
+    const grid = document.getElementById('themes-grid');
+    const temas = Object.values(TEMAS);
+
+    temas.forEach(tema => {
+      const escalasText = tema.escalas.map(id => ESCALAS[id]?.nome || id).join(' · ');
+      const card = document.createElement('a');
+      card.className = 'theme-card';
+      card.href = `cadastro.html?tema=${tema.id}`;
+      card.innerHTML = `
+        <div class="theme-card__icon">${tema.icon}</div>
+        <div class="theme-card__name">${tema.nome}</div>
+        <div class="theme-card__desc">${tema.descricao}</div>
+        <div class="theme-card__scales">${escalasText}</div>
+        <div class="theme-card__arrow">Iniciar →</div>
+      `;
+      grid.appendChild(card);
+    });
+  </script>
+</body>
+</html>

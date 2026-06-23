@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resultado · O Seu Psico Testes</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">Testes</span>
+        </a>
+        <a href="/" class="navbar__back">← Fazer outro teste</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-header">
+    <div class="container">
+      <div class="page-header__theme-icon" id="tema-icon">✅</div>
+      <div class="page-header__eyebrow">Rastreio concluído</div>
+      <h1 class="page-header__title" id="resultado-titulo">Seus resultados</h1>
+      <p class="page-header__sub" id="resultado-sub"></p>
+    </div>
+  </section>
+
+  <section class="result-section">
+    <div class="container">
+
+      <!-- Aviso de e-mail -->
+      <div class="result-email-notice">
+        <div class="result-email-notice__icon">📬</div>
+        <div>
+          <div class="result-email-notice__title">Resultado enviado por e-mail</div>
+          <div class="result-email-notice__text" id="email-notice-text">Enviamos seu resultado detalhado com orientações personalizadas para o e-mail informado.</div>
+        </div>
+      </div>
+
+      <!-- Cards por escala -->
+      <div id="result-cards"></div>
+
+      <!-- Resumo geral -->
+      <div class="result-summary" id="result-summary">
+        <div class="result-summary__title">Resumo geral</div>
+        <div id="summary-items"></div>
+      </div>
+
+      <!-- Ações -->
+      <div class="result-actions">
+        <a href="https://oseupsico.com.br" class="btn btn--yellow btn--lg" id="cta-btn">Encontrar meu psicólogo →</a>
+        <a href="/" class="btn btn--outline">Fazer outro teste</a>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="footer__logo-text">O Seu Psico</span>
+        </div>
+        <p class="footer__disclaimer">Estes instrumentos são exclusivamente para fins de rastreio e não substituem diagnóstico clínico por profissional habilitado.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="data/testes.js"></script>
+  <script>
+    const raw = sessionStorage.getItem('psico_resultado');
+    const cadastroRaw = sessionStorage.getItem('psico_cadastro');
+    if (!raw) { location.href = '/'; }
+
+    const { tema: temaId, resultados, faixaGeral, nome } = JSON.parse(raw);
+    const cadastro = cadastroRaw ? JSON.parse(cadastroRaw) : {};
+    const tema = TEMAS[temaId];
+
+    document.getElementById('tema-icon').textContent = tema.icon;
+    document.getElementById('resultado-titulo').textContent = `Resultado de ${nome || 'você'}`;
+    document.getElementById('resultado-sub').textContent = `Rastreio de ${tema.nome} · ${new Date().toLocaleDateString('pt-BR')}`;
+    document.getElementById('email-notice-text').textContent = `Enviamos seu resultado detalhado para ${cadastro.email || 'o e-mail informado'} com orientações personalizadas.`;
+
+    // Renderiza card por escala
+    const cardsContainer = document.getElementById('result-cards');
+    const summaryItems = document.getElementById('summary-items');
+
+    Object.entries(resultados).forEach(([escalaId, res]) => {
+      const escala = ESCALAS[escalaId];
+      if (!escala) return;
+
+      const pct = Math.round((res.score / res.scoreMax) * 100);
+
+      const card = document.createElement('div');
+      card.className = 'result-card';
+      card.innerHTML = `
+        <div class="result-card__theme">${tema.nome}</div>
+        <div class="result-card__scale">${escala.nomeCompleto}</div>
+        <div class="result-card__score-wrap">
+          <div class="result-card__score-num">${res.score}</div>
+          <div class="result-card__score-max">/ ${res.scoreMax} pontos</div>
+        </div>
+        <div class="result-card__faixa faixa--${res.classe}">
+          ${faixaIcon(res.classe)} ${res.faixa}
+        </div>
+        <div class="result-card__bar-wrap">
+          <div class="result-card__bar-fill bar--${res.classe}" style="width:0%" data-pct="${pct}"></div>
+        </div>
+        <div class="result-card__interpretation">${res.texto}</div>
+      `;
+      cardsContainer.appendChild(card);
+
+      // Resumo
+      const item = document.createElement('div');
+      item.className = 'result-summary__item';
+      item.innerHTML = `
+        <span class="result-summary__scale">${escala.nome} — ${escala.nomeCompleto}</span>
+        <span class="result-summary__badge faixa--${res.classe}">${res.faixa}</span>
+      `;
+      summaryItems.appendChild(item);
+    });
+
+    // Anima barras
+    setTimeout(() => {
+      document.querySelectorAll('.result-card__bar-fill').forEach(el => {
+        el.style.width = el.dataset.pct + '%';
+      });
+    }, 200);
+
+    // CTA baseado na faixa geral
+    const ctaBtn = document.getElementById('cta-btn');
+    if (faixaGeral === 'severe' || faixaGeral === 'moderate') {
+      ctaBtn.textContent = 'Falar com um psicólogo agora →';
+    }
+
+    function faixaIcon(classe) {
+      return { minimal: '🟢', mild: '🟡', moderate: '🟠', severe: '🔴' }[classe] || '⚪';
+    }
+  </script>
+</body>
+</html>
