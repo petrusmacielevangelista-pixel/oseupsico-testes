@@ -65,7 +65,32 @@
 
     const dados = JSON.parse(dadosRaw);
     const tema = TEMAS[temaId];
-    const escalasIds = tema.escalas;
+    const idade = dados.idade;
+
+    // Filtra escalas compatíveis com a idade do respondente
+    const escalasIds = tema.escalas.filter(id => {
+      const e = ESCALAS[id];
+      if (!e) return false;
+      return idade >= (e.minAge ?? 0) && idade <= (e.maxAge ?? 999);
+    });
+
+    // Nenhuma escala compatível com a idade
+    if (escalasIds.length === 0) {
+      document.getElementById('scale-container').innerHTML = `
+        <div class="scale-intro" style="text-align:center;padding:48px 32px;">
+          <div style="font-size:3rem;margin-bottom:16px;">⚠️</div>
+          <div class="scale-intro__title">Sem escalas disponíveis para sua idade</div>
+          <div class="scale-intro__desc" style="margin-top:12px;">
+            As escalas do tema <strong>${tema.nome}</strong> não possuem versão validada para ${idade} anos.<br><br>
+            Escolha outro tema ou consulte diretamente um profissional de saúde mental.
+          </div>
+          <a href="/" class="btn btn--yellow" style="margin-top:28px;">← Escolher outro tema</a>
+        </div>
+      `;
+      document.querySelector('.scale-nav').style.display = 'none';
+      document.querySelector('.progress-bar-wrap').style.display = 'none';
+      return;
+    }
     let escalaAtual = dados.escalaIndex || 0;
     let respostas = {}; // { escalaId: { qIndex: valor } }
 

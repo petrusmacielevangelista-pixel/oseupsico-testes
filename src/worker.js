@@ -173,19 +173,9 @@ async function enviarEmail(env, para, nome, dadosEmail) {
 
 /* ── Inicializa tabelas D1 ── */
 async function initDB(db) {
-  await db.exec(`
-    CREATE TABLE IF NOT EXISTS participantes (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      nome TEXT NOT NULL,
-      email TEXT NOT NULL,
-      telefone TEXT NOT NULL,
-      idade INTEGER NOT NULL,
-      tema TEXT NOT NULL,
-      faixa_geral TEXT NOT NULL,
-      resultados TEXT NOT NULL,
-      criado_em TEXT DEFAULT (datetime('now'))
-    );
-  `);
+  await db.prepare(
+    `CREATE TABLE IF NOT EXISTS participantes (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, email TEXT NOT NULL, telefone TEXT NOT NULL, idade INTEGER NOT NULL, tema TEXT NOT NULL, faixa_geral TEXT NOT NULL, resultados TEXT NOT NULL, criado_em TEXT DEFAULT (datetime('now')))`
+  ).run();
 }
 
 /* ── Handler principal ── */

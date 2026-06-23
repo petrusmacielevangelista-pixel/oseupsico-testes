@@ -107,6 +107,8 @@ const ESCALAS = {
     nome: 'PHQ-9',
     nomeCompleto: 'Patient Health Questionnaire-9',
     publico: 'Adultos',
+    minAge: 18,
+    maxAge: 999,
     instrucao: 'Durante as <strong>últimas 2 semanas</strong>, com que frequência você foi incomodado pelos problemas abaixo?',
     opcoes: [
       { label: 'Nenhuma vez', valor: 0 },
@@ -140,6 +142,8 @@ const ESCALAS = {
     nome: 'PHQ-A',
     nomeCompleto: 'Patient Health Questionnaire — Versão Adolescente',
     publico: 'Adolescentes (12–17 anos)',
+    minAge: 12,
+    maxAge: 17,
     instrucao: 'Durante as <strong>últimas 2 semanas</strong>, com que frequência você foi incomodado(a) pelos seguintes problemas?',
     opcoes: [
       { label: 'Nenhuma vez', valor: 0 },
@@ -173,6 +177,8 @@ const ESCALAS = {
     nome: 'GAD-7',
     nomeCompleto: 'Generalized Anxiety Disorder-7',
     publico: 'Adultos e Adolescentes (13+)',
+    minAge: 13,
+    maxAge: 999,
     instrucao: 'Durante as <strong>últimas 2 semanas</strong>, com que frequência você foi incomodado(a) pelos seguintes problemas?',
     opcoes: [
       { label: 'Nenhuma vez', valor: 0 },
@@ -204,6 +210,8 @@ const ESCALAS = {
     nome: 'SCARED',
     nomeCompleto: 'Screen for Child Anxiety Related Disorders',
     publico: 'Crianças e Adolescentes (8–18 anos)',
+    minAge: 8,
+    maxAge: 18,
     instrucao: 'Indique como você se sentiu <strong>nas últimas 3 semanas</strong>. Não há resposta certa ou errada.',
     opcoes: [
       { label: 'Não é verdade ou quase nunca', valor: 0 },
@@ -267,6 +275,8 @@ const ESCALAS = {
     nome: 'ASRS-v1.1',
     nomeCompleto: 'Adult ADHD Self-Report Scale (Parte A)',
     publico: 'Adultos (18+)',
+    minAge: 18,
+    maxAge: 999,
     instrucao: 'Com que frequência você experienciou cada um dos seguintes sintomas <strong>nos últimos 6 meses</strong>?',
     opcoes: [
       { label: 'Nunca', valor: 0 },
@@ -309,6 +319,8 @@ const ESCALAS = {
     nome: 'SNAP-IV',
     nomeCompleto: 'Swanson, Nolan and Pelham Rating Scale IV',
     publico: 'Crianças e Adolescentes (6–17 anos) — respondido pelo responsável',
+    minAge: 6,
+    maxAge: 17,
     instrucao: 'Como responsável, indique o quanto cada afirmação abaixo <strong>descreve a criança/adolescente</strong>.',
     opcoes: [
       { label: 'Nem um pouco', valor: 0 },
@@ -350,6 +362,8 @@ const ESCALAS = {
     nome: 'AQ-10',
     nomeCompleto: 'Autism Spectrum Quotient — 10 itens',
     publico: 'Adultos (16+)',
+    minAge: 16,
+    maxAge: 999,
     instrucao: 'Indique o quanto cada afirmação se aplica a você.',
     opcoes: [
       { label: 'Concordo totalmente', valor: 1 },
@@ -382,6 +396,8 @@ const ESCALAS = {
     nome: 'M-CHAT-R',
     nomeCompleto: 'Modified Checklist for Autism in Toddlers — Revisado',
     publico: 'Crianças (16–30 meses) — respondido pelos pais',
+    minAge: 0,
+    maxAge: 2,
     instrucao: 'Responda às perguntas abaixo sobre o comportamento atual do seu filho(a). Por favor, tente basear suas respostas no comportamento típico, não em situações incomuns.',
     opcoes: [
       { label: 'Sim', valor: 0 },
@@ -423,6 +439,8 @@ const ESCALAS = {
     nome: 'PCL-5',
     nomeCompleto: 'PTSD Checklist for DSM-5',
     publico: 'Adultos',
+    minAge: 18,
+    maxAge: 999,
     instrucao: 'Nos <strong>últimos 30 dias</strong>, o quanto você foi incomodado(a) por cada um dos seguintes problemas relacionados a uma experiência estressante?',
     opcoes: [
       { label: 'Nada', valor: 0 },
@@ -466,6 +484,8 @@ const ESCALAS = {
     nome: 'PC-PTSD-5',
     nomeCompleto: 'Primary Care PTSD Screen for DSM-5',
     publico: 'Adultos — rastreio rápido',
+    minAge: 18,
+    maxAge: 999,
     instrucao: 'Às vezes, as pessoas têm problemas após experiências estressantes extremas. Nos <strong>últimos mês</strong>, você teve pesadelos, pensamentos recorrentes ou se lembrou de uma experiência estressante do passado? <br><br>Se sim, responda às perguntas abaixo:',
     opcoes: [
       { label: 'Não', valor: 0 },
@@ -491,6 +511,8 @@ const ESCALAS = {
     nome: 'ISI',
     nomeCompleto: 'Insomnia Severity Index',
     publico: 'Adultos',
+    minAge: 18,
+    maxAge: 999,
     instrucao: 'Por favor, avalie a <strong>gravidade atual</strong> dos seus problemas de insônia.',
     perguntas: [
       {
@@ -551,6 +573,8 @@ const ESCALAS = {
     nome: 'MBI-GS',
     nomeCompleto: 'Maslach Burnout Inventory — General Survey (versão reduzida)',
     publico: 'Adultos em atividade profissional',
+    minAge: 18,
+    maxAge: 999,
     instrucao: 'Com que frequência você tem os sentimentos descritos abaixo em relação ao seu trabalho?',
     opcoes: [
       { label: 'Nunca', valor: 0 },
@@ -588,6 +612,8 @@ const ESCALAS = {
     nome: 'MDQ',
     nomeCompleto: 'Mood Disorder Questionnaire',
     publico: 'Adultos',
+    minAge: 18,
+    maxAge: 999,
     instrucao: 'Já aconteceu alguma vez na sua vida um período em que você não estava no seu estado habitual e...',
     opcoes: [
       { label: 'Não', valor: 0 },
@@ -621,6 +647,8 @@ const ESCALAS = {
     nome: 'PSS-10',
     nomeCompleto: 'Perceived Stress Scale — 10 itens',
     publico: 'Adultos',
+    minAge: 18,
+    maxAge: 999,
     instrucao: 'As perguntas a seguir referem-se a seus sentimentos e pensamentos durante o <strong>último mês</strong>. Indique com que frequência você se sentiu da forma descrita.',
     opcoes: [
       { label: 'Nunca', valor: 0 },
@@ -655,6 +683,8 @@ const ESCALAS = {
     nome: 'PGSI',
     nomeCompleto: 'Problem Gambling Severity Index',
     publico: 'Adultos',
+    minAge: 18,
+    maxAge: 999,
     instrucao: 'Pensando nos <strong>últimos 12 meses</strong>, com que frequência você...',
     opcoes: [
       { label: 'Nunca', valor: 0 },
@@ -688,6 +718,8 @@ const ESCALAS = {
     nome: 'AUDIT',
     nomeCompleto: 'Alcohol Use Disorders Identification Test',
     publico: 'Adultos',
+    minAge: 18,
+    maxAge: 999,
     instrucao: 'Responda às perguntas abaixo sobre o consumo de bebidas alcoólicas no <strong>último ano</strong>.',
     perguntas: [
       {
@@ -766,6 +798,8 @@ const ESCALAS = {
     nome: 'BSMAS',
     nomeCompleto: 'Bergen Social Media Addiction Scale',
     publico: 'Adultos e Adolescentes',
+    minAge: 13,
+    maxAge: 999,
     instrucao: 'Com que frequência ao longo do <strong>último ano</strong> você...',
     opcoes: [
       { label: 'Muito raramente', valor: 1 },
@@ -796,6 +830,8 @@ const ESCALAS = {
     nome: 'WHOQOL-BREF',
     nomeCompleto: 'World Health Organization Quality of Life — Bref',
     publico: 'Adultos',
+    minAge: 18,
+    maxAge: 999,
     instrucao: 'As perguntas a seguir referem-se a como você se sentiu sobre aspectos de sua vida nas <strong>últimas 2 semanas</strong>.',
     opcoes: [
       { label: 'Muito ruim / Muito insatisfeito(a) / Nunca', valor: 1 },
