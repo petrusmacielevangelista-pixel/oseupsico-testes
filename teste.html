@@ -65,7 +65,7 @@
 
     const dados = JSON.parse(dadosRaw);
     const tema = TEMAS[temaId];
-    const idade = dados.idade;
+    const idade = parseInt(dados.idade, 10);
 
     // Filtra escalas compatíveis com a idade do respondente
     const escalasIds = tema.escalas.filter(id => {
