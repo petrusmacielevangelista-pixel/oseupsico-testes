@@ -18,8 +18,8 @@ const TEMAS = {
     id: 'ansiedade',
     nome: 'Ansiedade',
     icon: '😰',
-    descricao: 'Rastreio de ansiedade generalizada em adultos, adolescentes e crianças.',
-    escalas: ['gad7', 'scared'],
+    descricao: 'Rastreio de ansiedade em adultos, adolescentes e crianças.',
+    escalas: ['bai', 'scared'],
   },
 
   tdah: {
@@ -43,7 +43,7 @@ const TEMAS = {
     nome: 'Trauma / TEPT',
     icon: '🛡️',
     descricao: 'Rastreio de sintomas de Transtorno de Estresse Pós-Traumático.',
-    escalas: ['pcl5', 'pcptsd5'],
+    escalas: ['pcl5'],
   },
 
   insonia: {
@@ -51,7 +51,7 @@ const TEMAS = {
     nome: 'Insônia',
     icon: '🌙',
     descricao: 'Avaliação da gravidade e impacto de sintomas de insônia.',
-    escalas: ['isi'],
+    escalas: ['psqi'],
   },
 
   burnout: {
@@ -83,7 +83,7 @@ const TEMAS = {
     nome: 'Vícios & Compulsões',
     icon: '🎰',
     descricao: 'Rastreio de comportamentos compulsivos e vícios comportamentais.',
-    escalas: ['pgsi', 'audit', 'bsmas'],
+    escalas: ['pgsi', 'audit', 'iat'],
   },
 
   qualidade: {
@@ -126,6 +126,7 @@ const ESCALAS = {
       'Dificuldade para se concentrar nas coisas, como ler jornal ou ver televisão',
       'Lentidão para se movimentar ou falar, a ponto de outras pessoas perceberem? Ou ao contrário — estar tão agitado(a) ou inquieto(a) que você fica andando de um lado para outro mais do que de costume',
       'Pensar em se ferir de alguma maneira ou que seria melhor estar morto(a)',
+      'Se os problemas acima existirem, eles dificultaram seu trabalho, cuidados em casa ou seu relacionamento com outras pessoas?',
     ],
     scoreMax: 27,
     faixas: [
@@ -161,6 +162,7 @@ const ESCALAS = {
       'Dificuldade em se concentrar em coisas como dever de casa, leitura ou televisão',
       'Estar tão agitado(a) ou lento(a) que outras pessoas podem ter percebido',
       'Pensar que seria melhor estar morto(a), ou se machucar de alguma forma',
+      'Esses problemas tornaram mais difícil para você realizar seu trabalho, tarefas em casa ou se relacionar com outras pessoas?',
     ],
     scoreMax: 27,
     faixas: [
@@ -171,36 +173,50 @@ const ESCALAS = {
     ],
   },
 
-  /* ── GAD-7 ── */
-  gad7: {
-    id: 'gad7',
-    nome: 'GAD-7',
-    nomeCompleto: 'Generalized Anxiety Disorder-7',
-    publico: 'Adultos e Adolescentes (13+)',
-    minAge: 13,
+  /* ── BAI (Beck Anxiety Inventory) ── */
+  bai: {
+    id: 'bai',
+    nome: 'BAI',
+    nomeCompleto: 'Beck Anxiety Inventory',
+    publico: 'Adultos (18+)',
+    minAge: 18,
     maxAge: 999,
-    instrucao: 'Durante as <strong>últimas 2 semanas</strong>, com que frequência você foi incomodado(a) pelos seguintes problemas?',
+    instrucao: 'Abaixo está uma lista de sintomas comuns de ansiedade. Por favor, leia cada item com atenção e indique o quanto você foi <strong>incomodado(a) por cada sintoma na última semana</strong>, incluindo hoje.',
     opcoes: [
-      { label: 'Nenhuma vez', valor: 0 },
-      { label: 'Menos de 1 dia por semana', valor: 1 },
-      { label: 'Mais da metade dos dias', valor: 2 },
-      { label: 'Quase todos os dias', valor: 3 },
+      { label: 'Absolutamente não', valor: 0 },
+      { label: 'Levemente — não me incomodou muito', valor: 1 },
+      { label: 'Moderadamente — foi muito desagradável, mas pude suportar', valor: 2 },
+      { label: 'Gravemente — mal pude suportar', valor: 3 },
     ],
     perguntas: [
-      'Se sentir nervoso(a), ansioso(a) ou muito tenso(a)',
-      'Não conseguir parar de se preocupar ou controlar suas preocupações',
-      'Se preocupar demais com coisas diferentes',
-      'Dificuldade para relaxar',
-      'Ficar tão agitado(a) que se torna difícil ficar parado(a)',
-      'Ficar facilmente irritado(a) ou irritável',
-      'Sentir medo como se algo horrível fosse acontecer',
+      'Dormência ou formigamento',
+      'Sensação de calor',
+      'Tremor nas pernas',
+      'Incapaz de relaxar',
+      'Medo que aconteça o pior',
+      'Sensação de desmaio ou tontura',
+      'Palpitação ou aceleração do coração',
+      'Sem equilíbrio',
+      'Aterrorizado(a)',
+      'Nervoso(a)',
+      'Sensação de sufocamento',
+      'Tremores nas mãos',
+      'Inseguro(a)',
+      'Medo de perder o controle',
+      'Dificuldade de respirar',
+      'Medo de morrer',
+      'Assustado(a)',
+      'Indigestão ou desconforto no estômago',
+      'Sensação de desmaio',
+      'Rosto afogueado',
+      'Suor (não relacionado ao calor)',
     ],
-    scoreMax: 21,
+    scoreMax: 63,
     faixas: [
-      { min: 0,  max: 4,  label: 'Mínima',  classe: 'minimal',  texto: 'Ansiedade mínima ou ausente.' },
-      { min: 5,  max: 9,  label: 'Leve',    classe: 'mild',     texto: 'Ansiedade leve. Técnicas de relaxamento e autocuidado podem ajudar.' },
-      { min: 10, max: 14, label: 'Moderada',classe: 'moderate', texto: 'Ansiedade moderada. Recomenda-se avaliação por profissional.' },
-      { min: 15, max: 21, label: 'Grave',   classe: 'severe',   texto: 'Ansiedade grave. Busque apoio profissional o quanto antes.' },
+      { min: 0,  max: 9,  label: 'Mínima',  classe: 'minimal',  texto: 'Ansiedade mínima ou ausente.' },
+      { min: 10, max: 18, label: 'Leve',    classe: 'mild',     texto: 'Ansiedade leve. Técnicas de relaxamento e autocuidado podem ajudar.' },
+      { min: 19, max: 29, label: 'Moderada',classe: 'moderate', texto: 'Ansiedade moderada. Recomenda-se avaliação por profissional.' },
+      { min: 30, max: 63, label: 'Grave',   classe: 'severe',   texto: 'Ansiedade grave. Busque apoio profissional o quanto antes.' },
     ],
   },
 
@@ -505,65 +521,101 @@ const ESCALAS = {
     ],
   },
 
-  /* ── ISI ── */
-  isi: {
-    id: 'isi',
-    nome: 'ISI',
-    nomeCompleto: 'Insomnia Severity Index',
-    publico: 'Adultos',
+  /* ── PSQI (Pittsburgh Sleep Quality Index) ── */
+  psqi: {
+    id: 'psqi',
+    nome: 'PSQI',
+    nomeCompleto: 'Pittsburgh Sleep Quality Index',
+    publico: 'Adultos (18+)',
     minAge: 18,
     maxAge: 999,
-    instrucao: 'Por favor, avalie a <strong>gravidade atual</strong> dos seus problemas de insônia.',
+    instrucao: 'As perguntas abaixo referem-se aos seus <strong>hábitos de sono no último mês</strong>. Suas respostas devem indicar o que ocorreu na maioria dos dias e noites do mês passado.',
     perguntas: [
       {
-        texto: 'Gravidade do problema para adormecer',
+        texto: 'Com que frequência você teve dificuldade para adormecer em até 30 minutos?',
         opcoes: [
-          { label: 'Nenhuma', valor: 0 }, { label: 'Leve', valor: 1 }, { label: 'Moderada', valor: 2 }, { label: 'Grave', valor: 3 }, { label: 'Muito grave', valor: 4 },
+          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
         ],
       },
       {
-        texto: 'Gravidade do problema para permanecer dormindo',
+        texto: 'Com que frequência você acordou no meio da noite ou de manhã cedo?',
         opcoes: [
-          { label: 'Nenhuma', valor: 0 }, { label: 'Leve', valor: 1 }, { label: 'Moderada', valor: 2 }, { label: 'Grave', valor: 3 }, { label: 'Muito grave', valor: 4 },
+          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
         ],
       },
       {
-        texto: 'Problema de acordar muito cedo',
+        texto: 'Com que frequência você teve que se levantar para ir ao banheiro?',
         opcoes: [
-          { label: 'Nenhum', valor: 0 }, { label: 'Leve', valor: 1 }, { label: 'Moderado', valor: 2 }, { label: 'Grave', valor: 3 }, { label: 'Muito grave', valor: 4 },
+          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
         ],
       },
       {
-        texto: 'Quão satisfeito(a) você está com seu padrão de sono atual?',
+        texto: 'Com que frequência você teve dificuldade para respirar confortavelmente?',
         opcoes: [
-          { label: 'Muito satisfeito(a)', valor: 0 }, { label: 'Satisfeito(a)', valor: 1 }, { label: 'Neutro(a)', valor: 2 }, { label: 'Insatisfeito(a)', valor: 3 }, { label: 'Muito insatisfeito(a)', valor: 4 },
+          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
         ],
       },
       {
-        texto: 'Em que medida você considera que o seu problema de sono interfere com o seu funcionamento diário (ex.: cansaço diurno, capacidade de trabalho, concentração, memória, humor etc.)?',
+        texto: 'Com que frequência você tossiu ou roncou alto?',
         opcoes: [
-          { label: 'Nada', valor: 0 }, { label: 'Um pouco', valor: 1 }, { label: 'Moderadamente', valor: 2 }, { label: 'Muito', valor: 3 }, { label: 'Extremamente', valor: 4 },
+          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
         ],
       },
       {
-        texto: 'Quão perceptível para os outros você acha que o seu problema de sono é em termos de prejudicar a qualidade de sua vida?',
+        texto: 'Com que frequência você sentiu muito frio?',
         opcoes: [
-          { label: 'Nada perceptível', valor: 0 }, { label: 'Um pouco', valor: 1 }, { label: 'Moderadamente', valor: 2 }, { label: 'Muito', valor: 3 }, { label: 'Extremamente', valor: 4 },
+          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
         ],
       },
       {
-        texto: 'Quão preocupado(a) você está com seu atual problema de sono?',
+        texto: 'Com que frequência você sentiu muito calor?',
         opcoes: [
-          { label: 'Nada', valor: 0 }, { label: 'Um pouco', valor: 1 }, { label: 'Moderadamente', valor: 2 }, { label: 'Muito', valor: 3 }, { label: 'Extremamente', valor: 4 },
+          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
+        ],
+      },
+      {
+        texto: 'Com que frequência você teve sonhos ruins?',
+        opcoes: [
+          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
+        ],
+      },
+      {
+        texto: 'Com que frequência você teve dor?',
+        opcoes: [
+          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
+        ],
+      },
+      {
+        texto: 'Como você avalia a qualidade geral do seu sono?',
+        opcoes: [
+          { label: 'Muito boa', valor: 0 }, { label: 'Boa', valor: 1 }, { label: 'Ruim', valor: 2 }, { label: 'Muito ruim', valor: 3 },
+        ],
+      },
+      {
+        texto: 'Com que frequência você tomou remédio para dormir (prescrito ou por conta própria)?',
+        opcoes: [
+          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
+        ],
+      },
+      {
+        texto: 'Com que frequência você teve dificuldade para ficar acordado(a) enquanto dirigia, comia ou participava de atividades sociais?',
+        opcoes: [
+          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
+        ],
+      },
+      {
+        texto: 'Quão problemático foi manter o entusiasmo para realizar suas atividades?',
+        opcoes: [
+          { label: 'Nenhum problema', valor: 0 }, { label: 'Problema leve', valor: 1 }, { label: 'Problema moderado', valor: 2 }, { label: 'Problema grave', valor: 3 },
         ],
       },
     ],
-    scoreMax: 28,
+    scoreMax: 39,
     faixas: [
-      { min: 0,  max: 7,  label: 'Sem insônia',        classe: 'minimal',  texto: 'Sem insônia clinicamente significativa.' },
-      { min: 8,  max: 14, label: 'Subclínica',          classe: 'mild',     texto: 'Insônia leve ou subclínica. Higiene do sono pode ajudar.' },
-      { min: 15, max: 21, label: 'Moderada',            classe: 'moderate', texto: 'Insônia moderada. Avaliação e tratamento são recomendados.' },
-      { min: 22, max: 28, label: 'Grave',               classe: 'severe',   texto: 'Insônia grave. Busque avaliação profissional.' },
+      { min: 0,  max: 5,  label: 'Boa qualidade',    classe: 'minimal',  texto: 'Qualidade de sono boa. Sem indicativo de distúrbio do sono.' },
+      { min: 6,  max: 10, label: 'Ruim qualidade',   classe: 'mild',     texto: 'Qualidade de sono ruim. Higiene do sono e avaliação podem ajudar.' },
+      { min: 11, max: 20, label: 'Perturbada',        classe: 'moderate', texto: 'Sono significativamente perturbado. Avaliação profissional é recomendada.' },
+      { min: 21, max: 39, label: 'Grave',             classe: 'severe',   texto: 'Distúrbio grave do sono. Busque avaliação especializada.' },
     ],
   },
 
@@ -702,8 +754,9 @@ const ESCALAS = {
       'Sentiu-se culpado(a) por causa do seu jogo ou pelo que acontece quando você joga?',
       'O jogo causou problemas de saúde, incluindo estresse ou ansiedade?',
       'O jogo causou qualquer problema financeiro para você ou para sua família?',
+      'Escondeu seus comportamentos de jogo de familiares, amigos ou outras pessoas?',
     ],
-    scoreMax: 27,
+    scoreMax: 30,
     faixas: [
       { min: 0,  max: 0,  label: 'Sem problema',       classe: 'minimal',  texto: 'Sem problemas com jogo identificados.' },
       { min: 1,  max: 2,  label: 'Jogador de baixo risco', classe: 'mild',  texto: 'Risco baixo. Poucas consequências negativas.' },
@@ -792,35 +845,50 @@ const ESCALAS = {
     ],
   },
 
-  /* ── BSMAS ── */
-  bsmas: {
-    id: 'bsmas',
-    nome: 'BSMAS',
-    nomeCompleto: 'Bergen Social Media Addiction Scale',
-    publico: 'Adultos e Adolescentes',
+  /* ── IAT (Internet Addiction Test) ── */
+  iat: {
+    id: 'iat',
+    nome: 'IAT',
+    nomeCompleto: 'Internet Addiction Test (Kimberly Young)',
+    publico: 'Adultos e Adolescentes (13+)',
     minAge: 13,
     maxAge: 999,
-    instrucao: 'Com que frequência ao longo do <strong>último ano</strong> você...',
+    instrucao: 'Para cada uma das afirmações abaixo, use a escala de 1 a 5 para indicar com que frequência o comportamento descrito ocorre. Responda considerando apenas o tempo em que você usa a internet (redes sociais, jogos, streaming, etc.).',
     opcoes: [
-      { label: 'Muito raramente', valor: 1 },
-      { label: 'Raramente', valor: 2 },
-      { label: 'Às vezes', valor: 3 },
-      { label: 'Frequentemente', valor: 4 },
-      { label: 'Muito frequentemente', valor: 5 },
+      { label: 'Raramente', valor: 1 },
+      { label: 'Ocasionalmente', valor: 2 },
+      { label: 'Frequentemente', valor: 3 },
+      { label: 'Com muita frequência', valor: 4 },
+      { label: 'Sempre', valor: 5 },
     ],
     perguntas: [
-      'Gastou muito tempo pensando nas redes sociais ou planejando como usá-las?',
-      'Sentiu uma vontade de usar as redes sociais cada vez mais?',
-      'Usou as redes sociais para esquecer problemas pessoais?',
-      'Tentou reduzir o uso das redes sociais sem sucesso?',
-      'Ficou agitado(a) ou inquieto(a) se foi proibido(a) de usar as redes sociais?',
-      'Usou as redes sociais tanto que isso teve impacto negativo no seu trabalho/estudos?',
+      'Com que frequência você fica online por mais tempo do que pretendia?',
+      'Com que frequência você negligencia as tarefas domésticas para ficar mais tempo online?',
+      'Com que frequência você prefere a emoção da internet a estar com seu(sua) parceiro(a)?',
+      'Com que frequência você forma novos relacionamentos com pessoas que conheceu online?',
+      'Com que frequência outras pessoas em sua vida reclamam da quantidade de tempo que você passa online?',
+      'Com que frequência seus estudos ou trabalho são prejudicados porque você passou muito tempo online?',
+      'Com que frequência você verifica seus e-mails, redes sociais ou mensagens antes de fazer outras coisas que precisa fazer?',
+      'Com que frequência seu desempenho no trabalho ou nos estudos é prejudicado pela internet?',
+      'Com que frequência você fica na defensiva ou guarda segredo quando alguém pergunta o que você faz online?',
+      'Com que frequência você bloqueia pensamentos perturbadores sobre sua vida com pensamentos reconfortantes sobre a internet?',
+      'Com que frequência você se vê antecipando a próxima vez que ficará online?',
+      'Com que frequência você tem medo de que sua vida sem a internet seja entediante, vazia e sem graça?',
+      'Com que frequência você fica irritado(a), grita ou fica ranzinza se alguém o(a) incomoda enquanto está online?',
+      'Com que frequência você perde sono por ficar online até tarde da noite?',
+      'Com que frequência você se sente preocupado(a) com a internet quando está offline ou pensa em estar online?',
+      'Com que frequência você se pega dizendo "só mais alguns minutos" enquanto está online?',
+      'Com que frequência você tenta reduzir o tempo que passa online e fracassa?',
+      'Com que frequência você tenta esconder quanto tempo passa online?',
+      'Com que frequência você opta por passar mais tempo online em vez de sair com outras pessoas?',
+      'Com que frequência você se sente deprimido(a), mal-humorado(a) ou nervoso(a) quando está offline e esse sentimento desaparece quando volta a ficar online?',
     ],
-    scoreMax: 30,
+    scoreMax: 100,
     faixas: [
-      { min: 6,  max: 18, label: 'Baixo',    classe: 'minimal',  texto: 'Uso de redes sociais sem indicativo de dependência.' },
-      { min: 19, max: 24, label: 'Moderado', classe: 'moderate', texto: 'Alguns sinais de uso problemático. Atenção ao tempo nas redes.' },
-      { min: 25, max: 30, label: 'Alto',     classe: 'severe',   texto: 'Uso de redes sociais potencialmente problemático. Considere buscar apoio.' },
+      { min: 20, max: 39, label: 'Uso comum',     classe: 'minimal',  texto: 'Uso normal da internet. Sem indicativo de dependência.' },
+      { min: 40, max: 59, label: 'Uso moderado',  classe: 'mild',     texto: 'A internet está causando alguns problemas ocasionais. Considere estabelecer limites.' },
+      { min: 60, max: 79, label: 'Uso excessivo', classe: 'moderate', texto: 'A internet está causando problemas significativos na sua vida. Recomenda-se buscar apoio.' },
+      { min: 80, max: 100,label: 'Dependência',   classe: 'severe',   texto: 'Uso da internet indicativo de dependência. Busque avaliação profissional.' },
     ],
   },
 
