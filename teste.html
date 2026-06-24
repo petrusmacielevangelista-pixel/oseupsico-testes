@@ -57,11 +57,12 @@
 
   <script src="data/testes.js"></script>
   <script>
+  (function() {
     const params = new URLSearchParams(location.search);
     const temaId = params.get('tema');
     const dadosRaw = sessionStorage.getItem('psico_cadastro');
 
-    if (!dadosRaw || !TEMAS[temaId]) { location.href = '/'; }
+    if (!dadosRaw || !TEMAS[temaId]) { location.href = '/'; return; }
 
     const dados = JSON.parse(dadosRaw);
     const tema = TEMAS[temaId];
@@ -283,6 +284,7 @@
     }
 
     renderEscala();
+  })();
   </script>
 </body>
 </html>
