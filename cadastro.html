@@ -12,12 +12,12 @@
   <nav class="navbar">
     <div class="container">
       <div class="navbar__inner">
-        <a href="/" class="navbar__logo">
+        <a href="/testes/" class="navbar__logo">
           <img src="assets/logo.png" alt="O Seu Psico" />
           <span class="navbar__logo-text">O Seu Psico<span></span></span>
           <span class="navbar__badge">Testes</span>
         </a>
-        <a href="/" class="navbar__back">← Escolher outro tema</a>
+        <a href="/testes/" class="navbar__back">← Escolher outro tema</a>
       </div>
     </div>
   </nav>
@@ -96,7 +96,7 @@
     const tema = TEMAS[temaId];
 
     if (!tema) {
-      location.href = '/';
+      location.href = '/testes/';
     } else {
       document.getElementById('tema-icon').textContent = tema.icon;
       document.getElementById('tema-eyebrow').textContent = tema.nome;

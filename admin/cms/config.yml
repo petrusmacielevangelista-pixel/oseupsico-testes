@@ -2,7 +2,8 @@ backend:
   name: github
   repo: petrusmacielevangelista-pixel/oseupsico-testes
   branch: master
-  base_url: https://testes.oseupsico.com.br
+  base_url: https://oseupsico.com.br
+  auth_endpoint: testes/auth
 
 media_folder: assets
 public_folder: assets

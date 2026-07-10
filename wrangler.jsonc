@@ -5,7 +5,8 @@
   "compatibility_date": "2026-06-23",
   "compatibility_flags": ["nodejs_compat"],
   "assets": {
-    "directory": "."
+    "directory": ".",
+    "binding": "ASSETS"
   },
   "d1_databases": [
     {
@@ -16,5 +17,12 @@
   ],
   "observability": {
     "enabled": true
+  },
+  "routes": [
+    { "pattern": "oseupsico.com.br/testes", "zone_name": "oseupsico.com.br" },
+    { "pattern": "oseupsico.com.br/testes/*", "zone_name": "oseupsico.com.br" }
+  ],
+  "dev": {
+    "port": 8788
   }
 }

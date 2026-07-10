@@ -12,12 +12,12 @@
   <nav class="navbar">
     <div class="container">
       <div class="navbar__inner">
-        <a href="/" class="navbar__logo">
+        <a href="/testes/" class="navbar__logo">
           <img src="assets/logo.png" alt="O Seu Psico" />
           <span class="navbar__logo-text">O Seu Psico<span></span></span>
           <span class="navbar__badge">Testes</span>
         </a>
-        <a href="/" class="navbar__back">← Fazer outro teste</a>
+        <a href="/testes/" class="navbar__back">← Fazer outro teste</a>
       </div>
     </div>
   </nav>
@@ -55,7 +55,7 @@
       <!-- Ações -->
       <div class="result-actions">
         <a href="https://oseupsico.com.br" class="btn btn--yellow btn--lg" id="cta-btn">Encontrar meu psicólogo →</a>
-        <a href="/" class="btn btn--outline">Fazer outro teste</a>
+        <a href="/testes/" class="btn btn--outline">Fazer outro teste</a>
       </div>
 
     </div>
@@ -77,7 +77,7 @@
   <script>
     const raw = sessionStorage.getItem('psico_resultado');
     const cadastroRaw = sessionStorage.getItem('psico_cadastro');
-    if (!raw) { location.href = '/'; }
+    if (!raw) { location.href = '/testes/'; }
 
     const { tema: temaId, resultados, faixaGeral, nome } = JSON.parse(raw);
     const cadastro = cadastroRaw ? JSON.parse(cadastroRaw) : {};

@@ -110,14 +110,14 @@
   <script src="../data/testes.js"></script>
   <script>
     const token = sessionStorage.getItem('psico_admin_token');
-    if (!token) location.href = '/admin/';
+    if (!token) location.href = '/testes/admin/';
 
     let todosRegistros = [];
     let filtrados = [];
 
     async function carregarDados() {
       try {
-        const res = await fetch('/api/admin/dados', {
+        const res = await fetch('/testes/api/admin/dados', {
           headers: { 'Authorization': 'Bearer ' + token },
         });
         if (res.status === 401) { logout(); return; }
@@ -206,7 +206,7 @@
 
       Object.entries(resultados).forEach(([escalaId, res]) => {
         const escala = ESCALAS[escalaId];
-        const faixaLabel = { minimal: 'Mínima', mild: 'Leve', moderate: 'Moderada', severe: 'Grave' }[res.classe] || res.faixa;
+        const faixaLabel = res.faixa || { minimal: 'Mínima', mild: 'Leve', moderate: 'Moderada', severe: 'Grave' }[res.classe];
         html += `
           <div class="modal__scale-result">
             <span>${escala ? escala.nomeCompleto : escalaId}</span>
@@ -243,7 +243,7 @@
 
     function logout() {
       sessionStorage.removeItem('psico_admin_token');
-      location.href = '/admin/';
+      location.href = '/testes/admin/';
     }
 
     carregarDados();

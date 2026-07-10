@@ -12,7 +12,7 @@
   <nav class="navbar">
     <div class="container">
       <div class="navbar__inner">
-        <a href="/" class="navbar__logo">
+        <a href="/testes/" class="navbar__logo">
           <img src="assets/logo.png" alt="O Seu Psico" />
           <span class="navbar__logo-text">O Seu Psico<span></span></span>
           <span class="navbar__badge">Testes</span>
@@ -62,7 +62,7 @@
     const temaId = params.get('tema');
     const dadosRaw = sessionStorage.getItem('psico_cadastro');
 
-    if (!dadosRaw || !TEMAS[temaId]) { location.href = '/'; return; }
+    if (!dadosRaw || !TEMAS[temaId]) { location.href = '/testes/'; return; }
 
     const dados = JSON.parse(dadosRaw);
     const tema = TEMAS[temaId];
@@ -85,30 +85,107 @@
             As escalas do tema <strong>${tema.nome}</strong> não possuem versão validada para ${idade} anos.<br><br>
             Escolha outro tema ou consulte diretamente um profissional de saúde mental.
           </div>
-          <a href="/" class="btn btn--yellow" style="margin-top:28px;">← Escolher outro tema</a>
+          <a href="/testes/" class="btn btn--yellow" style="margin-top:28px;">← Escolher outro tema</a>
         </div>
       `;
       document.querySelector('.scale-nav').style.display = 'none';
       document.querySelector('.progress-bar-wrap').style.display = 'none';
       return;
     }
+    const PROGRESSO_KEY = 'psico_progresso_' + temaId;
+
     let escalaAtual = dados.escalaIndex || 0;
     let respostas = {}; // { escalaId: { qIndex: valor } }
+
+    // Restaura progresso salvo (ex.: após F5 ou "voltar" do navegador)
+    try {
+      const progressoRaw = sessionStorage.getItem(PROGRESSO_KEY);
+      if (progressoRaw) {
+        const progresso = JSON.parse(progressoRaw);
+        if (progresso && typeof progresso.escalaAtual === 'number' && progresso.escalaAtual < escalasIds.length) {
+          escalaAtual = progresso.escalaAtual;
+          respostas = progresso.respostas || {};
+        }
+      }
+    } catch (e) { /* progresso inválido — ignora e começa do zero */ }
+
+    function salvarProgresso() {
+      sessionStorage.setItem(PROGRESSO_KEY, JSON.stringify({ escalaAtual, respostas }));
+    }
 
     document.getElementById('nav-tema').textContent = tema.icon + ' ' + tema.nome;
 
     function getEscala() { return ESCALAS[escalasIds[escalaAtual]]; }
 
     function calcularScore(escala, respostasEscala) {
-      const vals = Object.values(respostasEscala);
-      if (escala.id === 'pss10') {
-        // Itens 3,4,6,7 (índice 3,4,6,7) são invertidos (0→4, 1→3, 2→2, 3→1, 4→0)
-        const invertidos = [3, 4, 6, 7];
-        return Object.entries(respostasEscala).reduce((sum, [idx, val]) => {
-          return sum + (invertidos.includes(Number(idx)) ? 4 - val : val);
-        }, 0);
+      // Filtra chaves de rastreamento _oi_, mantém apenas índices numéricos
+      const entries = Object.entries(respostasEscala)
+        .filter(([k]) => !k.startsWith('_') && !isNaN(Number(k)));
+      const getVal = (idx) => {
+        const found = entries.find(([k]) => Number(k) === idx);
+        return found ? found[1] : 0;
+      };
+
+      // PHQ-9 e PHQ-A: excluir último item (funcional, não pontuado)
+      if (escala.id === 'phq9' || escala.id === 'phqa') {
+        return entries
+          .filter(([k]) => Number(k) < escala.perguntas.length - 1)
+          .reduce((s, [, v]) => s + v, 0);
       }
-      return vals.reduce((a, b) => a + b, 0);
+
+      // PSS-10: itens 3,4,6,7 (índice 0) invertidos — escala 0-4
+      if (escala.id === 'pss10') {
+        const invertidos = [3, 4, 6, 7];
+        return entries.reduce((sum, [idx, val]) =>
+          sum + (invertidos.includes(Number(idx)) ? 4 - val : val), 0);
+      }
+
+      // ASRS: rastreio Parte A oficial (NYU/Harvard ASRS-V1.1 Screener, 2023)
+      // Q1,Q2,Q3 → índices 3,4,8 — sombreado a partir de "Às vezes" (>=2)
+      // Q4,Q5,Q6 → índices 5,9,13 — sombreado a partir de "Frequentemente" (>=3)
+      if (escala.id === 'asrs') {
+        const itensParteA = [3, 4, 8, 5, 9, 13];
+        const limiares =    [2, 2, 2, 3, 3, 3];
+        return itensParteA.reduce((count, idx, i) =>
+          count + (getVal(idx) >= limiares[i] ? 1 : 0), 0);
+      }
+
+      // SNAP-IV: Combined Mean = soma dos 18 itens / 18 (Swanson, 1992 — cutoff Responsável = 1,67)
+      if (escala.id === 'snapiv') {
+        const soma = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].reduce((s, i) => s + getVal(i), 0);
+        return Math.round((soma / 18) * 10);
+      }
+
+      // MBI-GS: exaustão + cinismo + eficácia profissional invertida
+      if (escala.id === 'mbigs') {
+        const exhaust  = [0,1,2,3].reduce((s, i) => s + getVal(i), 0);
+        const efficacy = [4,5,6,7].reduce((s, i) => s + getVal(i), 0);
+        const cynicism = [8,9,10,11].reduce((s, i) => s + getVal(i), 0);
+        return exhaust + cynicism + (20 - efficacy);
+      }
+
+      // MDQ: 3 critérios — ≥7 sintomas (0-12) + mesmo período (13) + impacto moderado/grave (14)
+      if (escala.id === 'mdq') {
+        const sintomas = [0,1,2,3,4,5,6,7,8,9,10,11,12].filter(i => getVal(i) === 1).length;
+        const mesmoPeriodo = getVal(13);
+        const impacto = getVal(14);
+        return (sintomas >= 7 && mesmoPeriodo === 1 && impacto >= 1) ? 1 : 0;
+      }
+
+      // PGSI: pontuar apenas os 9 itens originais (item 10 é pergunta suplementar)
+      if (escala.id === 'pgsi') {
+        return [0,1,2,3,4,5,6,7,8].reduce((s, i) => s + getVal(i), 0);
+      }
+
+      // WHOQOL-BREF: itens 2,3,25 (índice 0) são negativamente formulados — inverter (6 - val)
+      if (escala.id === 'whoqolbref') {
+        const invertidos = [2, 3, 25];
+        return entries.reduce((sum, [idx, val]) =>
+          sum + (invertidos.includes(Number(idx)) ? 6 - val : val), 0);
+      }
+
+      // Padrão: soma simples dos valores pontuados
+      return entries.reduce((s, [, v]) => s + v, 0);
     }
 
     function getFaixa(escala, score) {
@@ -184,6 +261,7 @@
             block.classList.remove('required-error');
             optsList.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
             item.classList.add('selected');
+            salvarProgresso();
           });
           optsList.appendChild(item);
         });
@@ -225,6 +303,7 @@
 
       if (escalaAtual < escalasIds.length - 1) {
         escalaAtual++;
+        salvarProgresso();
         renderEscala();
       } else {
         finalizarTestes();
@@ -234,6 +313,7 @@
     function anteriorEscala() {
       if (escalaAtual > 0) {
         escalaAtual--;
+        salvarProgresso();
         renderEscala();
       }
     }
@@ -261,7 +341,7 @@
 
       // Envia para a API
       try {
-        await fetch('/api/resultado', {
+        await fetch('/testes/api/resultado', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -278,8 +358,9 @@
         console.error('Erro ao enviar resultado:', e);
       }
 
-      // Salva resultado e redireciona
+      // Salva resultado, limpa progresso intermediário e redireciona
       sessionStorage.setItem('psico_resultado', JSON.stringify({ tema: temaId, resultados, faixaGeral, nome: dados.nome }));
+      sessionStorage.removeItem(PROGRESSO_KEY);
       location.href = 'resultado.html';
     }
 

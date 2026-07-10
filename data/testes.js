@@ -51,7 +51,7 @@ const TEMAS = {
     nome: 'Insônia',
     icon: '🌙',
     descricao: 'Avaliação da gravidade e impacto de sintomas de insônia.',
-    escalas: ['psqi'],
+    escalas: ['isi'],
   },
 
   burnout: {
@@ -130,10 +130,11 @@ const ESCALAS = {
     ],
     scoreMax: 27,
     faixas: [
-      { min: 0,  max: 4,  label: 'Mínima',   classe: 'minimal',  texto: 'Seus sintomas indicam depressão mínima ou ausente. Continue cuidando da sua saúde mental.' },
-      { min: 5,  max: 9,  label: 'Leve',      classe: 'mild',     texto: 'Sintomas leves de depressão foram identificados. Atenção ao seu bem-estar emocional é recomendada.' },
-      { min: 10, max: 14, label: 'Moderada',  classe: 'moderate', texto: 'Seus sintomas sugerem depressão moderada. Considere buscar apoio de um profissional de saúde mental.' },
-      { min: 15, max: 27, label: 'Grave',     classe: 'severe',   texto: 'Sintomas graves de depressão foram identificados. Recomendamos fortemente buscar ajuda profissional.' },
+      { min: 0,  max: 4,  label: 'Mínima',               classe: 'minimal',  texto: 'Seus sintomas indicam depressão mínima ou ausente. Continue cuidando da sua saúde mental.' },
+      { min: 5,  max: 9,  label: 'Leve',                  classe: 'mild',     texto: 'Sintomas leves de depressão foram identificados. Atenção ao seu bem-estar emocional é recomendada.' },
+      { min: 10, max: 14, label: 'Moderada',              classe: 'moderate', texto: 'Seus sintomas sugerem depressão moderada. Considere buscar apoio de um profissional de saúde mental.' },
+      { min: 15, max: 19, label: 'Moderadamente grave',   classe: 'severe',   texto: 'Sintomas moderadamente graves de depressão identificados. Avaliação profissional é fortemente recomendada.' },
+      { min: 20, max: 27, label: 'Grave',                 classe: 'severe',   texto: 'Sintomas graves de depressão foram identificados. Busque ajuda profissional urgentemente.' },
     ],
   },
 
@@ -166,10 +167,11 @@ const ESCALAS = {
     ],
     scoreMax: 27,
     faixas: [
-      { min: 0,  max: 4,  label: 'Mínima',  classe: 'minimal',  texto: 'Nenhum indicativo significativo de sintomas depressivos.' },
-      { min: 5,  max: 9,  label: 'Leve',    classe: 'mild',     texto: 'Sintomas leves presentes. Acompanhamento por um adulto de confiança ou profissional é recomendado.' },
-      { min: 10, max: 14, label: 'Moderada',classe: 'moderate', texto: 'Sintomas moderados. Recomenda-se avaliação por psicólogo ou médico.' },
-      { min: 15, max: 27, label: 'Grave',   classe: 'severe',   texto: 'Sintomas graves. Avaliação profissional urgente é fortemente recomendada.' },
+      { min: 0,  max: 4,  label: 'Mínima',             classe: 'minimal',  texto: 'Nenhum indicativo significativo de sintomas depressivos.' },
+      { min: 5,  max: 9,  label: 'Leve',                classe: 'mild',     texto: 'Sintomas leves presentes. Acompanhamento por um adulto de confiança ou profissional é recomendado.' },
+      { min: 10, max: 14, label: 'Moderada',            classe: 'moderate', texto: 'Sintomas moderados. Recomenda-se avaliação por psicólogo ou médico.' },
+      { min: 15, max: 19, label: 'Moderadamente grave', classe: 'severe',   texto: 'Sintomas moderadamente graves. Avaliação profissional é fortemente recomendada.' },
+      { min: 20, max: 27, label: 'Grave',               classe: 'severe',   texto: 'Sintomas graves. Avaliação profissional urgente é fortemente recomendada.' },
     ],
   },
 
@@ -289,11 +291,11 @@ const ESCALAS = {
   asrs: {
     id: 'asrs',
     nome: 'ASRS-v1.1',
-    nomeCompleto: 'Adult ADHD Self-Report Scale (Parte A)',
+    nomeCompleto: 'Adult ADHD Self-Report Scale v1.1',
     publico: 'Adultos (18+)',
     minAge: 18,
     maxAge: 999,
-    instrucao: 'Com que frequência você experienciou cada um dos seguintes sintomas <strong>nos últimos 6 meses</strong>?',
+    instrucao: 'Com que frequência você experienciou cada um dos seguintes sintomas <strong>nos últimos 6 meses</strong>? As <strong>6 primeiras perguntas</strong> compõem a Parte A e determinam o resultado do rastreio. As demais fornecem informação clínica complementar.',
     opcoes: [
       { label: 'Nunca', valor: 0 },
       { label: 'Raramente', valor: 1 },
@@ -321,11 +323,10 @@ const ESCALAS = {
       'Com que frequência você tem dificuldade de esperar quando há uma fila?',
       'Com que frequência você interrompe outros quando eles estão ocupados?',
     ],
-    scoreMax: 72,
+    scoreMax: 6,
     faixas: [
-      { min: 0,  max: 13, label: 'Improvável', classe: 'minimal',  texto: 'Sintomas inconsistentes com TDAH. Rastreio não sugestivo do transtorno.' },
-      { min: 14, max: 36, label: 'Possível',   classe: 'mild',     texto: 'Alguns sintomas presentes. Avaliação clínica pode ser indicada.' },
-      { min: 37, max: 72, label: 'Provável',   classe: 'severe',   texto: 'Sintomas consistentes com TDAH. Recomenda-se avaliação especializada.' },
+      { min: 0, max: 3, label: 'Improvável', classe: 'minimal', texto: 'Rastreio Parte A não sugestivo de TDAH. Sintomas inconsistentes com o transtorno.' },
+      { min: 4, max: 6, label: 'Provável',   classe: 'severe',  texto: 'Rastreio Parte A sugestivo de TDAH. Recomenda-se avaliação especializada por profissional habilitado.' },
     ],
   },
 
@@ -364,11 +365,11 @@ const ESCALAS = {
       'Tem dificuldade em aguardar sua vez',
       'Interrompe ou se intromete em conversas ou jogos dos outros',
     ],
-    scoreMax: 54,
+    scoreMax: 30,
     faixas: [
-      { min: 0,  max: 15, label: 'Improvável', classe: 'minimal',  texto: 'Sintomas não sugestivos de TDAH nesta avaliação.' },
-      { min: 16, max: 29, label: 'Possível',   classe: 'mild',     texto: 'Alguns sintomas presentes. Avaliação por especialista pode ser útil.' },
-      { min: 30, max: 54, label: 'Provável',   classe: 'severe',   texto: 'Sintomas consistentes com TDAH. Avaliação especializada é recomendada.' },
+      { min: 0,  max: 13, label: 'Improvável', classe: 'minimal', texto: 'Sintomas não sugestivos de TDAH nesta avaliação (média combinada abaixo do limiar clínico).' },
+      { min: 14, max: 16, label: 'Possível',   classe: 'mild',    texto: 'Alguns sintomas presentes, próximos ao limiar clínico. Avaliação por especialista pode ser útil.' },
+      { min: 17, max: 30, label: 'Provável',   classe: 'severe',  texto: 'Média combinada igual ou acima do ponto de corte clínico (Swanson, 1992, versão Responsável ≥1,67). Avaliação especializada é recomendada.' },
     ],
   },
 
@@ -381,23 +382,27 @@ const ESCALAS = {
     minAge: 16,
     maxAge: 999,
     instrucao: 'Indique o quanto cada afirmação se aplica a você.',
-    opcoes: [
-      { label: 'Concordo totalmente', valor: 1 },
-      { label: 'Concordo um pouco', valor: 1 },
-      { label: 'Discordo um pouco', valor: 0 },
-      { label: 'Discordo totalmente', valor: 0 },
-    ],
     perguntas: [
-      'Frequentemente percebo pequenos sons quando os outros não percebem',
-      'Em geral, concentro-me mais no quadro geral do que nos pequenos detalhes',
-      'Acho fácil fazer mais de uma coisa ao mesmo tempo',
-      'Se houver uma interrupção, posso voltar ao que estava fazendo muito rapidamente',
-      'Acho fácil "ler nas entrelinhas" quando alguém está falando comigo',
-      'Sei como dizer se alguém que está me ouvindo está ficando entediado',
-      'Quando estou lendo uma história, tenho dificuldade de perceber as intenções dos personagens',
-      'Gosto de colecionar informações sobre categorias de coisas (como tipos de carros, pássaros, trens, plantas)',
-      'Acho fácil descobrir o que alguém está pensando ou sentindo apenas olhando para o rosto da pessoa',
-      'Acho difícil descobrir as regras de cortesia sociais',
+      { texto: 'Frequentemente percebo pequenos sons quando os outros não percebem',
+        opcoes: [{label:'Concordo totalmente',valor:1},{label:'Concordo um pouco',valor:1},{label:'Discordo um pouco',valor:0},{label:'Discordo totalmente',valor:0}] },
+      { texto: 'Em geral, concentro-me mais no quadro geral do que nos pequenos detalhes',
+        opcoes: [{label:'Concordo totalmente',valor:0},{label:'Concordo um pouco',valor:0},{label:'Discordo um pouco',valor:1},{label:'Discordo totalmente',valor:1}] },
+      { texto: 'Acho fácil fazer mais de uma coisa ao mesmo tempo',
+        opcoes: [{label:'Concordo totalmente',valor:0},{label:'Concordo um pouco',valor:0},{label:'Discordo um pouco',valor:1},{label:'Discordo totalmente',valor:1}] },
+      { texto: 'Se houver uma interrupção, posso voltar ao que estava fazendo muito rapidamente',
+        opcoes: [{label:'Concordo totalmente',valor:0},{label:'Concordo um pouco',valor:0},{label:'Discordo um pouco',valor:1},{label:'Discordo totalmente',valor:1}] },
+      { texto: 'Acho fácil "ler nas entrelinhas" quando alguém está falando comigo',
+        opcoes: [{label:'Concordo totalmente',valor:0},{label:'Concordo um pouco',valor:0},{label:'Discordo um pouco',valor:1},{label:'Discordo totalmente',valor:1}] },
+      { texto: 'Sei como dizer se alguém que está me ouvindo está ficando entediado',
+        opcoes: [{label:'Concordo totalmente',valor:0},{label:'Concordo um pouco',valor:0},{label:'Discordo um pouco',valor:1},{label:'Discordo totalmente',valor:1}] },
+      { texto: 'Quando estou lendo uma história, tenho dificuldade de perceber as intenções dos personagens',
+        opcoes: [{label:'Concordo totalmente',valor:1},{label:'Concordo um pouco',valor:1},{label:'Discordo um pouco',valor:0},{label:'Discordo totalmente',valor:0}] },
+      { texto: 'Gosto de colecionar informações sobre categorias de coisas (como tipos de carros, pássaros, trens, plantas)',
+        opcoes: [{label:'Concordo totalmente',valor:1},{label:'Concordo um pouco',valor:1},{label:'Discordo um pouco',valor:0},{label:'Discordo totalmente',valor:0}] },
+      { texto: 'Acho fácil descobrir o que alguém está pensando ou sentindo apenas olhando para o rosto da pessoa',
+        opcoes: [{label:'Concordo totalmente',valor:0},{label:'Concordo um pouco',valor:0},{label:'Discordo um pouco',valor:1},{label:'Discordo totalmente',valor:1}] },
+      { texto: 'Acho difícil descobrir as regras de cortesia sociais',
+        opcoes: [{label:'Concordo totalmente',valor:1},{label:'Concordo um pouco',valor:1},{label:'Discordo um pouco',valor:0},{label:'Discordo totalmente',valor:0}] },
     ],
     scoreMax: 10,
     faixas: [
@@ -421,17 +426,17 @@ const ESCALAS = {
     ],
     perguntas: [
       'Se você apontar para algo que está do outro lado do quarto, seu filho(a) olha para isso?',
-      'Você já se perguntou se seu filho(a) é surdo(a)?',
+      { texto: 'Você já se perguntou se seu filho(a) é surdo(a)?', opcoes: [{label:'Sim',valor:1},{label:'Não',valor:0}] },
       'Seu filho(a) brinca de faz-de-conta ou de fingir (por exemplo, fingir que está bebendo de um copo vazio, ou que está falando ao telefone, ou fingir que está alimentando uma boneca)?',
       'Seu filho(a) gosta de subir em coisas?',
-      'Seu filho(a) faz movimentos com os dedos de forma incomum perto dos olhos?',
+      { texto: 'Seu filho(a) faz movimentos com os dedos de forma incomum perto dos olhos?', opcoes: [{label:'Sim',valor:1},{label:'Não',valor:0}] },
       'Seu filho(a) aponta com um dedo para pedir alguma coisa ou para conseguir ajuda?',
       'Seu filho(a) aponta com um dedo para mostrar algo interessante?',
       'Seu filho(a) tem interesse em outras crianças?',
       'Seu filho(a) mostra coisas para você, trazendo objetos para você ou erguendo-os para que você veja (não para pedir ajuda, mas apenas para compartilhar o interesse)?',
       'Seu filho(a) responde quando você chama pelo nome dele(a)?',
       'Quando você sorri para seu filho(a), ele(a) sorri de volta para você?',
-      'Seu filho(a) fica perturbado(a) por barulhos comuns do cotidiano?',
+      { texto: 'Seu filho(a) fica perturbado(a) por barulhos comuns do cotidiano?', opcoes: [{label:'Sim',valor:1},{label:'Não',valor:0}] },
       'Seu filho(a) anda?',
       'Seu filho(a) olha nos seus olhos quando você fala com ele(a), brinca com ele(a) ou veste-o(a)?',
       'Seu filho(a) tenta imitar o que você faz?',
@@ -521,101 +526,65 @@ const ESCALAS = {
     ],
   },
 
-  /* ── PSQI (Pittsburgh Sleep Quality Index) ── */
-  psqi: {
-    id: 'psqi',
-    nome: 'PSQI',
-    nomeCompleto: 'Pittsburgh Sleep Quality Index',
+  /* ── ISI (Insomnia Severity Index) ── */
+  isi: {
+    id: 'isi',
+    nome: 'ISI',
+    nomeCompleto: 'Insomnia Severity Index',
     publico: 'Adultos (18+)',
     minAge: 18,
     maxAge: 999,
-    instrucao: 'As perguntas abaixo referem-se aos seus <strong>hábitos de sono no último mês</strong>. Suas respostas devem indicar o que ocorreu na maioria dos dias e noites do mês passado.',
+    instrucao: 'Para cada uma das perguntas abaixo, indique o nível de dificuldade que você teve nas <strong>últimas 2 semanas</strong>.',
     perguntas: [
       {
-        texto: 'Com que frequência você teve dificuldade para adormecer em até 30 minutos?',
+        texto: 'Dificuldade em adormecer',
         opcoes: [
-          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
+          { label: 'Nenhuma', valor: 0 }, { label: 'Leve', valor: 1 }, { label: 'Moderada', valor: 2 }, { label: 'Grave', valor: 3 }, { label: 'Muito grave', valor: 4 },
         ],
       },
       {
-        texto: 'Com que frequência você acordou no meio da noite ou de manhã cedo?',
+        texto: 'Dificuldade em permanecer dormindo',
         opcoes: [
-          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
+          { label: 'Nenhuma', valor: 0 }, { label: 'Leve', valor: 1 }, { label: 'Moderada', valor: 2 }, { label: 'Grave', valor: 3 }, { label: 'Muito grave', valor: 4 },
         ],
       },
       {
-        texto: 'Com que frequência você teve que se levantar para ir ao banheiro?',
+        texto: 'Problema de acordar muito cedo',
         opcoes: [
-          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
+          { label: 'Nenhum', valor: 0 }, { label: 'Leve', valor: 1 }, { label: 'Moderado', valor: 2 }, { label: 'Grave', valor: 3 }, { label: 'Muito grave', valor: 4 },
         ],
       },
       {
-        texto: 'Com que frequência você teve dificuldade para respirar confortavelmente?',
+        texto: 'Quão satisfeito(a) você está com o seu padrão de sono atual?',
         opcoes: [
-          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
+          { label: 'Muito satisfeito(a)', valor: 0 }, { label: 'Satisfeito(a)', valor: 1 }, { label: 'Neutro(a)', valor: 2 }, { label: 'Insatisfeito(a)', valor: 3 }, { label: 'Muito insatisfeito(a)', valor: 4 },
         ],
       },
       {
-        texto: 'Com que frequência você tossiu ou roncou alto?',
+        texto: 'O quanto os problemas de sono interferem no seu funcionamento diário (ex.: cansaço, humor, concentração, produtividade)?',
         opcoes: [
-          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
+          { label: 'Nada', valor: 0 }, { label: 'Um pouco', valor: 1 }, { label: 'Moderadamente', valor: 2 }, { label: 'Muito', valor: 3 }, { label: 'Extremamente', valor: 4 },
         ],
       },
       {
-        texto: 'Com que frequência você sentiu muito frio?',
+        texto: 'O quanto as dificuldades de sono são percebidas pelas pessoas ao seu redor no seu funcionamento?',
         opcoes: [
-          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
+          { label: 'De forma alguma', valor: 0 }, { label: 'Um pouco', valor: 1 }, { label: 'Moderadamente', valor: 2 }, { label: 'Muito', valor: 3 }, { label: 'Extremamente', valor: 4 },
         ],
       },
       {
-        texto: 'Com que frequência você sentiu muito calor?',
+        texto: 'Quão preocupado(a) ou angustiado(a) você está com os seus problemas atuais de sono?',
         opcoes: [
-          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
-        ],
-      },
-      {
-        texto: 'Com que frequência você teve sonhos ruins?',
-        opcoes: [
-          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
-        ],
-      },
-      {
-        texto: 'Com que frequência você teve dor?',
-        opcoes: [
-          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
-        ],
-      },
-      {
-        texto: 'Como você avalia a qualidade geral do seu sono?',
-        opcoes: [
-          { label: 'Muito boa', valor: 0 }, { label: 'Boa', valor: 1 }, { label: 'Ruim', valor: 2 }, { label: 'Muito ruim', valor: 3 },
-        ],
-      },
-      {
-        texto: 'Com que frequência você tomou remédio para dormir (prescrito ou por conta própria)?',
-        opcoes: [
-          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
-        ],
-      },
-      {
-        texto: 'Com que frequência você teve dificuldade para ficar acordado(a) enquanto dirigia, comia ou participava de atividades sociais?',
-        opcoes: [
-          { label: 'Nenhuma vez', valor: 0 }, { label: 'Menos de 1 vez por semana', valor: 1 }, { label: '1 a 2 vezes por semana', valor: 2 }, { label: '3 ou mais vezes por semana', valor: 3 },
-        ],
-      },
-      {
-        texto: 'Quão problemático foi manter o entusiasmo para realizar suas atividades?',
-        opcoes: [
-          { label: 'Nenhum problema', valor: 0 }, { label: 'Problema leve', valor: 1 }, { label: 'Problema moderado', valor: 2 }, { label: 'Problema grave', valor: 3 },
+          { label: 'Nada', valor: 0 }, { label: 'Um pouco', valor: 1 }, { label: 'Moderadamente', valor: 2 }, { label: 'Muito', valor: 3 }, { label: 'Extremamente', valor: 4 },
         ],
       },
     ],
-    scoreMax: 39,
+    scoreMax: 28,
     faixas: [
-      { min: 0,  max: 5,  label: 'Boa qualidade',    classe: 'minimal',  texto: 'Qualidade de sono boa. Sem indicativo de distúrbio do sono.' },
-      { min: 6,  max: 10, label: 'Ruim qualidade',   classe: 'mild',     texto: 'Qualidade de sono ruim. Higiene do sono e avaliação podem ajudar.' },
-      { min: 11, max: 20, label: 'Perturbada',        classe: 'moderate', texto: 'Sono significativamente perturbado. Avaliação profissional é recomendada.' },
-      { min: 21, max: 39, label: 'Grave',             classe: 'severe',   texto: 'Distúrbio grave do sono. Busque avaliação especializada.' },
+      { min: 0,  max: 7,  label: 'Ausência de insônia', classe: 'minimal',  texto: 'Sem indicativo clínico de insônia. Qualidade de sono adequada.' },
+      { min: 8,  max: 14, label: 'Insônia leve',         classe: 'mild',     texto: 'Insônia subclínica leve. Atenção à higiene do sono é recomendada.' },
+      { min: 15, max: 21, label: 'Insônia moderada',     classe: 'moderate', texto: 'Insônia clínica moderada. Avaliação por profissional é recomendada.' },
+      { min: 22, max: 28, label: 'Insônia grave',        classe: 'severe',   texto: 'Insônia clínica grave. Busque avaliação e tratamento especializado.' },
     ],
   },
 
@@ -685,11 +654,15 @@ const ESCALAS = {
       'Você estava muito mais interessado(a) em sexo do que o habitual?',
       'Você fazia coisas que eram incomuns para você ou que outras pessoas poderiam achar tolas, extravagantes ou arriscadas?',
       'Gastar dinheiro de uma forma que causou problemas para você ou para sua família?',
+      { texto: 'Se marcou SIM em mais de uma afirmação acima — vários desses comportamentos ocorreram durante o MESMO período de tempo?',
+        opcoes: [{ label: 'Não', valor: 0 }, { label: 'Sim', valor: 1 }] },
+      { texto: 'Esses comportamentos causaram algum problema em sua vida (no trabalho, em casa ou nos seus relacionamentos)?',
+        opcoes: [{ label: 'Nenhum problema', valor: 0 }, { label: 'Problema leve', valor: 0 }, { label: 'Problema moderado', valor: 1 }, { label: 'Problema grave', valor: 1 }] },
     ],
-    scoreMax: 13,
+    scoreMax: 1,
     faixas: [
-      { min: 0,  max: 6,  label: 'Negativo', classe: 'minimal', texto: 'Rastreio não sugestivo de Transtorno Bipolar.' },
-      { min: 7,  max: 13, label: 'Positivo', classe: 'severe',  texto: 'Rastreio positivo. Avaliação psiquiátrica é recomendada.' },
+      { min: 0, max: 0, label: 'Negativo', classe: 'minimal', texto: 'Rastreio não sugestivo de Transtorno Bipolar. Os três critérios do MDQ não foram atendidos simultaneamente.' },
+      { min: 1, max: 1, label: 'Positivo', classe: 'severe',  texto: 'Rastreio positivo para Transtorno Bipolar. Avaliação psiquiátrica é fortemente recomendada.' },
     ],
   },
 
@@ -756,12 +729,12 @@ const ESCALAS = {
       'O jogo causou qualquer problema financeiro para você ou para sua família?',
       'Escondeu seus comportamentos de jogo de familiares, amigos ou outras pessoas?',
     ],
-    scoreMax: 30,
+    scoreMax: 27,
     faixas: [
-      { min: 0,  max: 0,  label: 'Sem problema',       classe: 'minimal',  texto: 'Sem problemas com jogo identificados.' },
-      { min: 1,  max: 2,  label: 'Jogador de baixo risco', classe: 'mild',  texto: 'Risco baixo. Poucas consequências negativas.' },
-      { min: 3,  max: 7,  label: 'Jogador moderado',   classe: 'moderate', texto: 'Risco moderado. Algumas consequências negativas presentes.' },
-      { min: 8,  max: 27, label: 'Jogador problemático',classe: 'severe',  texto: 'Jogo problemático identificado. Busque apoio especializado.' },
+      { min: 0,  max: 0,  label: 'Sem problema',           classe: 'minimal',  texto: 'Sem problemas com jogo identificados.' },
+      { min: 1,  max: 2,  label: 'Jogador de baixo risco', classe: 'mild',     texto: 'Risco baixo. Poucas consequências negativas.' },
+      { min: 3,  max: 7,  label: 'Jogador moderado',       classe: 'moderate', texto: 'Risco moderado. Algumas consequências negativas presentes.' },
+      { min: 8,  max: 27, label: 'Jogador problemático',   classe: 'severe',   texto: 'Jogo problemático identificado. Busque apoio especializado.' },
     ],
   },
 
@@ -885,10 +858,9 @@ const ESCALAS = {
     ],
     scoreMax: 100,
     faixas: [
-      { min: 20, max: 39, label: 'Uso comum',     classe: 'minimal',  texto: 'Uso normal da internet. Sem indicativo de dependência.' },
-      { min: 40, max: 59, label: 'Uso moderado',  classe: 'mild',     texto: 'A internet está causando alguns problemas ocasionais. Considere estabelecer limites.' },
-      { min: 60, max: 79, label: 'Uso excessivo', classe: 'moderate', texto: 'A internet está causando problemas significativos na sua vida. Recomenda-se buscar apoio.' },
-      { min: 80, max: 100,label: 'Dependência',   classe: 'severe',   texto: 'Uso da internet indicativo de dependência. Busque avaliação profissional.' },
+      { min: 20, max: 49, label: 'Uso comum',       classe: 'minimal',  texto: 'Uso normal da internet. Sem indicativo de dependência.' },
+      { min: 50, max: 79, label: 'Uso problemático', classe: 'moderate', texto: 'A internet está causando problemas em sua vida. Considere estabelecer limites e buscar apoio.' },
+      { min: 80, max: 100,label: 'Dependência',      classe: 'severe',   texto: 'Uso da internet indicativo de dependência. Busque avaliação profissional.' },
     ],
   },
 

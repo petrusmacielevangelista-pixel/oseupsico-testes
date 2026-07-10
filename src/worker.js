@@ -20,6 +20,110 @@ function json(data, status = 200) {
   });
 }
 
+const WHATSAPP_NUMERO = '5511945556826';
+
+/* ── Textos interpretativos por escala e por faixa ──
+   Fontes oficiais quando disponíveis (Kroenke et al., Beck & Steer, National
+   Center for PTSD, Morin, Ferris & Wynne, OMS/Babor et al., Young, Robins et al.,
+   Hirschfeld et al.). Para escalas sem redação oficial publicada por faixa
+   (SCARED, ASRS itens complementares, SNAP-IV, AQ-10, MBI-GS, PSS-10,
+   WHOQOL-BREF), o texto foi elaborado de forma genérica a partir do
+   significado geral da faixa de escore. */
+const ESCALA_TEXTOS = {
+  phq9: {
+    minimal: 'Sintomas mínimos — o indicado é apenas monitorar como você está se sentindo ao longo do tempo.',
+    mild: 'Sintomas leves de depressão, com tendência a melhorar com pouca intervenção ou acompanhamento breve.',
+    moderate: 'Sintomas moderados que costumam se beneficiar de um acompanhamento estruturado com um profissional.',
+    severe: 'Sintomas de intensidade elevada, para os quais um acompanhamento psicológico mais robusto — e, em alguns casos, avaliação médica complementar — costuma ser indicado.',
+  },
+  phqa: {
+    minimal: 'Sintomas mínimos — o indicado é apenas monitorar como você está se sentindo ao longo do tempo.',
+    mild: 'Sintomas leves de depressão, com tendência a melhorar com pouca intervenção ou acompanhamento breve.',
+    moderate: 'Sintomas moderados que costumam se beneficiar de um acompanhamento estruturado com um profissional.',
+    severe: 'Sintomas de intensidade elevada, para os quais um acompanhamento psicológico mais robusto costuma ser indicado.',
+  },
+  bai: {
+    minimal: 'Sintomas de ansiedade mínimos ou ausentes.',
+    mild: 'Sintomas presentes, mas geralmente administráveis no dia a dia.',
+    moderate: 'Sintomas mais persistentes, que já começam a interferir nas atividades diárias.',
+    severe: 'Sintomas intensos e angustiantes, que tendem a prejudicar significativamente o funcionamento e a qualidade de vida.',
+  },
+  scared: {
+    minimal: 'Sem indicativo relevante de ansiedade nesta avaliação.',
+    mild: 'Alguns sinais de ansiedade presentes, que vale a pena observar com atenção.',
+    severe: 'Sinais de ansiedade em nível elevado, que sugerem conversar com um profissional especializado no público infantojuvenil.',
+  },
+  asrs: {
+    minimal: 'Padrão de respostas não sugestivo de TDAH no rastreio da Parte A.',
+    severe: 'Padrão de respostas compatível com TDAH no rastreio da Parte A — isso não é um diagnóstico, mas indica que vale a pena uma avaliação especializada.',
+  },
+  snapiv: {
+    minimal: 'Sintomas relatados pelo responsável não sugerem TDAH nesta avaliação.',
+    mild: 'Alguns sintomas presentes, próximos ao que costuma ser considerado clinicamente relevante.',
+    severe: 'Sintomas relatados em nível compatível com TDAH — uma avaliação especializada pode esclarecer melhor o quadro.',
+  },
+  aq10: {
+    minimal: 'Rastreio não sugestivo de características do espectro autista.',
+    severe: 'Rastreio sugestivo de características associadas ao espectro autista — vale conversar com um profissional especializado para uma avaliação mais aprofundada.',
+  },
+  mchatr: {
+    minimal: 'Baixo risco de TEA nesta triagem — sem necessidade de ação adicional agora.',
+    moderate: 'Risco moderado — recomenda-se aplicar a etapa de acompanhamento (M-CHAT-R/F) para esclarecer melhor as respostas antes de qualquer encaminhamento.',
+    severe: 'Alto risco — o recomendado é buscar avaliação especializada o quanto antes.',
+  },
+  pcl5: {
+    minimal: 'Sintomas atuais abaixo do limiar de significância clínica para TEPT.',
+    severe: 'Pontuação compatível com TEPT provável — uma avaliação clínica formal é a forma correta de confirmar isso.',
+  },
+  isi: {
+    minimal: 'Sem insônia clinicamente significativa.',
+    mild: 'Insônia em nível subclínico — vale cuidar da higiene do sono.',
+    moderate: 'Insônia de gravidade moderada, que já costuma justificar avaliação profissional.',
+    severe: 'Insônia de gravidade importante, com indicação de avaliação e tratamento especializado.',
+  },
+  mbigs: {
+    minimal: 'Nível baixo de esgotamento relacionado ao trabalho.',
+    moderate: 'Sinais de esgotamento profissional em nível moderado — atenção aos limites entre trabalho e vida pessoal é importante agora.',
+    severe: 'Sinais de esgotamento profissional em nível elevado, o que costuma pedir apoio profissional e, muitas vezes, mudanças no ambiente de trabalho.',
+  },
+  mdq: {
+    minimal: 'Rastreio negativo — isso não descarta completamente quadros bipolares mais sutis, especialmente o tipo II.',
+    severe: 'Rastreio positivo — isso aumenta a probabilidade de um quadro do espectro bipolar, mas não é um diagnóstico; a confirmação exige avaliação psiquiátrica formal.',
+  },
+  pss10: {
+    minimal: 'Nível baixo de estresse percebido nas últimas semanas.',
+    moderate: 'Nível moderado de estresse percebido — vale observar quais situações estão pesando mais.',
+    severe: 'Nível alto de estresse percebido, que pode se beneficiar de apoio para desenvolver estratégias de manejo.',
+  },
+  pgsi: {
+    minimal: 'Sem problemas com jogo identificados neste rastreio.',
+    mild: 'Nível baixo de risco, com poucas ou nenhuma consequência negativa identificada.',
+    moderate: 'Nível moderado de risco, já associado a algumas consequências negativas.',
+    severe: 'Padrão de jogo problemático, com consequências negativas e possível perda de controle — buscar apoio especializado é recomendado.',
+  },
+  audit: {
+    minimal: 'Consumo de álcool classificado como baixo risco.',
+    mild: 'Consumo de risco — uma orientação simples sobre redução já costuma fazer diferença.',
+    moderate: 'Uso nocivo de álcool identificado — uma avaliação profissional é recomendada.',
+    severe: 'Padrão compatível com dependência provável — o recomendado é buscar avaliação e tratamento especializado.',
+  },
+  iat: {
+    minimal: 'Uso da internet dentro do que se considera comum, sem indicativo de dependência.',
+    moderate: 'A internet já está causando problemas perceptíveis na sua vida — vale considerar estabelecer limites.',
+    severe: 'Padrão de uso compatível com dependência de internet — uma avaliação profissional é recomendada.',
+  },
+  whoqolbref: {
+    minimal: 'Qualidade de vida percebida como muito boa nos aspectos avaliados.',
+    mild: 'Boa qualidade de vida percebida, com espaço para melhorias pontuais.',
+    moderate: 'Qualidade de vida percebida como moderada — pode valer a pena olhar com mais atenção para as áreas que pesaram mais no resultado.',
+    severe: 'Qualidade de vida percebida como baixa — uma conversa com um profissional pode ajudar a entender melhor o que está pesando mais.',
+  },
+};
+
+function textoEscala(id, classe) {
+  return ESCALA_TEXTOS[id]?.[classe] || '';
+}
+
 /* ── Templates de e-mail por faixa ── */
 const EMAIL_TEMPLATES = {
   minimal: {
@@ -66,10 +170,23 @@ function gerarHTML(dados) {
       <td style="padding:12px 16px;font-size:14px;color:#444;border-bottom:1px solid #eee;">${id.toUpperCase()}</td>
       <td style="padding:12px 16px;font-size:14px;color:#444;border-bottom:1px solid #eee;text-align:center;">${res.score}/${res.scoreMax}</td>
       <td style="padding:12px 16px;text-align:center;border-bottom:1px solid #eee;">
-        <span style="background:${corFaixa(res.classe)};color:#fff;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;">${faixaLabel[res.classe] || res.faixa}</span>
+        <span style="background:${corFaixa(res.classe)};color:#fff;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;">${res.faixa || faixaLabel[res.classe]}</span>
       </td>
     </tr>
   `).join('');
+
+  const escalasTextos = Object.entries(resultados)
+    .map(([id, res]) => ({ nome: id.toUpperCase(), texto: textoEscala(id, res.classe) }))
+    .filter(e => e.texto)
+    .map(e => `
+      <div style="margin-bottom:12px;">
+        <strong style="font-size:13px;color:#1A1A1A;">${e.nome}:</strong>
+        <span style="font-size:13px;color:#555;line-height:1.6;">${e.texto}</span>
+      </div>
+    `).join('');
+
+  const waMsg = encodeURIComponent(`Olá! Acabei de fazer o rastreio de ${temaLabel} no O Seu Psico e gostaria de conversar com um psicólogo.`);
+  const waLink = `https://wa.me/${WHATSAPP_NUMERO}?text=${waMsg}`;
 
   return `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -102,8 +219,8 @@ function gerarHTML(dados) {
             <!-- CTA -->
             <table cellpadding="0" cellspacing="0" style="margin:0 0 32px;">
               <tr>
-                <td style="background:#F5C518;border-radius:40px;padding:14px 28px;">
-                  <a href="https://oseupsico.com.br" style="font-size:15px;font-weight:700;color:#1A1A1A;text-decoration:none;">${tmpl.cta_label} →</a>
+                <td style="background:#25D366;border-radius:40px;padding:14px 28px;">
+                  <a href="${waLink}" style="font-size:15px;font-weight:700;color:#fff;text-decoration:none;">💬 ${tmpl.cta_label} no WhatsApp →</a>
                 </td>
               </tr>
             </table>
@@ -124,6 +241,14 @@ function gerarHTML(dados) {
                 <tbody>${escalasRows}</tbody>
               </table>
             </div>
+
+            ${escalasTextos ? `
+            <!-- O que os resultados significam -->
+            <div style="background:#fafafa;border-radius:12px;padding:20px 24px;border:1px solid #eee;margin-bottom:24px;">
+              <div style="font-size:12px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">O que os seus resultados significam</div>
+              ${escalasTextos}
+            </div>
+            ` : ''}
 
             <!-- Disclaimer -->
             <div style="background:#FFF8DC;border-radius:10px;padding:16px 20px;margin-bottom:24px;">
@@ -178,11 +303,19 @@ async function initDB(db) {
   ).run();
 }
 
-/* ── Handler principal ── */
+/* ── Handler principal ──
+   Este Worker é servido sob o prefixo /testes (oseupsico.com.br/testes/*).
+   Removemos o prefixo do pathname logo no início para que todo o resto da
+   lógica (comparações de rota e busca de assets estáticos) continue igual,
+   sem precisar reescrever cada comparação abaixo. ── */
+const PREFIX = '/testes';
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    const { pathname } = url;
+    const pathname = url.pathname.startsWith(PREFIX)
+      ? (url.pathname.slice(PREFIX.length) || '/')
+      : url.pathname;
 
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: CORS });
@@ -193,7 +326,7 @@ export default {
       const params = new URLSearchParams({
         client_id: env.GITHUB_CLIENT_ID,
         scope: 'repo,user',
-        redirect_uri: `${url.origin}/callback`,
+        redirect_uri: `${url.origin}${PREFIX}/callback`,
       });
       return Response.redirect(`https://github.com/login/oauth/authorize?${params}`, 302);
     }
@@ -206,13 +339,23 @@ export default {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({ client_id: env.GITHUB_CLIENT_ID, client_secret: env.GITHUB_CLIENT_SECRET, code }),
       });
-      const { access_token, error } = await tokenRes.json();
-      if (error || !access_token) return new Response('Erro ao obter token.', { status: 500 });
+      const tokenData = await tokenRes.json();
+      const { access_token, error, error_description } = tokenData;
+      if (error || !access_token) {
+        return new Response(`Erro ao obter token: ${error || 'sem access_token'} — ${error_description || JSON.stringify(tokenData)}`, { status: 500 });
+      }
       const content = JSON.stringify({ token: access_token, provider: 'github' });
       const html = `<!DOCTYPE html><html><body><script>
         (function(){
-          function cb(e){ window.opener.postMessage('authorization:github:success:${content.replace(/'/g,"\\'")}', e.origin); }
-          window.addEventListener('message', cb, false);
+          if (!window.opener) { document.body.textContent = 'Autenticado. Pode fechar esta janela.'; return; }
+          // Protocolo oficial do Decap CMS: o pop-up avisa que está
+          // autorizando, espera a janela principal responder, e só então
+          // envia o token de fato.
+          function receiveMessage(e){
+            window.opener.postMessage('authorization:github:success:${content.replace(/'/g,"\\'")}', e.origin);
+            window.close();
+          }
+          window.addEventListener('message', receiveMessage, false);
           window.opener.postMessage('authorizing:github', '*');
         })();
       </script></body></html>`;
@@ -265,6 +408,25 @@ export default {
       return json({ ok: true, registros: results });
     }
 
-    return env.ASSETS.fetch(request);
+    // Serve assets estáticos usando o pathname sem o prefixo /testes,
+    // já que os arquivos vivem na raiz do diretório de assets do projeto.
+    const assetUrl = new URL(request.url);
+    assetUrl.pathname = pathname;
+    const assetRes = await env.ASSETS.fetch(new Request(assetUrl, request));
+
+    // O Cloudflare Assets pode responder com um redirect próprio (ex.: de
+    // "/cadastro.html" para "/cadastro"). Como o pathname usado nessa busca
+    // já estava sem o prefixo, o Location gerado também vem sem o prefixo —
+    // precisamos devolvê-lo para não mandar o usuário pra fora de /testes.
+    if (assetRes.status >= 300 && assetRes.status < 400) {
+      const location = assetRes.headers.get('Location');
+      if (location && location.startsWith('/') && !location.startsWith(PREFIX)) {
+        const headers = new Headers(assetRes.headers);
+        headers.set('Location', PREFIX + location);
+        return new Response(assetRes.body, { status: assetRes.status, headers });
+      }
+    }
+
+    return assetRes;
   },
 };
