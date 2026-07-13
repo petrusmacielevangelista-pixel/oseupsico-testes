@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Testes · O Seu Psico</title>
-  <meta name="description" content="Escalas de rastreio em saúde mental validadas internacionalmente. Gratuito e confidencial." />
+  <meta name="description" content="Testes de saúde mental validados internacionalmente. Gratuito e confidencial." />
   <link rel="icon" href="assets/logo.png" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
@@ -32,10 +32,10 @@
       <div class="home-hero__eyebrow" data-cms="hero.eyebrow">Avaliação gratuita e confidencial</div>
       <h1 class="home-hero__title" data-cms="hero.title">Entenda melhor a sua <mark>saúde mental</mark></h1>
       <p class="home-hero__sub" data-cms="hero.subtitle">
-        Aplique escalas de rastreio validadas internacionalmente, usadas por psicólogos em todo o mundo. Receba seu resultado por e-mail com orientações personalizadas.
+        Aplique testes validados internacionalmente, usados por psicólogos em todo o mundo. Receba seu resultado por e-mail com orientações personalizadas.
       </p>
       <p class="home-hero__disclaimer" data-cms="hero.disclaimer">
-        Estes instrumentos são de rastreio, não de diagnóstico. Os resultados não substituem a avaliação de um profissional de saúde mental.
+        Estes instrumentos são de triagem, não de diagnóstico. Os resultados não substituem a avaliação de um profissional de saúde mental.
       </p>
     </div>
   </section>
@@ -62,13 +62,23 @@
           <img src="assets/logo.png" alt="O Seu Psico" />
           <span class="footer__logo-text">O Seu Psico</span>
         </div>
-        <p class="footer__copy" data-cms="footer.tagline">Rastreio em saúde mental com escalas validadas internacionalmente.</p>
-        <p class="footer__disclaimer" data-cms="footer.disclaimer">Estes instrumentos são exclusivamente para fins de rastreio e não substituem avaliação ou diagnóstico clínico por profissional habilitado.</p>
+        <p class="footer__copy" data-cms="footer.tagline">Testes de saúde mental validados internacionalmente.</p>
+        <p class="footer__disclaimer" data-cms="footer.disclaimer">Estes instrumentos são exclusivamente para fins de triagem e não substituem avaliação ou diagnóstico clínico por profissional habilitado.</p>
       </div>
     </div>
   </footer>
 
   <script src="data/testes.js"></script>
+  <script>
+    // Carrega textos editáveis pelo CMS (data/config.json) e injeta nos
+    // elementos marcados com data-cms="caminho.no.json".
+    fetch('data/config.json').then(r => r.json()).then(cfg => {
+      document.querySelectorAll('[data-cms]').forEach(el => {
+        const valor = el.dataset.cms.split('.').reduce((o, k) => o?.[k], cfg);
+        if (valor) el.innerHTML = valor.replace(/\n/g, '<br>');
+      });
+    }).catch(() => {});
+  </script>
   <script>
     // Renderiza os temas
     const grid = document.getElementById('themes-grid');

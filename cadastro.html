@@ -26,7 +26,7 @@
   <section class="page-header">
     <div class="container">
       <div class="page-header__theme-icon" id="tema-icon">🧠</div>
-      <div class="page-header__eyebrow" id="tema-eyebrow">Rastreio</div>
+      <div class="page-header__eyebrow" id="tema-eyebrow">Teste</div>
       <h1 class="page-header__title" id="tema-titulo">Carregando...</h1>
       <p class="page-header__sub" id="tema-desc"></p>
     </div>
@@ -84,7 +84,7 @@
           <img src="assets/logo.png" alt="O Seu Psico" />
           <span class="footer__logo-text">O Seu Psico</span>
         </div>
-        <p class="footer__disclaimer">Estes instrumentos são exclusivamente para fins de rastreio e não substituem diagnóstico clínico por profissional habilitado.</p>
+        <p class="footer__disclaimer">Estes instrumentos são exclusivamente para fins de triagem e não substituem diagnóstico clínico por profissional habilitado.</p>
       </div>
     </div>
   </footer>
@@ -100,7 +100,7 @@
     } else {
       document.getElementById('tema-icon').textContent = tema.icon;
       document.getElementById('tema-eyebrow').textContent = tema.nome;
-      document.getElementById('tema-titulo').textContent = `Rastreio de ${tema.nome}`;
+      document.getElementById('tema-titulo').textContent = `Teste de ${tema.nome}`;
       document.getElementById('tema-desc').textContent = tema.descricao;
       document.title = `${tema.nome} · O Seu Psico Testes`;
     }

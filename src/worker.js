@@ -262,7 +262,7 @@ function gerarHTML(dados) {
         <!-- Footer -->
         <tr>
           <td style="background:#f5f5f5;padding:24px 40px;text-align:center;border-top:1px solid #eee;">
-            <p style="font-size:12px;color:#aaa;margin:0 0 4px;">O Seu Psico · testes.oseupsico.com.br</p>
+            <p style="font-size:12px;color:#aaa;margin:0 0 4px;">O Seu Psico · oseupsico.com.br/testes</p>
             <p style="font-size:11px;color:#ccc;margin:0;">Você recebeu este e-mail porque realizou um teste em nossa plataforma.</p>
           </td>
         </tr>
@@ -313,6 +313,14 @@ const PREFIX = '/testes';
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    // Sem a barra final, os caminhos relativos do HTML (css/style.css,
+    // assets/logo.png etc.) resolveriam para fora de /testes. Redireciona
+    // /testes -> /testes/ antes de qualquer outra coisa.
+    if (url.pathname === PREFIX) {
+      return Response.redirect(`${url.origin}${PREFIX}/${url.search}`, 301);
+    }
+
     const pathname = url.pathname.startsWith(PREFIX)
       ? (url.pathname.slice(PREFIX.length) || '/')
       : url.pathname;

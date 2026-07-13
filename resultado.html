@@ -25,7 +25,7 @@
   <section class="page-header">
     <div class="container">
       <div class="page-header__theme-icon" id="tema-icon">✅</div>
-      <div class="page-header__eyebrow">Rastreio concluído</div>
+      <div class="page-header__eyebrow">Teste concluído</div>
       <h1 class="page-header__title" id="resultado-titulo">Seus resultados</h1>
       <p class="page-header__sub" id="resultado-sub"></p>
     </div>
@@ -68,7 +68,7 @@
           <img src="assets/logo.png" alt="O Seu Psico" />
           <span class="footer__logo-text">O Seu Psico</span>
         </div>
-        <p class="footer__disclaimer">Estes instrumentos são exclusivamente para fins de rastreio e não substituem diagnóstico clínico por profissional habilitado.</p>
+        <p class="footer__disclaimer">Estes instrumentos são exclusivamente para fins de triagem e não substituem diagnóstico clínico por profissional habilitado.</p>
       </div>
     </div>
   </footer>
@@ -85,7 +85,7 @@
 
     document.getElementById('tema-icon').textContent = tema.icon;
     document.getElementById('resultado-titulo').textContent = `Resultado de ${nome || 'você'}`;
-    document.getElementById('resultado-sub').textContent = `Rastreio de ${tema.nome} · ${new Date().toLocaleDateString('pt-BR')}`;
+    document.getElementById('resultado-sub').textContent = `Teste de ${tema.nome} · ${new Date().toLocaleDateString('pt-BR')}`;
     document.getElementById('email-notice-text').textContent = `Enviamos seu resultado detalhado para ${cadastro.email || 'o e-mail informado'} com orientações personalizadas.`;
 
     // Renderiza card por escala
