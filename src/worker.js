@@ -404,7 +404,9 @@ export default {
     if (pathname === '/api/admin/dados' && request.method === 'GET') {
       const auth = request.headers.get('Authorization') || '';
       const token = auth.replace('Bearer ', '');
-      if (!token || !token.includes(env.ADMIN_PASS)) {
+      let tokenDecodificado = '';
+      try { tokenDecodificado = atob(token); } catch {}
+      if (!token || !tokenDecodificado.includes(env.ADMIN_PASS)) {
         return json({ ok: false }, 401);
       }
 
