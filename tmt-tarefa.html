@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teste de Velocidade Mental · O Seu Psico</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/testes/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">Testes</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="igt-section">
+    <div class="container" style="max-width:680px;">
+
+      <div id="tela-trilha">
+        <p style="text-align:center;font-size:0.95rem;color:var(--text-mid);margin-bottom:20px;">
+          Clique nos círculos em ordem, o mais rápido que conseguir.
+        </p>
+        <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+          <svg id="trilha-svg" width="100%" style="display:block;"></svg>
+        </div>
+      </div>
+
+      <div id="tela-transicao" style="display:none;text-align:center;padding:60px 20px;">
+        <h2 id="transicao-titulo" style="font-family:var(--font-display);font-size:1.6rem;font-weight:800;margin-bottom:12px;"></h2>
+        <p id="transicao-msg" style="color:var(--text-mid);margin-bottom:28px;"></p>
+        <button class="btn btn--yellow btn--lg" id="btn-continuar-parte">Continuar →</button>
+      </div>
+
+    </div>
+  </section>
+
+  <script src="js/tmt.js"></script>
+  <script>
+    if (!sessionStorage.getItem('psico_cadastro')) { window.location.href = '/testes/'; }
+  </script>
+</body>
+</html>
