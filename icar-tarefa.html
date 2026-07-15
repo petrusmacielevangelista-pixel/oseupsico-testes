@@ -41,7 +41,7 @@
 
     let tentativaDescartada = false;
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden && !tentativaDescartada) {
+      if (document.hidden && respostas.length > 0 && !tentativaDescartada) {
         tentativaDescartada = true;
         alert('Você saiu da tela durante o teste. Por isso, esta tentativa foi descartada — recomece quando puder ficar sem interrupções.');
         window.location.href = '/testes/';
