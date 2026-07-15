@@ -18,6 +18,9 @@
   "observability": {
     "enabled": true
   },
+  "triggers": {
+    "crons": ["0 3 * * *"]
+  },
   "routes": [
     { "pattern": "oseupsico.com.br/testes", "zone_name": "oseupsico.com.br" },
     { "pattern": "oseupsico.com.br/testes/*", "zone_name": "oseupsico.com.br" }

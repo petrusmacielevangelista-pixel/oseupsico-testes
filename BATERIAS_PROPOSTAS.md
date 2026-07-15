@@ -2,6 +2,8 @@
 
 Decisão: lançar primeiro as baterias 1, 2 e 3. As demais (4-7) ficam registradas para um próximo momento.
 
+Fechado em 2026-07-14: bateria 6 = "Atenção e Funções Executivas" (ASRS + TMT + Flanker, sem swap de MDQ). Bateria 7 = "Memória, Sono e Estresse", com os 4 instrumentos (Corsi + N-Back + ISI + PSS-10) — aceito que essa seja a bateria mais longa do catálogo, sem cortar pra 3.
+
 ## Lançamento inicial (fase 1)
 
 1. **Check-up Emocional** — PHQ-9 + BAI + PSS-10
@@ -12,12 +14,14 @@ Decisão: lançar primeiro as baterias 1, 2 e 3. As demais (4-7) ficam registrad
 
 4. **Sono, Energia e Foco** — ISI + PVT (Teste de Atenção Sustentada) + MBI-GS
 5. **Autoestima e Satisfação com a Vida** — Rosenberg + SWLS + WHOQOL-BREF
-6. **Atenção, Impulsividade e Humor** — ASRS + MDQ + Flanker (Teste de Concentração)
+6. **Atenção e Funções Executivas** — ASRS + TMT (Teste de Velocidade Mental) + Flanker (Teste de Concentração)
    - Renomeado de "TDAH e Funções Executivas" — evitar nome de transtorno específico na bateria (mesma lógica de "Rastreio" vs "Testes")
    - TEA (AQ-10) avaliado e descartado desta bateria: comorbidade com TDAH é majoritariamente descrita em crianças, sinergia fraca para autorrelato adulto
    - "Personalidade" como nome descartado: TDAH/TEA/Bipolaridade não são traços de personalidade tecnicamente, seria impreciso
-7. **Memória e Sono** (ou "Memória, Sono e Estresse" — decisão pendente sobre 3 vs. 4 instrumentos) — Corsi (Teste de Memória Espacial) + N-Back (Teste de Memória de Trabalho) + ISI [+ PSS-10 se optar pela versão de 4 instrumentos]
+   - Variante "Atenção, Impulsividade e Humor" (trocando TMT por MDQ) avaliada e descartada — mantido TMT
+7. **Memória, Sono e Estresse** — Corsi (Teste de Memória Espacial) + N-Back (Teste de Memória de Trabalho) + ISI + PSS-10
    - Descartada ideia original de "Memória e Compulsões" — sem conexão científica direta
+   - Decidido manter os 4 instrumentos (não cortar pra 3); é a bateria mais longa do catálogo, ok por design
 
 ## Instrumentos fora de qualquer bateria (ficam só na página individual)
 

@@ -349,9 +349,12 @@
             email: dados.email,
             telefone: dados.telefone,
             idade: dados.idade,
-            tema: temaId,
+            tipo: 'rastreio',
+            identificador: temaId,
             resultados,
             faixaGeral,
+            consentimentoDados: !!dados.consentimentoDadosEm,
+            consentimentoInstrumento: !!dados.consentimentoInstrumentoEm,
           }),
         });
       } catch (e) {

@@ -124,68 +124,45 @@ function textoEscala(id, classe) {
   return ESCALA_TEXTOS[id]?.[classe] || '';
 }
 
-/* ── Templates de e-mail por faixa ── */
-const EMAIL_TEMPLATES = {
-  minimal: {
-    titulo: 'Seus indicadores estão dentro do esperado 🌱',
-    mensagem: 'Ótima notícia! Seus resultados de rastreio não indicam sintomas significativos no momento. Isso não significa que você não possa se beneficiar de apoio psicológico — muitas pessoas buscam psicoterapia para autoconhecimento e desenvolvimento pessoal.',
-    cta_label: 'Conhecer nossos psicólogos',
-    cor: '#22C55E',
-  },
-  mild: {
-    titulo: 'Seus resultados merecem atenção 💛',
-    mensagem: 'Identificamos alguns indicadores que valem uma conversa com um profissional. Sintomas leves, quando acompanhados cedo, têm excelente resposta ao tratamento.',
-    cta_label: 'Encontrar meu psicólogo',
-    cor: '#EAB308',
-  },
-  moderate: {
-    titulo: 'Recomendamos buscar apoio profissional 🧡',
-    mensagem: 'Seus resultados indicam sintomas moderados que se beneficiariam de avaliação e acompanhamento por um psicólogo. Você não precisa passar por isso sozinho(a).',
-    cta_label: 'Falar com um psicólogo agora',
-    cor: '#F97316',
-  },
-  severe: {
-    titulo: 'Seus resultados pedem atenção urgente ❤️',
-    mensagem: 'Identificamos indicadores que sugerem sintomas significativos. É importante buscar apoio profissional o quanto antes. Nossos psicólogos estão disponíveis para uma primeira conversa ainda hoje.',
-    cta_label: 'Falar com psicólogo hoje',
-    cor: '#EF4444',
-  },
-};
+/* ── Catálogo de sugestões pro e-mail ──
+   O e-mail nunca revela o tema/resultado do teste feito — só sugere 3
+   outros aleatórios (excluindo o identificador recém-concluído). Vai
+   crescendo conforme novos rastreios/testes de desempenho entram no ar. ── */
+const CATALOGO_SUGESTOES = [
+  { identificador: 'depressao', nome: 'Depressão', beneficio: 'Perceba os sinais do seu estado emocional' },
+  { identificador: 'ansiedade', nome: 'Ansiedade', beneficio: 'Como a ansiedade pesa no seu dia a dia' },
+  { identificador: 'tdah', nome: 'TDAH', beneficio: 'Rastreie sinais de desatenção e hiperatividade' },
+  { identificador: 'tea', nome: 'TEA / Autismo', beneficio: 'Identifique traços do espectro autista' },
+  { identificador: 'trauma', nome: 'Trauma / TEPT', beneficio: 'Avalie sinais de estresse pós-traumático' },
+  { identificador: 'insonia', nome: 'Insônia', beneficio: 'Descubra a qualidade do seu sono' },
+  { identificador: 'burnout', nome: 'Burnout', beneficio: 'Como está sua energia no trabalho' },
+  { identificador: 'bipolaridade', nome: 'Bipolaridade', beneficio: 'Rastreie sinais de humor bipolar' },
+  { identificador: 'estresse', nome: 'Estresse', beneficio: 'Avalie seu nível de estresse' },
+  { identificador: 'vicios', nome: 'Vícios & Compulsões', beneficio: 'Entenda seus padrões de uso e controle' },
+  { identificador: 'qualidade', nome: 'Qualidade de Vida', beneficio: 'Como está sua qualidade de vida hoje' },
+];
+
+function sugestoesAleatorias(identificadorAtual, quantidade = 3) {
+  const pool = CATALOGO_SUGESTOES.filter(s => s.identificador !== identificadorAtual);
+  const embaralhado = pool.sort(() => Math.random() - 0.5);
+  return embaralhado.slice(0, quantidade);
+}
 
 function gerarHTML(dados) {
-  const { nome, tema, resultados, faixaGeral } = dados;
-  const tmpl = EMAIL_TEMPLATES[faixaGeral] || EMAIL_TEMPLATES.minimal;
+  const { nome, identificador } = dados;
+  const sugestoes = sugestoesAleatorias(identificador, 3);
 
-  const temaLabel = {
-    depressao: 'Depressão', ansiedade: 'Ansiedade', tdah: 'TDAH',
-    tea: 'TEA / Autismo', trauma: 'Trauma / TEPT', insonia: 'Insônia',
-    burnout: 'Burnout', bipolaridade: 'Bipolaridade', estresse: 'Estresse',
-    vicios: 'Vícios & Compulsões', qualidade: 'Qualidade de Vida',
-  }[tema] || tema;
-
-  const faixaLabel = { minimal: 'Mínima', mild: 'Leve', moderate: 'Moderada', severe: 'Grave' };
-
-  const escalasRows = Object.entries(resultados).map(([id, res]) => `
+  const sugestoesHTML = sugestoes.map(s => `
     <tr>
-      <td style="padding:12px 16px;font-size:14px;color:#444;border-bottom:1px solid #eee;">${id.toUpperCase()}</td>
-      <td style="padding:12px 16px;font-size:14px;color:#444;border-bottom:1px solid #eee;text-align:center;">${res.score}/${res.scoreMax}</td>
-      <td style="padding:12px 16px;text-align:center;border-bottom:1px solid #eee;">
-        <span style="background:${corFaixa(res.classe)};color:#fff;font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;">${res.faixa || faixaLabel[res.classe]}</span>
+      <td style="padding:14px 0;border-bottom:1px solid #eee;">
+        <a href="https://oseupsico.com.br/testes/cadastro.html?tema=${s.identificador}" style="text-decoration:none;color:#1A1A1A;">
+          🧠 <strong>${s.nome}</strong> — <span style="color:#555;">${s.beneficio}</span>
+        </a>
       </td>
     </tr>
   `).join('');
 
-  const escalasTextos = Object.entries(resultados)
-    .map(([id, res]) => ({ nome: id.toUpperCase(), texto: textoEscala(id, res.classe) }))
-    .filter(e => e.texto)
-    .map(e => `
-      <div style="margin-bottom:12px;">
-        <strong style="font-size:13px;color:#1A1A1A;">${e.nome}:</strong>
-        <span style="font-size:13px;color:#555;line-height:1.6;">${e.texto}</span>
-      </div>
-    `).join('');
-
-  const waMsg = encodeURIComponent(`Olá! Acabei de fazer o rastreio de ${temaLabel} no O Seu Psico e gostaria de conversar com um psicólogo.`);
+  const waMsg = encodeURIComponent('Olá! Fiz um teste no O Seu Psico e gostaria de conversar com um psicólogo.');
   const waLink = `https://wa.me/${WHATSAPP_NUMERO}?text=${waMsg}`;
 
   return `<!DOCTYPE html>
@@ -202,58 +179,43 @@ function gerarHTML(dados) {
             <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:22px;font-weight:800;color:#fff;letter-spacing:-0.5px;">
               O Seu <span style="color:#F5C518;">Psico</span>
             </div>
-            <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;text-transform:uppercase;letter-spacing:2px;">Testes · Rastreio em Saúde Mental</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:4px;text-transform:uppercase;letter-spacing:2px;">Testes</div>
           </td>
         </tr>
-
-        <!-- Faixa colorida -->
-        <tr><td style="height:6px;background:${tmpl.cor};"></td></tr>
 
         <!-- Body -->
         <tr>
           <td style="padding:40px 40px 24px;">
             <p style="font-size:14px;color:#888;margin:0 0 8px;">Olá, <strong style="color:#1A1A1A;">${nome}</strong> 👋</p>
-            <h1 style="font-size:24px;font-weight:800;color:#1A1A1A;margin:0 0 16px;line-height:1.2;">${tmpl.titulo}</h1>
-            <p style="font-size:15px;color:#555;line-height:1.7;margin:0 0 24px;">${tmpl.mensagem}</p>
+            <p style="font-size:15px;color:#555;line-height:1.7;margin:0 0 20px;">
+              Você concluiu um teste em nossa plataforma — e isso já é um passo importante rumo ao autoconhecimento. Esperamos que essas informações te ajudem a entender um pouco mais sobre você mesmo(a), do seu jeito e no seu tempo.
+            </p>
+            <p style="font-size:15px;color:#555;line-height:1.7;margin:0 0 28px;">
+              Cuidar da saúde mental é um processo contínuo, e um teste sozinho é só o começo da conversa. Se quiser ir além do que descobriu hoje, temos psicólogos prontos pra te acompanhar nessa jornada — sempre que fizer sentido pra você.
+            </p>
+
+            <p style="font-size:13px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;">Separamos mais alguns testes que podem te interessar</p>
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+              ${sugestoesHTML}
+            </table>
+
+            <p style="font-size:15px;color:#555;line-height:1.7;margin:0 0 20px;">
+              Caso queira falar com um psicólogo, saiba que sempre pode contar conosco.
+            </p>
 
             <!-- CTA -->
-            <table cellpadding="0" cellspacing="0" style="margin:0 0 32px;">
+            <table cellpadding="0" cellspacing="0" style="margin:0 0 28px;">
               <tr>
                 <td style="background:#25D366;border-radius:40px;padding:14px 28px;">
-                  <a href="${waLink}" style="font-size:15px;font-weight:700;color:#fff;text-decoration:none;">💬 ${tmpl.cta_label} no WhatsApp →</a>
+                  <a href="${waLink}" style="font-size:15px;font-weight:700;color:#fff;text-decoration:none;">💬 Falar com um psicólogo no WhatsApp →</a>
                 </td>
               </tr>
             </table>
 
-            <!-- Tabela de resultados -->
-            <div style="background:#fafafa;border-radius:12px;overflow:hidden;border:1px solid #eee;margin-bottom:24px;">
-              <div style="background:#1A1A1A;padding:14px 16px;font-size:12px;font-weight:700;color:#F5C518;text-transform:uppercase;letter-spacing:1px;">
-                Rastreio de ${temaLabel}
-              </div>
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <thead>
-                  <tr>
-                    <th style="padding:10px 16px;font-size:11px;font-weight:700;color:#888;text-align:left;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #eee;">Escala</th>
-                    <th style="padding:10px 16px;font-size:11px;font-weight:700;color:#888;text-align:center;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #eee;">Pontuação</th>
-                    <th style="padding:10px 16px;font-size:11px;font-weight:700;color:#888;text-align:center;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #eee;">Faixa</th>
-                  </tr>
-                </thead>
-                <tbody>${escalasRows}</tbody>
-              </table>
-            </div>
-
-            ${escalasTextos ? `
-            <!-- O que os resultados significam -->
-            <div style="background:#fafafa;border-radius:12px;padding:20px 24px;border:1px solid #eee;margin-bottom:24px;">
-              <div style="font-size:12px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">O que os seus resultados significam</div>
-              ${escalasTextos}
-            </div>
-            ` : ''}
-
             <!-- Disclaimer -->
-            <div style="background:#FFF8DC;border-radius:10px;padding:16px 20px;margin-bottom:24px;">
+            <div style="background:#FFF8DC;border-radius:10px;padding:16px 20px;">
               <p style="font-size:13px;color:#7a6200;margin:0;line-height:1.6;">
-                ⚠️ <strong>Importante:</strong> Estes instrumentos são de <strong>rastreio</strong>, não de diagnóstico. Os resultados não substituem a avaliação de um profissional de saúde mental.
+                ⚠️ Os resultados não substituem a avaliação de um profissional de saúde mental.
               </p>
             </div>
           </td>
@@ -274,12 +236,8 @@ function gerarHTML(dados) {
 </html>`;
 }
 
-function corFaixa(classe) {
-  return { minimal: '#22C55E', mild: '#EAB308', moderate: '#F97316', severe: '#EF4444' }[classe] || '#888';
-}
-
 async function enviarEmail(env, para, nome, dadosEmail) {
-  const html = gerarHTML(dadosEmail);
+  const html = gerarHTML({ nome, ...dadosEmail });
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
@@ -289,18 +247,43 @@ async function enviarEmail(env, para, nome, dadosEmail) {
     body: JSON.stringify({
       from: 'O Seu Psico Testes <testes@oseupsico.com.br>',
       to: [para],
-      subject: `Seus resultados de rastreio · O Seu Psico`,
+      subject: `Seus resultados estão prontos · O Seu Psico`,
       html,
     }),
   });
   return res.ok;
 }
 
-/* ── Inicializa tabelas D1 ── */
+/* ── Inicializa tabelas D1 ──
+   Schema unificado (rastreios + testes de desempenho + baterias + IGT).
+   Em produção a tabela já existe com o schema antigo — a migração das
+   colunas novas é feita uma única vez via script separado, não aqui
+   (CREATE TABLE IF NOT EXISTS não altera tabela já existente). ── */
 async function initDB(db) {
   await db.prepare(
-    `CREATE TABLE IF NOT EXISTS participantes (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, email TEXT NOT NULL, telefone TEXT NOT NULL, idade INTEGER NOT NULL, tema TEXT NOT NULL, faixa_geral TEXT NOT NULL, resultados TEXT NOT NULL, criado_em TEXT DEFAULT (datetime('now')))`
+    `CREATE TABLE IF NOT EXISTS participantes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nome TEXT NOT NULL,
+      email TEXT NOT NULL,
+      telefone TEXT,
+      idade INTEGER,
+      tipo TEXT NOT NULL,
+      identificador TEXT NOT NULL,
+      faixa_geral TEXT,
+      resultados TEXT NOT NULL,
+      consentimento_dados_em TEXT,
+      consentimento_instrumento_em TEXT,
+      criado_em TEXT DEFAULT (datetime('now'))
+    )`
   ).run();
+}
+
+function autenticado(request, env) {
+  const auth = request.headers.get('Authorization') || '';
+  const token = auth.replace('Bearer ', '');
+  let tokenDecodificado = '';
+  try { tokenDecodificado = atob(token); } catch {}
+  return !!token && tokenDecodificado.includes(env.ADMIN_PASS);
 }
 
 /* ── Handler principal ──
@@ -370,19 +353,41 @@ export default {
       return new Response(html, { headers: { 'Content-Type': 'text/html' } });
     }
 
-    /* ── API: salvar resultado ── */
+    /* ── API: salvar resultado ──
+       tipo: 'rastreio' | 'desempenho' | 'bateria'
+       identificador: tema (rastreio) | instrumento (desempenho) | id da bateria
+       Os dois consentimentos são obrigatórios — validados aqui, não só no
+       cliente, para que a marcação dos checkboxes não possa ser burlada. ── */
     if (pathname === '/api/resultado' && request.method === 'POST') {
       try {
         const body = await request.json();
-        const { nome, email, telefone, idade, tema, resultados, faixaGeral } = body;
+        const {
+          nome, email, telefone, idade,
+          tipo, identificador, resultados, faixaGeral,
+          consentimentoDados, consentimentoInstrumento,
+        } = body;
+
+        if (!consentimentoDados || !consentimentoInstrumento) {
+          return json({ ok: false, error: 'Consentimento obrigatório não informado.' }, 400);
+        }
+        if (!tipo || !identificador || !nome || !email) {
+          return json({ ok: false, error: 'Dados obrigatórios ausentes.' }, 400);
+        }
+
+        const agora = new Date().toISOString();
 
         await initDB(env.DB);
         await env.DB.prepare(
-          `INSERT INTO participantes (nome, email, telefone, idade, tema, faixa_geral, resultados)
-           VALUES (?, ?, ?, ?, ?, ?, ?)`
-        ).bind(nome, email, telefone, idade, tema, faixaGeral, JSON.stringify(resultados)).run();
+          `INSERT INTO participantes
+           (nome, email, telefone, idade, tipo, identificador, faixa_geral, resultados, consentimento_dados_em, consentimento_instrumento_em)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        ).bind(
+          nome, email, telefone || null, idade || null,
+          tipo, identificador, faixaGeral || null, JSON.stringify(resultados),
+          agora, agora
+        ).run();
 
-        await enviarEmail(env, email, nome, { nome, tema, resultados, faixaGeral });
+        await enviarEmail(env, email, nome, { identificador });
 
         return json({ ok: true });
       } catch (e) {
@@ -400,22 +405,81 @@ export default {
       return json({ ok: false }, 401);
     }
 
-    /* ── API: dados admin (protegido) ── */
+    /* ── API: dados admin (protegido) ──
+       Aceita filtro opcional por intervalo de datas via querystring
+       (?de=YYYY-MM-DD&ate=YYYY-MM-DD), usado pelo filtro do painel. ── */
     if (pathname === '/api/admin/dados' && request.method === 'GET') {
-      const auth = request.headers.get('Authorization') || '';
-      const token = auth.replace('Bearer ', '');
-      let tokenDecodificado = '';
-      try { tokenDecodificado = atob(token); } catch {}
-      if (!token || !tokenDecodificado.includes(env.ADMIN_PASS)) {
-        return json({ ok: false }, 401);
+      if (!autenticado(request, env)) return json({ ok: false }, 401);
+
+      await initDB(env.DB);
+      const de = url.searchParams.get('de');
+      const ate = url.searchParams.get('ate');
+
+      let query = 'SELECT * FROM participantes';
+      const binds = [];
+      if (de && ate) {
+        query += ' WHERE date(criado_em) BETWEEN ? AND ?';
+        binds.push(de, ate);
+      } else if (de) {
+        query += ' WHERE date(criado_em) >= ?';
+        binds.push(de);
+      } else if (ate) {
+        query += ' WHERE date(criado_em) <= ?';
+        binds.push(ate);
+      }
+      query += ' ORDER BY criado_em DESC LIMIT 500';
+
+      const { results } = await env.DB.prepare(query).bind(...binds).all();
+
+      return json({ ok: true, registros: results });
+    }
+
+    /* ── API: excluir registro individual (protegido) ── */
+    if (pathname.startsWith('/api/admin/dados/') && request.method === 'DELETE') {
+      if (!autenticado(request, env)) return json({ ok: false }, 401);
+      const id = pathname.split('/').pop();
+      if (!id || !/^\d+$/.test(id)) return json({ ok: false, error: 'ID inválido.' }, 400);
+
+      await initDB(env.DB);
+      await env.DB.prepare('DELETE FROM participantes WHERE id = ?').bind(id).run();
+      return json({ ok: true });
+    }
+
+    /* ── API: excluir registros em lote (protegido) ── */
+    if (pathname === '/api/admin/dados/excluir-lote' && request.method === 'POST') {
+      if (!autenticado(request, env)) return json({ ok: false }, 401);
+      const { ids } = await request.json();
+      if (!Array.isArray(ids) || !ids.length || !ids.every(i => Number.isInteger(i))) {
+        return json({ ok: false, error: 'Lista de IDs inválida.' }, 400);
       }
 
       await initDB(env.DB);
-      const { results } = await env.DB.prepare(
-        `SELECT * FROM participantes ORDER BY criado_em DESC LIMIT 500`
-      ).all();
+      const placeholders = ids.map(() => '?').join(',');
+      await env.DB.prepare(`DELETE FROM participantes WHERE id IN (${placeholders})`).bind(...ids).run();
+      return json({ ok: true, excluidos: ids.length });
+    }
 
-      return json({ ok: true, registros: results });
+    /* ── API: autoatendimento de exclusão de dados (público, LGPD art. 18) ──
+       A pessoa confirma e-mail + telefone; se baterem com algum registro,
+       todos os registros correspondentes são apagados imediatamente. ── */
+    if (pathname === '/api/exclusao-solicitada' && request.method === 'POST') {
+      try {
+        const { email, telefone } = await request.json();
+        if (!email || !telefone) {
+          return json({ ok: false, error: 'Informe e-mail e telefone.' }, 400);
+        }
+
+        await initDB(env.DB);
+        const { meta } = await env.DB.prepare(
+          'DELETE FROM participantes WHERE email = ? AND telefone = ?'
+        ).bind(email, telefone).run();
+
+        // Resposta genérica independente de ter encontrado ou não —
+        // evita confirmar/negar se um e-mail existe na base.
+        return json({ ok: true });
+      } catch (e) {
+        return json({ ok: false, error: e.message }, 500);
+      }
     }
 
     // Serve assets estáticos usando o pathname sem o prefixo /testes,
@@ -438,5 +502,15 @@ export default {
     }
 
     return assetRes;
+  },
+
+  /* ── Job agendado: retenção de 5 anos ──
+     Roda periodicamente (ver crons em wrangler.jsonc) e apaga registros
+     com mais de 5 anos, conforme a Política de Privacidade. ── */
+  async scheduled(event, env, ctx) {
+    await initDB(env.DB);
+    await env.DB.prepare(
+      `DELETE FROM participantes WHERE criado_em < datetime('now', '-5 years')`
+    ).run();
   },
 };

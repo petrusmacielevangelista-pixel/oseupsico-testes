@@ -451,6 +451,41 @@ ul { list-style: none; }
   line-height: 1.6;
 }
 
+.form-consent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.form-consent__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text-mid);
+  cursor: pointer;
+}
+
+.form-consent__item input[type="checkbox"] {
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  accent-color: var(--yellow);
+}
+
+.form-consent__item a {
+  color: var(--black);
+  text-decoration: underline;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 /* ── Progress Bar ── */
 .progress-bar-wrap {
   background: var(--white);

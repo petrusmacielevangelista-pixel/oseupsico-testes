@@ -65,13 +65,20 @@
             <div class="form-group__error" id="erro-email">Informe um e-mail válido.</div>
           </div>
 
-          <button type="submit" class="btn btn--yellow btn--full btn--lg" style="margin-top:8px;">
+          <div class="form-consent">
+            <label class="form-consent__item">
+              <input type="checkbox" id="consent-dados" />
+              <span>Autorizo o uso dos meus dados para receber meu resultado. <a href="/politica-de-privacidade.html" target="_blank" rel="noopener">Saiba mais</a></span>
+            </label>
+            <label class="form-consent__item">
+              <input type="checkbox" id="consent-instrumento" />
+              <span>Li e entendi que a aplicação e os resultados apresentados por esses instrumentos não constituem nem substituem uma avaliação ou diagnóstico psicológico formal conduzido por um profissional habilitado.</span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn--yellow btn--full btn--lg" id="btn-iniciar" style="margin-top:8px;" disabled>
             Iniciar os testes →
           </button>
-
-          <p class="form-disclaimer">
-            Seus dados são utilizados apenas para envio do resultado e não serão compartilhados com terceiros.
-          </p>
         </form>
       </div>
     </div>
@@ -124,9 +131,21 @@
       input.classList.remove('error');
     }
 
+    // Botão só habilita com os dois consentimentos marcados
+    const consentDados = document.getElementById('consent-dados');
+    const consentInstrumento = document.getElementById('consent-instrumento');
+    const btnIniciar = document.getElementById('btn-iniciar');
+    function atualizarBotao() {
+      btnIniciar.disabled = !(consentDados.checked && consentInstrumento.checked);
+    }
+    consentDados.addEventListener('change', atualizarBotao);
+    consentInstrumento.addEventListener('change', atualizarBotao);
+
     document.getElementById('form-cadastro').addEventListener('submit', (e) => {
       e.preventDefault();
       let valid = true;
+
+      if (!consentDados.checked || !consentInstrumento.checked) return;
 
       const nome = document.getElementById('nome');
       const idade = document.getElementById('idade');
@@ -147,6 +166,7 @@
       if (!valid) return;
 
       // Salva dados na sessionStorage e redireciona para os testes
+      const agora = new Date().toISOString();
       sessionStorage.setItem('psico_cadastro', JSON.stringify({
         nome: nome.value.trim(),
         idade: idadeVal,
@@ -155,6 +175,8 @@
         tema: temaId,
         escalaIndex: 0,
         resultados: {},
+        consentimentoDadosEm: agora,
+        consentimentoInstrumentoEm: agora,
       }));
 
       location.href = `teste.html?tema=${temaId}`;
