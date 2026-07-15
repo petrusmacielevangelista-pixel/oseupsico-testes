@@ -98,18 +98,33 @@
 
   <script src="data/testes.js"></script>
   <script>
+    // Catálogo dos testes de desempenho — cresce conforme novos entram no ar.
+    // Diferente de TEMAS (rastreios), não fica em data/testes.js porque não
+    // tem escalas/pontuação de questionário.
+    const INSTRUMENTOS = {
+      igt: { icon: '🃏', nome: 'Teste de Julgamento', descricao: 'Descubra seu padrão de decisão sob incerteza.', proximaPagina: 'igt-instrucoes.html' },
+    };
+
     const params = new URLSearchParams(location.search);
     const temaId = params.get('tema');
+    const instrumentoId = params.get('instrumento');
     const tema = TEMAS[temaId];
+    const instrumento = INSTRUMENTOS[instrumentoId];
 
-    if (!tema) {
+    if (!tema && !instrumento) {
       location.href = '/testes/';
-    } else {
+    } else if (tema) {
       document.getElementById('tema-icon').textContent = tema.icon;
       document.getElementById('tema-eyebrow').textContent = tema.nome;
       document.getElementById('tema-titulo').textContent = `Teste de ${tema.nome}`;
       document.getElementById('tema-desc').textContent = tema.descricao;
       document.title = `${tema.nome} · O Seu Psico Testes`;
+    } else {
+      document.getElementById('tema-icon').textContent = instrumento.icon;
+      document.getElementById('tema-eyebrow').textContent = instrumento.nome;
+      document.getElementById('tema-titulo').textContent = instrumento.nome;
+      document.getElementById('tema-desc').textContent = instrumento.descricao;
+      document.title = `${instrumento.nome} · O Seu Psico Testes`;
     }
 
     // Máscara de telefone
@@ -179,7 +194,7 @@
         consentimentoInstrumentoEm: agora,
       }));
 
-      location.href = `teste.html?tema=${temaId}`;
+      location.href = tema ? `teste.html?tema=${temaId}` : instrumento.proximaPagina;
     });
   </script>
 </body>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teste de Julgamento · O Seu Psico</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/testes/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">Testes</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="igt-header">
+    <div class="container">
+      <div class="igt-header__inner" style="justify-content:center;">
+        <div class="igt-balance" style="flex-direction:column;align-items:center;gap:4px;">
+          <span class="igt-balance__label">Saldo</span>
+          <span class="igt-balance__value" id="saldo">R$ 2.000</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="igt-section">
+    <div class="container" style="max-width:840px;">
+
+      <div class="igt-feedback">
+        <div class="igt-feedback__msg" id="feedback-msg"></div>
+      </div>
+
+      <div class="decks-grid">
+        <button class="deck-card" data-deck="A" onclick="escolherBaralho('A')" id="deck-A">
+          <div class="deck-card__letter">A</div>
+          <div class="deck-card__label">Baralho A</div>
+        </button>
+        <button class="deck-card" data-deck="B" onclick="escolherBaralho('B')" id="deck-B">
+          <div class="deck-card__letter">B</div>
+          <div class="deck-card__label">Baralho B</div>
+        </button>
+        <button class="deck-card" data-deck="C" onclick="escolherBaralho('C')" id="deck-C">
+          <div class="deck-card__letter">C</div>
+          <div class="deck-card__label">Baralho C</div>
+        </button>
+        <button class="deck-card" data-deck="D" onclick="escolherBaralho('D')" id="deck-D">
+          <div class="deck-card__letter">D</div>
+          <div class="deck-card__label">Baralho D</div>
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <script src="js/igt.js"></script>
+  <script>
+    (function() {
+      if (!sessionStorage.getItem('psico_cadastro')) {
+        window.location.href = '/testes/';
+      }
+    })();
+  </script>
+</body>
+</html>

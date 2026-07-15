@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seu Resultado · O Seu Psico Testes</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/testes/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">Testes</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="result-hero">
+    <div class="container">
+      <div class="result-hero__eyebrow">Teste de Julgamento</div>
+      <h1 class="result-hero__title">Seu resultado</h1>
+      <p class="result-hero__sub" id="result-nome"></p>
+    </div>
+  </div>
+
+  <section class="result-section">
+    <div class="container">
+
+      <div class="result-card" style="text-align:center;">
+        <div class="result-score-big" id="result-score">—</div>
+        <div class="result-score-label">Escore &nbsp;·&nbsp; (C+D) − (A+B)</div>
+        <div class="result-faixa" id="result-faixa" style="margin:0 auto 20px;"></div>
+        <p class="result-text" id="result-interpretacao"></p>
+
+        <div class="result-decks" id="result-decks"></div>
+
+        <div style="background:var(--off-white);border-radius:var(--radius-md);padding:16px 20px;font-size:0.85rem;color:var(--text-mid);line-height:1.7;">
+          <strong>Saldo final:</strong> <span id="result-saldo" style="font-weight:700;color:var(--black);"></span>
+          &nbsp;|&nbsp; Iniciado com R$ 2.000
+        </div>
+      </div>
+
+      <!-- Compartilhar -->
+      <div style="max-width:720px;margin:0 auto 24px;text-align:center;">
+        <button class="btn btn--outline" id="btn-compartilhar">📤 Compartilhar</button>
+      </div>
+
+      <!-- Disclaimer -->
+      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:24px 28px;max-width:720px;margin:0 auto 28px;">
+        <p style="font-size:0.85rem;color:var(--text-mid);line-height:1.75;margin:0;">
+          ⚠️ <strong>Importante:</strong> este é um instrumento de pesquisa neuropsicológica. Os resultados não constituem diagnóstico clínico e não substituem avaliação por um profissional habilitado. Muitos fatores influenciam o desempenho, incluindo atenção, fadiga e familiaridade com jogos.
+        </p>
+      </div>
+
+      <div class="result-actions">
+        <a href="https://oseupsico.com.br" class="btn btn--yellow btn--lg">Conhecer os psicólogos →</a>
+        <a href="/testes/" class="btn btn--outline">Ver outros testes</a>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__logo">
+          <img src="assets/logo.png" alt="logo" />
+          <span class="footer__logo-text">O Seu Psico</span>
+        </div>
+        <p class="footer__disclaimer">Estes instrumentos são exclusivamente para fins de triagem e não substituem diagnóstico clínico por profissional habilitado.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const raw = sessionStorage.getItem('psico_igt_resultado');
+    if (!raw) { window.location.href = '/testes/'; }
+
+    const dados = JSON.parse(raw);
+    const { nome, score, faixa, classe, contagem, saldoFinal } = dados;
+
+    document.getElementById('result-nome').textContent = `Olá, ${nome}!`;
+
+    const scoreEl = document.getElementById('result-score');
+    scoreEl.textContent = (score >= 0 ? '+' : '') + score;
+    scoreEl.className = 'result-score-big ' + (score >= 10 ? 'positive' : score >= -10 ? 'neutral' : 'negative');
+
+    const faixaEl = document.getElementById('result-faixa');
+    faixaEl.textContent = faixa;
+    faixaEl.className = 'result-faixa ' + classe;
+
+    const interpretacoes = {
+      good: 'Seu padrão de escolhas foi predominantemente vantajoso: você tendeu a preferir os baralhos C e D, que oferecem ganhos menores mas perdas controladas. Esse padrão é consistente com sensibilidade às consequências futuras e aprendizado das contingências do ambiente ao longo da tarefa.',
+      moderate: 'Seu padrão de escolhas foi misto, sem preferência clara por baralhos vantajosos ou desvantajosos. Isso pode refletir exploração dos baralhos, dificuldade em identificar padrões ou influência de outros fatores como atenção e estratégia.',
+      poor: 'Seu padrão de escolhas foi predominantemente desvantajoso: você tendeu a preferir os baralhos A e B, que oferecem ganhos altos mas perdas elevadas. Esse padrão pode refletir preferência por recompensas imediatas em detrimento das consequências futuras.',
+    };
+    document.getElementById('result-interpretacao').textContent = interpretacoes[classe] || '';
+
+    const decksEl = document.getElementById('result-decks');
+    ['A','B','C','D'].forEach(d => {
+      decksEl.innerHTML += `
+        <div class="result-deck" data-deck="${d}">
+          <div class="result-deck__letter">${d}</div>
+          <div class="result-deck__count">${contagem[d]}</div>
+          <div class="result-deck__label">escolhas</div>
+        </div>`;
+    });
+
+    document.getElementById('result-saldo').textContent = 'R$ ' + saldoFinal.toLocaleString('pt-BR');
+
+    // Compartilhar — mensagem genérica de convite, nunca o resultado pessoal
+    document.getElementById('btn-compartilhar').addEventListener('click', async () => {
+      const texto = 'Acabei de fazer um teste de autoconhecimento no O Seu Psico e achei bem interessante! Dá uma olhada:';
+      const link = 'https://oseupsico.com.br/testes/';
+      if (navigator.share) {
+        try { await navigator.share({ text: texto, url: link }); } catch {}
+      } else {
+        window.open(`https://wa.me/?text=${encodeURIComponent(texto + ' ' + link)}`, '_blank');
+      }
+    });
+  </script>
+</body>
+</html>

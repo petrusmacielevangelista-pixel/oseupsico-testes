@@ -56,6 +56,20 @@
     </div>
   </section>
 
+  <!-- Testes de Desempenho -->
+  <section class="themes-section">
+    <div class="container">
+      <div class="themes-section__header">
+        <h2 class="themes-section__title">Testes de desempenho</h2>
+        <p class="themes-section__sub">Tarefas interativas que medem comportamento e desempenho cognitivo.</p>
+      </div>
+
+      <div class="themes-grid" id="instrumentos-grid">
+        <!-- Gerado por JS -->
+      </div>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
@@ -99,6 +113,24 @@
         <div class="theme-card__arrow">Iniciar →</div>
       `;
       grid.appendChild(card);
+    });
+
+    // Testes de desempenho (crescerá conforme novos entram no ar)
+    const INSTRUMENTOS = {
+      igt: { icon: '🃏', nome: 'Teste de Julgamento', descricao: 'Descubra seu padrão de decisão sob incerteza.' },
+    };
+    const gridInstrumentos = document.getElementById('instrumentos-grid');
+    Object.entries(INSTRUMENTOS).forEach(([id, inst]) => {
+      const card = document.createElement('a');
+      card.className = 'theme-card';
+      card.href = `cadastro.html?instrumento=${id}`;
+      card.innerHTML = `
+        <div class="theme-card__icon">${inst.icon}</div>
+        <div class="theme-card__name">${inst.nome}</div>
+        <div class="theme-card__desc">${inst.descricao}</div>
+        <div class="theme-card__arrow">Iniciar →</div>
+      `;
+      gridInstrumentos.appendChild(card);
     });
   </script>
 </body>
