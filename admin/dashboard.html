@@ -230,12 +230,12 @@
         const data = r.criado_em ? new Date(r.criado_em).toLocaleDateString('pt-BR') : '—';
         return `<tr>
           <td><input type="checkbox" data-id="${r.id}" onchange="toggleSelecionado(${r.id}, this.checked)" ${selecionados.has(r.id) ? 'checked' : ''} /></td>
-          <td><strong>${r.nome || '—'}</strong></td>
-          <td>${r.email || '—'}</td>
-          <td>${r.telefone || '—'}</td>
+          <td title="${r.nome || ''}"><strong>${r.nome || '—'}</strong></td>
+          <td title="${r.email || ''}">${r.email || '—'}</td>
+          <td title="${r.telefone || ''}">${r.telefone || '—'}</td>
           <td>${r.idade || '—'}</td>
           <td>${tipoLabel[r.tipo] || r.tipo}</td>
-          <td>${identificadorLabel(r)}</td>
+          <td title="${identificadorLabel(r).replace(/"/g, '&quot;')}">${identificadorLabel(r)}</td>
           <td>${r.faixa_geral ? `<span class="result-summary__badge faixa--${r.faixa_geral}">${faixaLabel[r.faixa_geral] || r.faixa_geral}</span>` : '—'}</td>
           <td>${data}</td>
           <td><button class="admin-table__btn" onclick="abrirModal(${i})">Ver</button></td>
