@@ -93,6 +93,22 @@ const TEMAS = {
     descricao: 'Avaliação ampla da qualidade de vida nos domínios físico, psicológico, social e ambiental.',
     escalas: ['whoqolbref'],
   },
+
+  autoestima: {
+    id: 'autoestima',
+    nome: 'Autoestima',
+    icon: '🪞',
+    descricao: 'Explore sua autoimagem.',
+    escalas: ['rosenberg'],
+  },
+
+  satisfacao: {
+    id: 'satisfacao',
+    nome: 'Satisfação com a Vida',
+    icon: '☀️',
+    descricao: 'Um retrato da sua satisfação pessoal.',
+    escalas: ['swls'],
+  },
 };
 
 /* ============================================================
@@ -914,6 +930,83 @@ const ESCALAS = {
       { min: 65,  max: 90,  label: 'Moderada',   classe: 'moderate', texto: 'Qualidade de vida moderada. Há espaço para melhoria em alguns domínios.' },
       { min: 91,  max: 110, label: 'Boa',        classe: 'mild',     texto: 'Boa qualidade de vida percebida.' },
       { min: 111, max: 130, label: 'Muito boa',  classe: 'minimal',  texto: 'Ótima qualidade de vida percebida.' },
+    ],
+  },
+
+  /* ── Rosenberg Self-Esteem Scale ──
+     Rosenberg (1965). Itens negativamente formulados (2,5,6,8,9) são
+     invertidos antes da soma. Escala 0-3, total 0-30.
+     Corte: 0-14 baixa autoestima, 15-25 dentro do esperado, 26-30 alta. ── */
+  rosenberg: {
+    id: 'rosenberg',
+    nome: 'Rosenberg',
+    nomeCompleto: 'Rosenberg Self-Esteem Scale',
+    publico: 'Adultos',
+    minAge: 18,
+    maxAge: 999,
+    instrucao: 'Indique o quanto você concorda ou discorda de cada afirmação sobre você mesmo(a).',
+    opcoes: [
+      { label: 'Discordo totalmente', valor: 0 },
+      { label: 'Discordo', valor: 1 },
+      { label: 'Concordo', valor: 2 },
+      { label: 'Concordo totalmente', valor: 3 },
+    ],
+    perguntas: [
+      'De um modo geral, estou satisfeito(a) comigo mesmo(a).',
+      'Às vezes, penso que não presto para nada. (invertida)',
+      'Sinto que tenho boas qualidades.',
+      'Sou capaz de fazer as coisas tão bem quanto a maioria das pessoas.',
+      'Sinto que não tenho muito do que me orgulhar. (invertida)',
+      'Às vezes me sinto inútil. (invertida)',
+      'Sinto que sou uma pessoa de valor, pelo menos tanto quanto as outras.',
+      'Eu gostaria de ter mais respeito por mim mesmo(a). (invertida)',
+      'No geral, tendo a achar que sou um fracasso. (invertida)',
+      'Tenho uma atitude positiva em relação a mim mesmo(a).',
+    ],
+    scoreMax: 30,
+    faixas: [
+      { min: 0,  max: 14, label: 'Baixa',   classe: 'severe',   texto: 'Autoestima abaixo do esperado. Pode valer conversar com um profissional sobre isso.' },
+      { min: 15, max: 25, label: 'Dentro do esperado', classe: 'moderate', texto: 'Autoestima dentro da faixa mais comum observada.' },
+      { min: 26, max: 30, label: 'Alta',    classe: 'minimal',  texto: 'Autoestima acima do esperado.' },
+    ],
+  },
+
+  /* ── SWLS — Satisfaction With Life Scale ──
+     Diener et al. (1985). 5 itens, escala 1-7, soma 5-35. Sem itens
+     invertidos. Faixas de interpretação oficiais de Diener et al. ── */
+  swls: {
+    id: 'swls',
+    nome: 'SWLS',
+    nomeCompleto: 'Satisfaction With Life Scale',
+    publico: 'Adultos',
+    minAge: 18,
+    maxAge: 999,
+    instrucao: 'Indique o quanto você concorda ou discorda de cada afirmação sobre sua vida.',
+    opcoes: [
+      { label: 'Discordo totalmente', valor: 1 },
+      { label: 'Discordo', valor: 2 },
+      { label: 'Discordo um pouco', valor: 3 },
+      { label: 'Neutro', valor: 4 },
+      { label: 'Concordo um pouco', valor: 5 },
+      { label: 'Concordo', valor: 6 },
+      { label: 'Concordo totalmente', valor: 7 },
+    ],
+    perguntas: [
+      'Em muitos aspectos, minha vida está próxima do meu ideal.',
+      'As condições da minha vida são excelentes.',
+      'Estou satisfeito(a) com minha vida.',
+      'Até agora, tenho conseguido as coisas importantes que quero na vida.',
+      'Se eu pudesse viver minha vida novamente, não mudaria quase nada.',
+    ],
+    scoreMax: 35,
+    faixas: [
+      { min: 5,  max: 9,  label: 'Extremamente insatisfeito', classe: 'severe',   texto: 'Nível de satisfação com a vida muito baixo.' },
+      { min: 10, max: 14, label: 'Insatisfeito',              classe: 'severe',   texto: 'Nível de satisfação com a vida baixo.' },
+      { min: 15, max: 19, label: 'Levemente insatisfeito',    classe: 'moderate', texto: 'Leve insatisfação com a vida.' },
+      { min: 20, max: 20, label: 'Neutro',                    classe: 'moderate', texto: 'Nem satisfeito, nem insatisfeito com a vida.' },
+      { min: 21, max: 25, label: 'Levemente satisfeito',      classe: 'mild',     texto: 'Leve satisfação com a vida.' },
+      { min: 26, max: 30, label: 'Satisfeito',                classe: 'minimal',  texto: 'Bom nível de satisfação com a vida.' },
+      { min: 31, max: 35, label: 'Extremamente satisfeito',   classe: 'minimal',  texto: 'Nível de satisfação com a vida muito alto.' },
     ],
   },
 
