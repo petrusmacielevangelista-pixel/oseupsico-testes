@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Decisão Progressiva · O Seu Psico</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/testes/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">Testes</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="igt-header">
+    <div class="container">
+      <div class="igt-header__inner" style="justify-content:center;gap:40px;">
+        <div id="contador-balao" style="font-size:0.9rem;color:rgba(255,255,255,0.7);">Balão 1 de 20</div>
+        <div class="igt-balance" style="flex-direction:column;align-items:center;gap:4px;">
+          <span class="igt-balance__label">Saldo guardado</span>
+          <span class="igt-balance__value" id="saldo-total">R$ 0,00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="igt-section">
+    <div class="container" style="max-width:520px;text-align:center;">
+
+      <div class="igt-feedback">
+        <div class="igt-feedback__msg" id="feedback-msg" style="background:transparent;"></div>
+      </div>
+
+      <div style="height:260px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;">
+        <div id="balao-visual" style="width:80px;height:96px;border-radius:50% 50% 50% 50% / 55% 55% 45% 45%;background:#F97316;transition:transform 0.15s ease-out;box-shadow:0 8px 24px rgba(249,115,22,0.35);"></div>
+      </div>
+
+      <div style="display:flex;justify-content:center;gap:32px;margin-bottom:32px;font-size:0.95rem;color:var(--text-mid);">
+        <div>Bombadas: <strong id="bombas-count" style="color:var(--black);">0</strong></div>
+        <div>Neste balão: <strong id="ganho-temp" style="color:var(--black);">R$ 0,00</strong></div>
+      </div>
+
+      <div style="display:flex;gap:16px;justify-content:center;">
+        <button class="btn btn--yellow btn--lg" onclick="bombear()" style="min-width:160px;">🎈 Bombear</button>
+        <button class="btn btn--outline btn--lg" id="btn-guardar" onclick="guardar()" disabled style="min-width:160px;">💰 Guardar</button>
+      </div>
+
+    </div>
+  </section>
+
+  <script src="js/bart.js"></script>
+  <script>
+    (function() {
+      if (!sessionStorage.getItem('psico_cadastro')) { window.location.href = '/testes/'; }
+    })();
+  </script>
+</body>
+</html>
