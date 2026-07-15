@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teste de Atenção Sustentada · O Seu Psico</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/testes/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">Testes</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="igt-section">
+    <div class="container" style="max-width:560px;text-align:center;">
+      <div id="progresso" style="font-size:0.85rem;color:var(--text-light);margin-bottom:8px;">0%</div>
+      <p style="font-size:0.95rem;color:var(--text-mid);margin-bottom:24px;">
+        Clique na caixa assim que ela ficar <strong>verde</strong>. O teste dura cerca de 3 minutos — evite trocar de tela ou aba até o fim.
+      </p>
+
+      <div id="pvt-area" onclick="clicarPVT()" style="height:220px;border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;background:#1A1A1A;transition:background 0.05s;">
+        <div id="pvt-msg" style="font-family:var(--font-display);font-size:1.4rem;font-weight:800;color:#fff;">Prepare-se...</div>
+      </div>
+    </div>
+  </section>
+
+  <script src="data/baterias.js"></script>
+  <script src="js/bateria.js"></script>
+  <script src="js/pvt.js"></script>
+  <script>
+    if (!sessionStorage.getItem('psico_cadastro')) { window.location.href = '/testes/'; }
+    iniciarPVT();
+  </script>
+</body>
+</html>

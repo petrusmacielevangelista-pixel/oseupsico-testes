@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teste de Memória Espacial · O Seu Psico</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/testes/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">Testes</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="igt-section">
+    <div class="container" style="max-width:680px;">
+      <p id="corsi-status" style="text-align:center;font-size:0.95rem;color:var(--text-mid);margin-bottom:20px;">
+        Memorize a sequência de blocos que vai acender. Depois, clique nos blocos na mesma ordem.
+      </p>
+      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+        <svg id="corsi-svg" width="100%" style="display:block;"></svg>
+      </div>
+    </div>
+  </section>
+
+  <script src="data/baterias.js"></script>
+  <script src="js/bateria.js"></script>
+  <script src="js/corsi.js"></script>
+  <script>
+    if (!sessionStorage.getItem('psico_cadastro')) { window.location.href = '/testes/'; }
+    setTimeout(iniciarTentativa, 1200);
+  </script>
+</body>
+</html>

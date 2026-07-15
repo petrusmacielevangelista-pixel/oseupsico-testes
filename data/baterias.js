@@ -40,6 +40,51 @@ const BATERIAS = {
       { tipo: 'rastreio', escalaId: 'pgsi', nome: 'Jogo' },
     ],
   },
+  sonoenergia: {
+    id: 'sonoenergia',
+    icon: '😴',
+    nome: 'Sono, Energia e Foco',
+    descricao: 'Como seu sono e disposição afetam sua atenção no dia a dia.',
+    itens: [
+      { tipo: 'rastreio', escalaId: 'isi', nome: 'Insônia' },
+      { tipo: 'desempenho', instrumentoId: 'pvt', nome: 'Teste de Atenção Sustentada' },
+      { tipo: 'rastreio', escalaId: 'mbigs', nome: 'Esgotamento (Burnout)' },
+    ],
+  },
+  autoestimasatisfacao: {
+    id: 'autoestimasatisfacao',
+    icon: '🌱',
+    nome: 'Autoestima e Satisfação com a Vida',
+    descricao: 'Como você se vê e avalia sua qualidade de vida hoje.',
+    itens: [
+      { tipo: 'rastreio', escalaId: 'rosenberg', nome: 'Autoestima' },
+      { tipo: 'rastreio', escalaId: 'swls', nome: 'Satisfação com a vida' },
+      { tipo: 'rastreio', escalaId: 'whoqolbref', nome: 'Qualidade de vida' },
+    ],
+  },
+  atencaoexecutiva: {
+    id: 'atencaoexecutiva',
+    icon: '🎯',
+    nome: 'Atenção e Funções Executivas',
+    descricao: 'Sua atenção, controle de impulsos e agilidade mental.',
+    itens: [
+      { tipo: 'rastreio', escalaId: 'asrs', nome: 'Desatenção e impulsividade' },
+      { tipo: 'desempenho', instrumentoId: 'tmt', nome: 'Teste de Velocidade Mental' },
+      { tipo: 'desempenho', instrumentoId: 'flanker', nome: 'Teste de Concentração' },
+    ],
+  },
+  memoriasonoestresse: {
+    id: 'memoriasonoestresse',
+    icon: '🧩',
+    nome: 'Memória, Sono e Estresse',
+    descricao: 'Um panorama mais completo: memória, sono e nível de estresse.',
+    itens: [
+      { tipo: 'desempenho', instrumentoId: 'corsi', nome: 'Teste de Memória Espacial' },
+      { tipo: 'desempenho', instrumentoId: 'nback', nome: 'Teste de Memória de Trabalho' },
+      { tipo: 'rastreio', escalaId: 'isi', nome: 'Insônia' },
+      { tipo: 'rastreio', escalaId: 'pss10', nome: 'Estresse' },
+    ],
+  },
 };
 
 /* Mapa instrumentoId → página de tarefa (desempenho) */
@@ -49,6 +94,10 @@ const PAGINA_INSTRUMENTO = {
   icar: 'icar-tarefa.html',
   stroop: 'stroop-tarefa.html',
   tmt: 'tmt-tarefa.html',
+  corsi: 'corsi-tarefa.html',
+  nback: 'nback-tarefa.html',
+  flanker: 'flanker-tarefa.html',
+  pvt: 'pvt-tarefa.html',
 };
 
 /* Retorna a URL do próximo item de uma bateria */

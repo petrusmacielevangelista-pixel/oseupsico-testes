@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teste de Concentração · O Seu Psico</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/testes/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">Testes</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="igt-section">
+    <div class="container" style="max-width:560px;text-align:center;">
+      <div id="progresso" style="font-size:0.85rem;color:var(--text-light);margin-bottom:8px;">1 / 24</div>
+      <p style="font-size:0.95rem;color:var(--text-mid);margin-bottom:32px;">
+        Clique na direção da <strong>seta laranja no meio</strong> — ignore as setas ao redor.
+      </p>
+
+      <div style="height:120px;display:flex;align-items:center;justify-content:center;margin-bottom:40px;">
+        <div id="flanker-estimulo" style="font-family:var(--font-display);font-size:3rem;font-weight:800;color:var(--black);letter-spacing:8px;"></div>
+      </div>
+
+      <div style="display:flex;gap:20px;justify-content:center;">
+        <button class="btn btn--yellow btn--lg" onclick="responderFlanker('esquerda')" style="min-width:140px;">← Esquerda</button>
+        <button class="btn btn--yellow btn--lg" onclick="responderFlanker('direita')" style="min-width:140px;">Direita →</button>
+      </div>
+    </div>
+  </section>
+
+  <script src="data/baterias.js"></script>
+  <script src="js/bateria.js"></script>
+  <script src="js/flanker.js"></script>
+  <script>
+    if (!sessionStorage.getItem('psico_cadastro')) { window.location.href = '/testes/'; }
+  </script>
+</body>
+</html>
