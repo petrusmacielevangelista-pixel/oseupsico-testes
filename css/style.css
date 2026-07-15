@@ -1289,7 +1289,24 @@ ul { list-style: none; }
 .igt-trials { font-size: 0.85rem; color: rgba(255,255,255,0.5); }
 .igt-trials strong { color: var(--white); }
 
-.igt-section { padding: 40px 0 80px; }
+.igt-section { padding: 24px 0 40px; }
+
+/* ── BART (Decisão Progressiva) — animação de estouro do balão ── */
+@keyframes balaoEstourar {
+  0%   { transform: scale(var(--balao-escala, 1)); opacity: 1; filter: brightness(1); }
+  35%  { transform: scale(calc(var(--balao-escala, 1) * 1.25)); filter: brightness(1.6); }
+  55%  { transform: scale(calc(var(--balao-escala, 1) * 1.6)); opacity: 0.15; filter: brightness(2); }
+  100% { transform: scale(calc(var(--balao-escala, 1) * 1.6)); opacity: 0; }
+}
+#balao-visual.balao--estourou { animation: balaoEstourar 0.45s ease-out forwards; background: #EF4444 !important; }
+@keyframes telaTremer {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(3px); }
+}
+.bart-tremer { animation: telaTremer 0.35s ease-in-out; }
 .igt-instruction {
   background: var(--yellow-light); border: 1px solid var(--yellow-mid);
   border-radius: var(--radius-md); padding: 16px 20px;

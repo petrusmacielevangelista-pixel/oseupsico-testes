@@ -50,6 +50,7 @@ function bombear() {
     state.estourado = true;
     state.historico.push({ bombas: state.bombaAtual, estourou: true, ganho: 0 });
     mostrarFeedback('estourou');
+    animarEstouro();
     setTimeout(proximoBalaoOuFim, 1400);
   } else {
     state.ganhoTemporario = state.bombaAtual * VALOR_BOMBA;
@@ -84,8 +85,11 @@ function proximoBalaoOuFim() {
 function atualizarUI() {
   const balaoEl = document.getElementById('balao-visual');
   if (balaoEl) {
+    balaoEl.classList.remove('balao--estourou');
+    balaoEl.style.background = '#F97316';
     const escala = 1 + (state.bombaAtual / MAX_BOMBAS) * 2.2;
     balaoEl.style.transform = `scale(${escala})`;
+    balaoEl.style.opacity = 1;
   }
   const contadorEl = document.getElementById('contador-balao');
   if (contadorEl) contadorEl.textContent = `Balão ${state.baloAtual} de ${TOTAL_BALOES}`;
@@ -97,6 +101,17 @@ function atualizarUI() {
   if (saldoEl) saldoEl.textContent = `R$ ${state.saldo.toFixed(2)}`;
   const btnGuardar = document.getElementById('btn-guardar');
   if (btnGuardar) btnGuardar.disabled = state.bombaAtual === 0 || state.estourado;
+}
+
+function animarEstouro() {
+  const balaoEl = document.getElementById('balao-visual');
+  if (balaoEl) {
+    const escala = 1 + (state.bombaAtual / MAX_BOMBAS) * 2.2;
+    balaoEl.style.setProperty('--balao-escala', escala);
+    balaoEl.classList.add('balao--estourou');
+  }
+  document.body.classList.add('bart-tremer');
+  setTimeout(() => document.body.classList.remove('bart-tremer'), 350);
 }
 
 function mostrarFeedback(tipo) {
