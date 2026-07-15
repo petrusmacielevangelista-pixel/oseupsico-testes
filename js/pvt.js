@@ -18,10 +18,15 @@ const DURACAO_TOTAL_MS = 3 * 60 * 1000; // 3 minutos
 const ISI_MIN_MS = 1000, ISI_MAX_MS = 4000;
 const LIMIAR_LAPSO_MS = 355;
 
+// Sem resposta em 10s = lapso por omissão (protocolo padrão do PVT
+// trata não-resposta como lapso) — sem isso o teste travaria no verde.
+const TIMEOUT_SEM_RESPOSTA_MS = 10000;
+
 let inicioTeste = 0;
 let estimuloAtivo = false;
 let tEstimuloMostrado = 0;
 let timeoutProximoEstimulo = null;
+let timeoutSemResposta = null;
 const respostasPVT = []; // { rt, lapso, falsoInicio }
 
 function agendarProximoEstimulo() {
@@ -40,6 +45,11 @@ function mostrarEstimulo() {
   tEstimuloMostrado = performance.now();
   document.getElementById('pvt-area').style.background = '#22C55E';
   document.getElementById('pvt-msg').textContent = 'CLIQUE!';
+  timeoutSemResposta = setTimeout(() => {
+    estimuloAtivo = false;
+    respostasPVT.push({ rt: null, lapso: true, falsoInicio: false });
+    agendarProximoEstimulo();
+  }, TIMEOUT_SEM_RESPOSTA_MS);
 }
 
 function clicarPVT() {
@@ -55,6 +65,7 @@ function clicarPVT() {
 
   const rt = Math.round(agora - tEstimuloMostrado);
   estimuloAtivo = false;
+  clearTimeout(timeoutSemResposta);
   respostasPVT.push({ rt, lapso: rt > LIMIAR_LAPSO_MS, falsoInicio: false });
   agendarProximoEstimulo();
 }
@@ -63,7 +74,8 @@ function calcularResultadoPVT() {
   const validas = respostasPVT.filter(r => !r.falsoInicio);
   const falsosInicios = respostasPVT.filter(r => r.falsoInicio).length;
   const lapsos = validas.filter(r => r.lapso).length;
-  const rtMedio = validas.length ? Math.round(validas.reduce((s, r) => s + r.rt, 0) / validas.length) : 0;
+  const comRT = validas.filter(r => r.rt !== null); // exclui lapsos por omissão (sem clique)
+  const rtMedio = comRT.length ? Math.round(comRT.reduce((s, r) => s + r.rt, 0) / comRT.length) : 0;
 
   // Sem ponto de corte clínico validado — classificação descritiva
   // pela proporção de lapsos (desatenção) sobre o total de respostas.
@@ -78,6 +90,8 @@ function calcularResultadoPVT() {
 
 async function finalizarTarefaPVT() {
   clearTimeout(timeoutProximoEstimulo);
+  clearTimeout(timeoutSemResposta);
+  estimuloAtivo = false;
   document.getElementById('pvt-area').style.background = '#1A1A1A';
   document.getElementById('pvt-msg').textContent = 'Concluído!';
 
@@ -118,6 +132,7 @@ function tratarTrocaDeAbaPVT() {
   if (document.hidden && respostasPVT.length > 0 && !tentativaDescartadaPVT) {
     tentativaDescartadaPVT = true;
     clearTimeout(timeoutProximoEstimulo);
+    clearTimeout(timeoutSemResposta);
     alert('Você saiu da tela durante o teste. Por isso, esta tentativa foi descartada — recomece quando puder ficar sem interrupções.');
     window.location.href = '/testes/';
   }
