@@ -56,24 +56,30 @@
   </div>
 
   <script src="data/testes.js"></script>
+  <script src="data/baterias.js"></script>
+  <script src="js/bateria.js"></script>
   <script>
   (function() {
     const params = new URLSearchParams(location.search);
     const temaId = params.get('tema');
+    const escalasParam = params.get('escalas'); // modo bateria: 1+ escalas exatas, sem tema
     const dadosRaw = sessionStorage.getItem('psico_cadastro');
 
-    if (!dadosRaw || !TEMAS[temaId]) { location.href = '/testes/'; return; }
+    if (!dadosRaw || (!TEMAS[temaId] && !escalasParam)) { location.href = '/testes/'; return; }
 
     const dados = JSON.parse(dadosRaw);
-    const tema = TEMAS[temaId];
+    const tema = escalasParam ? null : TEMAS[temaId];
     const idade = parseInt(dados.idade, 10);
 
-    // Filtra escalas compatíveis com a idade do respondente
-    const escalasIds = tema.escalas.filter(id => {
-      const e = ESCALAS[id];
-      if (!e) return false;
-      return idade >= (e.minAge ?? 0) && idade <= (e.maxAge ?? 999);
-    });
+    // Modo bateria: escalas exatas, sem filtro de tema/idade (a bateria já
+    // escolheu a escala específica que quer aplicar)
+    const escalasIds = escalasParam
+      ? escalasParam.split(',')
+      : tema.escalas.filter(id => {
+          const e = ESCALAS[id];
+          if (!e) return false;
+          return idade >= (e.minAge ?? 0) && idade <= (e.maxAge ?? 999);
+        });
 
     // Nenhuma escala compatível com a idade
     if (escalasIds.length === 0) {
@@ -82,7 +88,7 @@
           <div style="font-size:3rem;margin-bottom:16px;">⚠️</div>
           <div class="scale-intro__title">Sem escalas disponíveis para sua idade</div>
           <div class="scale-intro__desc" style="margin-top:12px;">
-            As escalas do tema <strong>${tema.nome}</strong> não possuem versão validada para ${idade} anos.<br><br>
+            As escalas do tema <strong>${tema ? tema.nome : ''}</strong> não possuem versão validada para ${idade} anos.<br><br>
             Escolha outro tema ou consulte diretamente um profissional de saúde mental.
           </div>
           <a href="/testes/" class="btn btn--yellow" style="margin-top:28px;">← Escolher outro tema</a>
@@ -92,7 +98,7 @@
       document.querySelector('.progress-bar-wrap').style.display = 'none';
       return;
     }
-    const PROGRESSO_KEY = 'psico_progresso_' + temaId;
+    const PROGRESSO_KEY = 'psico_progresso_' + (escalasParam || temaId);
 
     let escalaAtual = dados.escalaIndex || 0;
     let respostas = {}; // { escalaId: { qIndex: valor } }
@@ -113,7 +119,7 @@
       sessionStorage.setItem(PROGRESSO_KEY, JSON.stringify({ escalaAtual, respostas }));
     }
 
-    document.getElementById('nav-tema').textContent = tema.icon + ' ' + tema.nome;
+    document.getElementById('nav-tema').textContent = tema ? (tema.icon + ' ' + tema.nome) : 'Bateria';
 
     function getEscala() { return ESCALAS[escalasIds[escalaAtual]]; }
 
@@ -338,6 +344,14 @@
           faixaGeral = r.classe;
         }
       });
+
+      // Modo bateria: não submete individualmente, registra e avança
+      // pro próximo item da sequência
+      if (emBateria()) {
+        sessionStorage.removeItem(PROGRESSO_KEY);
+        await avancarBateria(escalasIds[0], { score: resultados[escalasIds[0]].score, scoreMax: resultados[escalasIds[0]].scoreMax, faixa: resultados[escalasIds[0]].faixa, classe: resultados[escalasIds[0]].classe });
+        return;
+      }
 
       // Envia para a API
       try {

@@ -20,6 +20,8 @@
           <span class="navbar__badge">Testes</span>
         </a>
         <div style="display:flex;align-items:center;gap:20px;">
+          <a href="#baterias" class="navbar__back">Baterias</a>
+          <a href="#rastreios" class="navbar__back">Testes</a>
           <a href="excluir-dados.html" class="navbar__back">Meus dados</a>
           <a href="https://oseupsico.com.br" class="navbar__back">← Voltar ao site</a>
           <a href="admin/" class="navbar__admin-link" title="Admin">⚙</a>
@@ -42,8 +44,22 @@
     </div>
   </section>
 
+  <!-- Baterias -->
+  <section class="themes-section" id="baterias">
+    <div class="container">
+      <div class="themes-section__header">
+        <h2 class="themes-section__title">Baterias rápidas</h2>
+        <p class="themes-section__sub">Combinações curtas de testes pra um retrato geral.</p>
+      </div>
+
+      <div class="themes-grid" id="baterias-grid">
+        <!-- Gerado por JS -->
+      </div>
+    </div>
+  </section>
+
   <!-- Temas -->
-  <section class="themes-section">
+  <section class="themes-section" id="rastreios">
     <div class="container">
       <div class="themes-section__header">
         <h2 class="themes-section__title" data-cms="themes.title">Escolha o tema que deseja explorar</h2>
@@ -57,7 +73,7 @@
   </section>
 
   <!-- Testes de Desempenho -->
-  <section class="themes-section">
+  <section class="themes-section" id="desempenho">
     <div class="container">
       <div class="themes-section__header">
         <h2 class="themes-section__title">Testes de desempenho</h2>
@@ -85,6 +101,7 @@
   </footer>
 
   <script src="data/testes.js"></script>
+  <script src="data/baterias.js"></script>
   <script>
     // Carrega textos editáveis pelo CMS (data/config.json) e injeta nos
     // elementos marcados com data-cms="caminho.no.json".
@@ -135,6 +152,22 @@
         <div class="theme-card__arrow">Iniciar →</div>
       `;
       gridInstrumentos.appendChild(card);
+    });
+
+    // Baterias
+    const gridBaterias = document.getElementById('baterias-grid');
+    Object.values(BATERIAS).forEach(bat => {
+      const card = document.createElement('a');
+      card.className = 'theme-card';
+      card.href = `cadastro.html?bateria=${bat.id}`;
+      card.innerHTML = `
+        <div class="theme-card__icon">${bat.icon}</div>
+        <div class="theme-card__name">${bat.nome}</div>
+        <div class="theme-card__desc">${bat.descricao}</div>
+        <div class="theme-card__scales">${bat.itens.length} etapas</div>
+        <div class="theme-card__arrow">Iniciar →</div>
+      `;
+      gridBaterias.appendChild(card);
     });
   </script>
 </body>

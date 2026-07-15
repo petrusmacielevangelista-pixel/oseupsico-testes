@@ -120,6 +120,7 @@
   </div>
 
   <script src="../data/testes.js"></script>
+  <script src="../data/baterias.js"></script>
   <script>
     const token = sessionStorage.getItem('psico_admin_token');
     if (!token) location.href = '/testes/admin/';
@@ -167,6 +168,10 @@
       if (r.tipo === 'rastreio') {
         const tema = TEMAS[r.identificador];
         return tema ? `${tema.icon} ${tema.nome}` : r.identificador;
+      }
+      if (r.tipo === 'bateria') {
+        const bat = BATERIAS[r.identificador];
+        return bat ? `${bat.icon} ${bat.nome}` : r.identificador;
       }
       return IDENTIFICADORES_LABEL[r.identificador] || r.identificador;
     }
@@ -304,6 +309,18 @@
             <div class="modal__scale-result">
               <span>${escala ? escala.nomeCompleto : escalaId}</span>
               <span><strong>${res.score}/${res.scoreMax}</strong> &nbsp; <span class="result-summary__badge faixa--${res.classe}">${res.faixa || faixaLabel[res.classe]}</span></span>
+            </div>
+          `;
+        });
+      } else if (r.tipo === 'bateria') {
+        // Bateria: cada item aparece separadamente, sem faixa geral combinada
+        const bat = BATERIAS[r.identificador];
+        Object.entries(resultados).forEach(([itemId, res]) => {
+          const nomeItem = bat?.itens.find(it => (it.escalaId || it.instrumentoId) === itemId)?.nome || itemId;
+          html += `
+            <div class="modal__scale-result">
+              <span>${nomeItem}</span>
+              <span><strong>${res.score}${res.scoreMax ? '/' + res.scoreMax : ''}</strong> &nbsp; <span class="result-summary__badge faixa--${res.classe}">${res.faixa || res.classe}</span></span>
             </div>
           `;
         });

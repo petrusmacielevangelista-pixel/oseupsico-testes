@@ -103,6 +103,11 @@ async function finalizarTarefa() {
   const dados = JSON.parse(sessionStorage.getItem('psico_cadastro') || '{}');
   sessionStorage.setItem('psico_stroop_resultado', JSON.stringify({ ...dados, ...resultado }));
 
+  if (typeof emBateria === 'function' && emBateria()) {
+    await avancarBateria('stroop', { score: resultado.score, faixa: resultado.faixa, classe: resultado.classe });
+    return;
+  }
+
   try {
     await fetch('/testes/api/resultado', {
       method: 'POST',

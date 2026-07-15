@@ -146,6 +146,11 @@ async function finalizarTarefa() {
 
   sessionStorage.setItem('psico_bart_resultado', JSON.stringify({ ...dados, ...resultado }));
 
+  if (typeof emBateria === 'function' && emBateria()) {
+    await avancarBateria('bart', { score: resultado.score, faixa: resultado.faixa, classe: resultado.classe });
+    return;
+  }
+
   try {
     await fetch('/testes/api/resultado', {
       method: 'POST',

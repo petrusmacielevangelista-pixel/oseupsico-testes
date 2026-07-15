@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seu Resultado · O Seu Psico Testes</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/testes/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">Testes</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="result-hero">
+    <div class="container">
+      <div class="result-hero__eyebrow" id="result-bateria-nome">Bateria</div>
+      <h1 class="result-hero__title">Seus resultados</h1>
+      <p class="result-hero__sub" id="result-nome"></p>
+    </div>
+  </div>
+
+  <section class="result-section">
+    <div class="container">
+
+      <!-- Cada item da bateria aparece separadamente — a bateria é só um
+           agrupador, não existe "faixa geral" combinada. -->
+      <div id="itens-container" style="max-width:720px;margin:0 auto;"></div>
+
+      <div style="max-width:720px;margin:24px auto;text-align:center;">
+        <button class="btn btn--outline" id="btn-compartilhar">📤 Compartilhar</button>
+      </div>
+
+      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:24px 28px;max-width:720px;margin:0 auto 28px;">
+        <p style="font-size:0.85rem;color:var(--text-mid);line-height:1.75;margin:0;">
+          ⚠️ Estes instrumentos são de rastreio e não substituem diagnóstico clínico por profissional habilitado.
+        </p>
+      </div>
+
+      <div class="result-actions">
+        <a href="https://oseupsico.com.br" class="btn btn--yellow btn--lg">Conhecer os psicólogos →</a>
+        <a href="/testes/" class="btn btn--outline">Ver outros testes</a>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="footer__logo-text">O Seu Psico</span>
+        </div>
+        <p class="footer__disclaimer">Estes instrumentos são exclusivamente para fins de triagem e não substituem diagnóstico clínico por profissional habilitado.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="data/baterias.js"></script>
+  <script>
+    const raw = sessionStorage.getItem('psico_bateria_resultado');
+    if (!raw) { window.location.href = '/testes/'; }
+
+    const dados = JSON.parse(raw);
+    const { nome, bateriaId, resultados } = dados;
+    const bateria = BATERIAS[bateriaId];
+
+    document.getElementById('result-bateria-nome').textContent = bateria.icon + ' ' + bateria.nome;
+    document.getElementById('result-nome').textContent = `Olá, ${nome}!`;
+
+    const faixaLabel = { minimal: 'Mínima', mild: 'Leve', moderate: 'Moderada', severe: 'Grave' };
+    const container = document.getElementById('itens-container');
+
+    bateria.itens.forEach(item => {
+      const id = item.escalaId || item.instrumentoId;
+      const res = resultados[id];
+      if (!res) return;
+
+      const card = document.createElement('div');
+      card.className = 'result-card';
+      card.style.marginBottom = '16px';
+      card.style.textAlign = 'left';
+      card.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:1.1rem;color:var(--black);">${item.nome}</div>
+            <div style="font-size:0.8rem;color:var(--text-light);">${res.score}${res.scoreMax ? '/' + res.scoreMax : ''}</div>
+          </div>
+          <span class="result-summary__badge faixa--${res.classe}">${res.faixa || faixaLabel[res.classe] || res.classe}</span>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    document.getElementById('btn-compartilhar').addEventListener('click', async () => {
+      const texto = 'Acabei de fazer uma bateria de autoconhecimento no O Seu Psico e achei bem interessante! Dá uma olhada:';
+      const link = 'https://oseupsico.com.br/testes/';
+      if (navigator.share) {
+        try { await navigator.share({ text: texto, url: link }); } catch {}
+      } else {
+        window.open(`https://wa.me/?text=${encodeURIComponent(texto + ' ' + link)}`, '_blank');
+      }
+    });
+  </script>
+</body>
+</html>

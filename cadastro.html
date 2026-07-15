@@ -97,6 +97,8 @@
   </footer>
 
   <script src="data/testes.js"></script>
+  <script src="data/baterias.js"></script>
+  <script src="js/bateria.js"></script>
   <script>
     // Catálogo dos testes de desempenho — cresce conforme novos entram no ar.
     // Diferente de TEMAS (rastreios), não fica em data/testes.js porque não
@@ -112,11 +114,19 @@
     const params = new URLSearchParams(location.search);
     const temaId = params.get('tema');
     const instrumentoId = params.get('instrumento');
+    const bateriaId = params.get('bateria');
     const tema = TEMAS[temaId];
     const instrumento = INSTRUMENTOS[instrumentoId];
+    const bateria = BATERIAS[bateriaId];
 
-    if (!tema && !instrumento) {
+    if (!tema && !instrumento && !bateria) {
       location.href = '/testes/';
+    } else if (bateria) {
+      document.getElementById('tema-icon').textContent = bateria.icon;
+      document.getElementById('tema-eyebrow').textContent = 'Bateria';
+      document.getElementById('tema-titulo').textContent = bateria.nome;
+      document.getElementById('tema-desc').textContent = bateria.descricao + ' · ' + bateria.itens.length + ' etapas';
+      document.title = `${bateria.nome} · O Seu Psico Testes`;
     } else if (tema) {
       document.getElementById('tema-icon').textContent = tema.icon;
       document.getElementById('tema-eyebrow').textContent = tema.nome;
@@ -198,7 +208,12 @@
         consentimentoInstrumentoEm: agora,
       }));
 
-      location.href = tema ? `teste.html?tema=${temaId}` : instrumento.proximaPagina;
+      if (bateria) {
+        iniciarBateria(bateriaId);
+        location.href = paginaParaItemBateria(bateria.itens[0]);
+      } else {
+        location.href = tema ? `teste.html?tema=${temaId}` : instrumento.proximaPagina;
+      }
     });
   </script>
 </body>

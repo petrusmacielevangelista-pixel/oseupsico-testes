@@ -179,6 +179,11 @@ async function finalizarTarefa() {
     historico: state.historico,
   }));
 
+  if (typeof emBateria === 'function' && emBateria()) {
+    await avancarBateria('igt', { score: resultado.score, faixa: resultado.faixa, classe: resultado.classe });
+    return;
+  }
+
   try {
     await fetch('/testes/api/resultado', {
       method: 'POST',

@@ -181,6 +181,11 @@ async function calcularEEnviarResultado() {
   const dados = JSON.parse(sessionStorage.getItem('psico_cadastro') || '{}');
   sessionStorage.setItem('psico_tmt_resultado', JSON.stringify({ ...dados, ...resultado }));
 
+  if (typeof emBateria === 'function' && emBateria()) {
+    await avancarBateria('tmt', { score: tempoB, faixa, classe });
+    return;
+  }
+
   try {
     await fetch('/testes/api/resultado', {
       method: 'POST',
