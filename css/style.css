@@ -1033,6 +1033,19 @@ ul { list-style: none; }
 .admin-filters select:focus,
 .admin-filters input:focus { border-color: var(--yellow); }
 
+.admin-bulk-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--yellow-light);
+  border: 1px solid var(--yellow-mid);
+  border-radius: var(--radius-md);
+  padding: 12px 18px;
+  margin-bottom: 16px;
+  font-size: 0.85rem;
+  color: var(--off-black);
+}
+
 .admin-table-wrap {
   background: var(--white);
   border: 1.5px solid var(--border);

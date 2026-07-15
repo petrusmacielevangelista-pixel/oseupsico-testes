@@ -43,24 +43,20 @@
           <div class="admin-stat__num" id="stat-grave">—</div>
           <div class="admin-stat__label">Resultados graves</div>
         </div>
+        <div class="admin-stat">
+          <div class="admin-stat__num" id="stat-idade-media">—</div>
+          <div class="admin-stat__label">Média de idade</div>
+        </div>
       </div>
 
       <!-- Filtros -->
       <div class="admin-filters">
         <input type="text" id="filtro-busca" placeholder="Buscar por nome ou e-mail..." oninput="aplicarFiltros()" style="flex:1;min-width:200px;" />
-        <select id="filtro-tema" onchange="aplicarFiltros()">
-          <option value="">Todos os temas</option>
-          <option value="depressao">Depressão</option>
-          <option value="ansiedade">Ansiedade</option>
-          <option value="tdah">TDAH</option>
-          <option value="tea">TEA / Autismo</option>
-          <option value="trauma">Trauma / TEPT</option>
-          <option value="insonia">Insônia</option>
-          <option value="burnout">Burnout</option>
-          <option value="bipolaridade">Bipolaridade</option>
-          <option value="estresse">Estresse</option>
-          <option value="vicios">Vícios & Compulsões</option>
-          <option value="qualidade">Qualidade de Vida</option>
+        <select id="filtro-tipo" onchange="aplicarFiltros()">
+          <option value="">Todos os tipos</option>
+          <option value="rastreio">Rastreios</option>
+          <option value="desempenho">Testes de desempenho</option>
+          <option value="bateria">Baterias</option>
         </select>
         <select id="filtro-faixa" onchange="aplicarFiltros()">
           <option value="">Todas as faixas</option>
@@ -68,8 +64,21 @@
           <option value="mild">Leve / Moderado</option>
           <option value="moderate">Moderada</option>
           <option value="severe">Grave / Alto</option>
+          <option value="good">Boa (desempenho)</option>
+          <option value="poor">Baixa (desempenho)</option>
         </select>
+        <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;color:var(--text-mid);">
+          De <input type="date" id="filtro-de" onchange="carregarDados()" style="width:auto;" />
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;color:var(--text-mid);">
+          Até <input type="date" id="filtro-ate" onchange="carregarDados()" style="width:auto;" />
+        </label>
         <button class="btn btn--outline" onclick="exportarCSV()" style="padding:10px 18px;font-size:0.85rem;">⬇ Exportar CSV</button>
+      </div>
+
+      <div class="admin-bulk-actions" id="bulk-actions" style="display:none;">
+        <span id="bulk-count"></span>
+        <button class="btn btn--outline" style="color:var(--error);border-color:var(--error);" onclick="excluirSelecionados()">🗑 Excluir selecionados</button>
       </div>
 
       <!-- Tabela -->
@@ -77,18 +86,21 @@
         <table class="admin-table">
           <thead>
             <tr>
+              <th><input type="checkbox" id="chk-todos" onchange="toggleTodos(this.checked)" /></th>
               <th>Nome</th>
               <th>E-mail</th>
               <th>Telefone</th>
               <th>Idade</th>
-              <th>Tema</th>
+              <th>Tipo</th>
+              <th>Identificador</th>
               <th>Faixa geral</th>
               <th>Data</th>
+              <th></th>
               <th></th>
             </tr>
           </thead>
           <tbody id="tabela-body">
-            <tr><td colspan="8" style="text-align:center;color:var(--text-light);padding:40px;">Carregando dados...</td></tr>
+            <tr><td colspan="11" style="text-align:center;color:var(--text-light);padding:40px;">Carregando dados...</td></tr>
           </tbody>
         </table>
       </div>
@@ -112,12 +124,28 @@
     const token = sessionStorage.getItem('psico_admin_token');
     if (!token) location.href = '/testes/admin/';
 
+    // Rótulos legíveis pra identificadores que não são "tema" de rastreio
+    // (testes de desempenho e, futuramente, baterias)
+    const IDENTIFICADORES_LABEL = {
+      igt: '🃏 Teste de Julgamento',
+    };
+
     let todosRegistros = [];
     let filtrados = [];
+    let selecionados = new Set();
 
     async function carregarDados() {
+      selecionados.clear();
+      atualizarBulkActions();
+
+      const de = document.getElementById('filtro-de').value;
+      const ate = document.getElementById('filtro-ate').value;
+      const qs = new URLSearchParams();
+      if (de) qs.set('de', de);
+      if (ate) qs.set('ate', ate);
+
       try {
-        const res = await fetch('/testes/api/admin/dados', {
+        const res = await fetch('/testes/api/admin/dados' + (qs.toString() ? '?' + qs.toString() : ''), {
           headers: { 'Authorization': 'Bearer ' + token },
         });
         if (res.status === 401) { logout(); return; }
@@ -127,8 +155,16 @@
         aplicarFiltros();
       } catch {
         document.getElementById('tabela-body').innerHTML =
-          '<tr><td colspan="8" style="text-align:center;color:var(--error);">Erro ao carregar dados.</td></tr>';
+          '<tr><td colspan="11" style="text-align:center;color:var(--error);">Erro ao carregar dados.</td></tr>';
       }
+    }
+
+    function identificadorLabel(r) {
+      if (r.tipo === 'rastreio') {
+        const tema = TEMAS[r.identificador];
+        return tema ? `${tema.icon} ${tema.nome}` : r.identificador;
+      }
+      return IDENTIFICADORES_LABEL[r.identificador] || r.identificador;
     }
 
     function atualizarStats() {
@@ -136,26 +172,32 @@
       const totalHoje = todosRegistros.filter(r => r.criado_em?.startsWith(hoje)).length;
       const graves = todosRegistros.filter(r => r.faixa_geral === 'severe').length;
 
-      const temaCount = {};
-      todosRegistros.forEach(r => { temaCount[r.tema] = (temaCount[r.tema] || 0) + 1; });
-      const temaMais = Object.entries(temaCount).sort((a, b) => b[1] - a[1])[0];
+      const idCount = {};
+      todosRegistros.forEach(r => { idCount[r.identificador] = (idCount[r.identificador] || 0) + 1; });
+      const maisFrequente = Object.entries(idCount).sort((a, b) => b[1] - a[1])[0];
+
+      const idades = todosRegistros.map(r => r.idade).filter(i => Number.isFinite(i));
+      const idadeMedia = idades.length ? Math.round(idades.reduce((a, b) => a + b, 0) / idades.length) : null;
 
       document.getElementById('stat-total').textContent = todosRegistros.length;
       document.getElementById('stat-hoje').textContent = totalHoje;
-      document.getElementById('stat-tema').textContent = temaMais ? (TEMAS[temaMais[0]]?.nome || temaMais[0]) : '—';
+      document.getElementById('stat-tema').textContent = maisFrequente
+        ? (TEMAS[maisFrequente[0]]?.nome || IDENTIFICADORES_LABEL[maisFrequente[0]] || maisFrequente[0])
+        : '—';
       document.getElementById('stat-grave').textContent = graves;
+      document.getElementById('stat-idade-media').textContent = idadeMedia !== null ? `${idadeMedia} anos` : '—';
     }
 
     function aplicarFiltros() {
       const busca = document.getElementById('filtro-busca').value.toLowerCase();
-      const tema = document.getElementById('filtro-tema').value;
+      const tipo = document.getElementById('filtro-tipo').value;
       const faixa = document.getElementById('filtro-faixa').value;
 
       filtrados = todosRegistros.filter(r => {
         const matchBusca = !busca || r.nome?.toLowerCase().includes(busca) || r.email?.toLowerCase().includes(busca);
-        const matchTema = !tema || r.tema === tema;
+        const matchTipo = !tipo || r.tipo === tipo;
         const matchFaixa = !faixa || r.faixa_geral === faixa;
-        return matchBusca && matchTema && matchFaixa;
+        return matchBusca && matchTipo && matchFaixa;
       });
 
       renderTabela();
@@ -164,30 +206,74 @@
     function renderTabela() {
       const tbody = document.getElementById('tabela-body');
       if (!filtrados.length) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-light);padding:32px;">Nenhum registro encontrado.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:var(--text-light);padding:32px;">Nenhum registro encontrado.</td></tr>';
         return;
       }
 
+      const tipoLabel = { rastreio: 'Rastreio', desempenho: 'Desempenho', bateria: 'Bateria' };
+      const faixaLabel = { minimal: 'Mínima', mild: 'Leve', moderate: 'Moderada', severe: 'Grave', good: 'Boa', poor: 'Baixa' };
+
       tbody.innerHTML = filtrados.map((r, i) => {
-        const tema = TEMAS[r.tema];
-        const faixaLabel = { minimal: 'Mínima', mild: 'Leve', moderate: 'Moderada', severe: 'Grave' }[r.faixa_geral] || r.faixa_geral;
         const data = r.criado_em ? new Date(r.criado_em).toLocaleDateString('pt-BR') : '—';
         return `<tr>
+          <td><input type="checkbox" data-id="${r.id}" onchange="toggleSelecionado(${r.id}, this.checked)" ${selecionados.has(r.id) ? 'checked' : ''} /></td>
           <td><strong>${r.nome || '—'}</strong></td>
           <td>${r.email || '—'}</td>
           <td>${r.telefone || '—'}</td>
           <td>${r.idade || '—'}</td>
-          <td>${tema ? tema.icon + ' ' + tema.nome : r.tema}</td>
-          <td><span class="result-summary__badge faixa--${r.faixa_geral}">${faixaLabel}</span></td>
+          <td>${tipoLabel[r.tipo] || r.tipo}</td>
+          <td>${identificadorLabel(r)}</td>
+          <td>${r.faixa_geral ? `<span class="result-summary__badge faixa--${r.faixa_geral}">${faixaLabel[r.faixa_geral] || r.faixa_geral}</span>` : '—'}</td>
           <td>${data}</td>
           <td><button class="admin-table__btn" onclick="abrirModal(${i})">Ver</button></td>
+          <td><button class="admin-table__btn" style="color:var(--error);" onclick="excluirUm(${r.id})">Excluir</button></td>
         </tr>`;
       }).join('');
     }
 
+    function toggleSelecionado(id, checked) {
+      if (checked) selecionados.add(id); else selecionados.delete(id);
+      atualizarBulkActions();
+    }
+
+    function toggleTodos(checked) {
+      selecionados = checked ? new Set(filtrados.map(r => r.id)) : new Set();
+      renderTabela();
+      atualizarBulkActions();
+    }
+
+    function atualizarBulkActions() {
+      const el = document.getElementById('bulk-actions');
+      if (selecionados.size > 0) {
+        el.style.display = 'flex';
+        document.getElementById('bulk-count').textContent = `${selecionados.size} selecionado(s)`;
+      } else {
+        el.style.display = 'none';
+      }
+    }
+
+    async function excluirUm(id) {
+      if (!confirm('Excluir este registro? Essa ação não pode ser desfeita.')) return;
+      await fetch(`/testes/api/admin/dados/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + token },
+      });
+      carregarDados();
+    }
+
+    async function excluirSelecionados() {
+      if (!selecionados.size) return;
+      if (!confirm(`Excluir ${selecionados.size} registro(s)? Essa ação não pode ser desfeita.`)) return;
+      await fetch('/testes/api/admin/dados/excluir-lote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ ids: Array.from(selecionados) }),
+      });
+      carregarDados();
+    }
+
     function abrirModal(i) {
       const r = filtrados[i];
-      const tema = TEMAS[r.tema];
       let resultados = {};
       try { resultados = typeof r.resultados === 'string' ? JSON.parse(r.resultados) : r.resultados; } catch {}
 
@@ -196,24 +282,37 @@
       let html = `
         <div class="modal__row"><strong>Nome</strong><span>${r.nome}</span></div>
         <div class="modal__row"><strong>E-mail</strong><span>${r.email}</span></div>
-        <div class="modal__row"><strong>Telefone</strong><span>${r.telefone}</span></div>
-        <div class="modal__row"><strong>Idade</strong><span>${r.idade} anos</span></div>
-        <div class="modal__row"><strong>Tema</strong><span>${tema ? tema.icon + ' ' + tema.nome : r.tema}</span></div>
+        <div class="modal__row"><strong>Telefone</strong><span>${r.telefone || '—'}</span></div>
+        <div class="modal__row"><strong>Idade</strong><span>${r.idade || '—'} anos</span></div>
+        <div class="modal__row"><strong>Tipo</strong><span>${identificadorLabel(r)}</span></div>
         <div class="modal__row"><strong>Data</strong><span>${r.criado_em ? new Date(r.criado_em).toLocaleString('pt-BR') : '—'}</span></div>
+        <div class="modal__row"><strong>Consentimento de dados</strong><span>${r.consentimento_dados_em ? new Date(r.consentimento_dados_em).toLocaleString('pt-BR') : '—'}</span></div>
+        <div class="modal__row"><strong>Consentimento do instrumento</strong><span>${r.consentimento_instrumento_em ? new Date(r.consentimento_instrumento_em).toLocaleString('pt-BR') : '—'}</span></div>
         <div class="modal__divider"></div>
-        <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-light);margin-bottom:12px;">Resultados por escala</div>
+        <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-light);margin-bottom:12px;">Resultado</div>
       `;
 
-      Object.entries(resultados).forEach(([escalaId, res]) => {
-        const escala = ESCALAS[escalaId];
-        const faixaLabel = res.faixa || { minimal: 'Mínima', mild: 'Leve', moderate: 'Moderada', severe: 'Grave' }[res.classe];
+      if (r.tipo === 'rastreio') {
+        const faixaLabel = { minimal: 'Mínima', mild: 'Leve', moderate: 'Moderada', severe: 'Grave' };
+        Object.entries(resultados).forEach(([escalaId, res]) => {
+          const escala = ESCALAS[escalaId];
+          html += `
+            <div class="modal__scale-result">
+              <span>${escala ? escala.nomeCompleto : escalaId}</span>
+              <span><strong>${res.score}/${res.scoreMax}</strong> &nbsp; <span class="result-summary__badge faixa--${res.classe}">${res.faixa || faixaLabel[res.classe]}</span></span>
+            </div>
+          `;
+        });
+      } else {
+        // Testes de desempenho: score/faixa direto + métricas específicas do instrumento
         html += `
           <div class="modal__scale-result">
-            <span>${escala ? escala.nomeCompleto : escalaId}</span>
-            <span><strong>${res.score}/${res.scoreMax}</strong> &nbsp; <span class="result-summary__badge faixa--${res.classe}">${faixaLabel}</span></span>
+            <span>Escore</span>
+            <span><strong>${resultados.score}</strong> &nbsp; <span class="result-summary__badge faixa--${resultados.classe}">${resultados.faixa}</span></span>
           </div>
+          <div class="modal__row"><strong>Métricas</strong><span style="font-size:0.8rem;">${JSON.stringify(resultados.metricas || {})}</span></div>
         `;
-      });
+      }
 
       document.getElementById('modal-body').innerHTML = html;
       document.getElementById('modal-overlay').classList.add('open');
@@ -226,12 +325,11 @@
     }
 
     function exportarCSV() {
-      const linhas = [['Nome', 'E-mail', 'Telefone', 'Idade', 'Tema', 'Faixa Geral', 'Data']];
+      const linhas = [['Nome', 'E-mail', 'Telefone', 'Idade', 'Tipo', 'Identificador', 'Faixa Geral', 'Data']];
       filtrados.forEach(r => {
         linhas.push([
           r.nome, r.email, r.telefone, r.idade,
-          TEMAS[r.tema]?.nome || r.tema,
-          r.faixa_geral,
+          r.tipo, identificadorLabel(r), r.faixa_geral,
           r.criado_em ? new Date(r.criado_em).toLocaleDateString('pt-BR') : '',
         ]);
       });
