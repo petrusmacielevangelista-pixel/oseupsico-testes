@@ -486,6 +486,34 @@ ul { list-style: none; }
   cursor: not-allowed;
 }
 
+.form-card__sucesso {
+  text-align: center;
+  padding: 24px 0;
+}
+
+.form-card__sucesso-icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.form-card__sucesso p {
+  color: var(--text-mid);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.navbar__admin-link {
+  color: var(--border);
+  font-size: 1rem;
+  text-decoration: none;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.navbar__admin-link:hover {
+  opacity: 1;
+}
+
 /* ── Progress Bar ── */
 .progress-bar-wrap {
   background: var(--white);
