@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seu Resultado · O Seu Psico Testes</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/testes/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">Testes</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="result-hero">
+    <div class="container">
+      <div class="result-hero__eyebrow">Teste de Raciocínio Lógico</div>
+      <h1 class="result-hero__title">Seu resultado</h1>
+      <p class="result-hero__sub" id="result-nome"></p>
+    </div>
+  </div>
+
+  <section class="result-section">
+    <div class="container">
+
+      <div class="result-card" style="text-align:center;">
+        <div class="result-score-big neutral" id="result-score">—</div>
+        <div class="result-score-label">Acertos</div>
+        <div class="result-faixa" id="result-faixa" style="margin:0 auto 20px;"></div>
+        <p class="result-text" id="result-interpretacao"></p>
+      </div>
+
+      <div style="max-width:720px;margin:0 auto 24px;text-align:center;">
+        <button class="btn btn--outline" id="btn-compartilhar">📤 Compartilhar</button>
+      </div>
+
+      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:24px 28px;max-width:720px;margin:0 auto 28px;">
+        <p style="font-size:0.85rem;color:var(--text-mid);line-height:1.75;margin:0;">
+          ⚠️ <strong>Importante:</strong> este teste usa itens originais, inspirados no formato de raciocínio matricial, mas não é uma aplicação de nenhum instrumento validado com normas de percentil ou equivalência de QI. O resultado é apenas a contagem de acertos neste conjunto específico de itens — não substitui uma avaliação cognitiva formal por um profissional habilitado.
+        </p>
+      </div>
+
+      <div class="result-actions">
+        <a href="https://oseupsico.com.br" class="btn btn--yellow btn--lg">Conhecer os psicólogos →</a>
+        <a href="/testes/" class="btn btn--outline">Ver outros testes</a>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="footer__logo-text">O Seu Psico</span>
+        </div>
+        <p class="footer__disclaimer">Estes instrumentos são exclusivamente para fins de triagem e não substituem diagnóstico clínico por profissional habilitado.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const raw = sessionStorage.getItem('psico_icar_resultado');
+    if (!raw) { window.location.href = '/testes/'; }
+
+    const dados = JSON.parse(raw);
+    const { nome, score, scoreMax, faixa, classe } = dados;
+
+    document.getElementById('result-nome').textContent = `Olá, ${nome}!`;
+    document.getElementById('result-score').textContent = `${score}/${scoreMax}`;
+
+    const faixaEl = document.getElementById('result-faixa');
+    faixaEl.textContent = faixa;
+    faixaEl.className = 'result-faixa ' + classe;
+
+    const interpretacoes = {
+      severe: 'Você acertou a maioria dos itens deste conjunto, identificando corretamente os padrões nas matrizes apresentadas.',
+      moderate: 'Você acertou uma parte dos itens deste conjunto — um desempenho intermediário para este formato de teste.',
+      minimal: 'Você acertou poucos itens deste conjunto específico. Isso pode refletir familiaridade com o formato, atenção no momento do teste, entre outros fatores — não é uma medida definitiva de capacidade de raciocínio.',
+    };
+    document.getElementById('result-interpretacao').textContent = interpretacoes[classe] || '';
+
+    document.getElementById('btn-compartilhar').addEventListener('click', async () => {
+      const texto = 'Acabei de fazer um teste de autoconhecimento no O Seu Psico e achei bem interessante! Dá uma olhada:';
+      const link = 'https://oseupsico.com.br/testes/';
+      if (navigator.share) {
+        try { await navigator.share({ text: texto, url: link }); } catch {}
+      } else {
+        window.open(`https://wa.me/?text=${encodeURIComponent(texto + ' ' + link)}`, '_blank');
+      }
+    });
+  </script>
+</body>
+</html>

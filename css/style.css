@@ -1335,3 +1335,19 @@ ul { list-style: none; }
 .result-deck[data-deck="D"] .result-deck__letter { color: var(--deck-d); }
 .result-deck__count { font-size: 1.2rem; font-weight: 700; color: var(--black); }
 .result-deck__label { font-size: 0.72rem; color: var(--text-light); }
+
+/* ── Teste de Raciocínio Lógico (matrizes) ── */
+.icar-opcao {
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s;
+}
+.icar-opcao:hover { border-color: var(--yellow); transform: translateY(-2px); }
+.icar-opcao span { font-size: 0.8rem; font-weight: 700; color: var(--text-light); }

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teste de Raciocínio Lógico · O Seu Psico</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/testes/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">Testes</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="igt-section">
+    <div class="container" style="max-width:560px;text-align:center;">
+      <div id="contador-item" style="font-size:0.85rem;color:var(--text-light);margin-bottom:16px;">Item 1 de 6</div>
+
+      <p style="font-size:0.95rem;color:var(--text-mid);margin-bottom:20px;">
+        Complete o padrão: qual opção substitui corretamente o "?" na matriz abaixo?
+      </p>
+
+      <div id="matriz-container" style="display:flex;justify-content:center;margin-bottom:32px;"></div>
+
+      <div id="opcoes-container" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:400px;margin:0 auto;"></div>
+    </div>
+  </section>
+
+  <script src="js/icar.js"></script>
+  <script>
+    if (!sessionStorage.getItem('psico_cadastro')) { window.location.href = '/testes/'; }
+
+    let tentativaDescartada = false;
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && !tentativaDescartada) {
+        tentativaDescartada = true;
+        alert('Você saiu da tela durante o teste. Por isso, esta tentativa foi descartada — recomece quando puder ficar sem interrupções.');
+        window.location.href = '/testes/';
+      }
+    });
+  </script>
+</body>
+</html>
