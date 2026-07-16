@@ -158,6 +158,16 @@ async function finalizarTarefa() {
 let tentativaDescartada = false;
 let timeoutSaidaTela = null;
 function tratarTrocaDeAba() {
+  // Pausa o cronômetro de "sem resposta" enquanto a tela está oculta —
+  // sem isso, o teste podia se autocompletar sozinho em segundo plano
+  // (cada tentativa contada como "não respondeu") antes do descarte
+  // sequer ser acionado, disparando um e-mail de um teste não concluído.
+  if (document.hidden) {
+    clearTimeout(timeoutProximo);
+  } else if (!tentativaDescartada && indiceAtual < sequencia.length && !jaRespondeuEssaTentativa) {
+    timeoutProximo = setTimeout(() => registrarResposta(false), 2200);
+  }
+
   // Espera a tela ficar oculta por mais de 1.5s antes de descartar —
   // evita falso positivo quando outra janela sobrepõe momentaneamente
   // o navegador (comum em setups com 2 monitores).
@@ -166,6 +176,7 @@ function tratarTrocaDeAba() {
       timeoutSaidaTela = setTimeout(() => {
         if (document.hidden && !tentativaDescartada) {
           tentativaDescartada = true;
+          clearTimeout(timeoutProximo);
           alert('Você saiu da tela durante o teste. Por isso, esta tentativa foi descartada — recomece quando puder ficar sem interrupções.');
           window.location.href = '/testes/';
         }

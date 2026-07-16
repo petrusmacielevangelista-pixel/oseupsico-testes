@@ -130,6 +130,25 @@ async function finalizarTarefaPVT() {
 let tentativaDescartadaPVT = false;
 let timeoutSaidaTelaPVT = null;
 function tratarTrocaDeAbaPVT() {
+  // Pausa os cronômetros do PVT enquanto a tela está oculta — sem
+  // isso, o teste podia rodar sozinho em segundo plano (contando
+  // lapsos e até chegando ao fim dos 3 minutos) antes do descarte
+  // sequer ser acionado, disparando um e-mail de um teste não concluído.
+  if (document.hidden) {
+    clearTimeout(timeoutProximoEstimulo);
+    clearTimeout(timeoutSemResposta);
+  } else if (!tentativaDescartadaPVT && inicioTeste > 0) {
+    if (estimuloAtivo) {
+      timeoutSemResposta = setTimeout(() => {
+        estimuloAtivo = false;
+        respostasPVT.push({ rt: null, lapso: true, falsoInicio: false });
+        agendarProximoEstimulo();
+      }, TIMEOUT_SEM_RESPOSTA_MS);
+    } else {
+      agendarProximoEstimulo();
+    }
+  }
+
   // Espera a tela ficar oculta por mais de 1.5s antes de descartar —
   // evita falso positivo quando outra janela sobrepõe momentaneamente
   // o navegador (comum em setups com 2 monitores).
