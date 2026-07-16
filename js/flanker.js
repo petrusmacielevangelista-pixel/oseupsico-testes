@@ -121,11 +121,23 @@ async function finalizarTarefaFlanker() {
 }
 
 let tentativaDescartadaFlanker = false;
+let timeoutSaidaTelaFlanker = null;
 function tratarTrocaDeAbaFlanker() {
-  if (document.hidden && indiceFlanker > 0 && !tentativaDescartadaFlanker) {
-    tentativaDescartadaFlanker = true;
-    alert('Você saiu da tela durante o teste. Por isso, esta tentativa foi descartada — recomece quando puder ficar sem interrupções.');
-    window.location.href = '/testes/';
+  // Espera a tela ficar oculta por mais de 1.5s antes de descartar —
+  // evita falso positivo quando outra janela sobrepõe momentaneamente
+  // o navegador (comum em setups com 2 monitores).
+  if (document.hidden) {
+    if (indiceFlanker > 0 && !tentativaDescartadaFlanker) {
+      timeoutSaidaTelaFlanker = setTimeout(() => {
+        if (document.hidden && !tentativaDescartadaFlanker) {
+          tentativaDescartadaFlanker = true;
+          alert('Você saiu da tela durante o teste. Por isso, esta tentativa foi descartada — recomece quando puder ficar sem interrupções.');
+          window.location.href = '/testes/';
+        }
+      }, 1500);
+    }
+  } else {
+    clearTimeout(timeoutSaidaTelaFlanker);
   }
 }
 

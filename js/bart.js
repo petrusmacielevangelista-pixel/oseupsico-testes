@@ -190,11 +190,23 @@ async function finalizarTarefa() {
 }
 
 let tentativaDescartada = false;
+let timeoutSaidaTela = null;
 function tratarTrocaDeAba() {
-  if (document.hidden && state.baloAtual > 1 && !tentativaDescartada) {
-    tentativaDescartada = true;
-    alert('Você saiu da tela durante a tarefa. Por isso, esta tentativa foi descartada — recomece quando puder ficar sem interrupções.');
-    window.location.href = '/testes/';
+  // Espera a tela ficar oculta por mais de 1.5s antes de descartar —
+  // evita falso positivo quando outra janela sobrepõe momentaneamente
+  // o navegador (comum em setups com 2 monitores).
+  if (document.hidden) {
+    if (state.baloAtual > 1 && !tentativaDescartada) {
+      timeoutSaidaTela = setTimeout(() => {
+        if (document.hidden && !tentativaDescartada) {
+          tentativaDescartada = true;
+          alert('Você saiu da tela durante a tarefa. Por isso, esta tentativa foi descartada — recomece quando puder ficar sem interrupções.');
+          window.location.href = '/testes/';
+        }
+      }, 1500);
+    }
+  } else {
+    clearTimeout(timeoutSaidaTela);
   }
 }
 

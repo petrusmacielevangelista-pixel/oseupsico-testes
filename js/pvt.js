@@ -128,13 +128,25 @@ async function finalizarTarefaPVT() {
 }
 
 let tentativaDescartadaPVT = false;
+let timeoutSaidaTelaPVT = null;
 function tratarTrocaDeAbaPVT() {
-  if (document.hidden && respostasPVT.length > 0 && !tentativaDescartadaPVT) {
-    tentativaDescartadaPVT = true;
-    clearTimeout(timeoutProximoEstimulo);
-    clearTimeout(timeoutSemResposta);
-    alert('Você saiu da tela durante o teste. Por isso, esta tentativa foi descartada — recomece quando puder ficar sem interrupções.');
-    window.location.href = '/testes/';
+  // Espera a tela ficar oculta por mais de 1.5s antes de descartar —
+  // evita falso positivo quando outra janela sobrepõe momentaneamente
+  // o navegador (comum em setups com 2 monitores).
+  if (document.hidden) {
+    if (respostasPVT.length > 0 && !tentativaDescartadaPVT) {
+      timeoutSaidaTelaPVT = setTimeout(() => {
+        if (document.hidden && !tentativaDescartadaPVT) {
+          tentativaDescartadaPVT = true;
+          clearTimeout(timeoutProximoEstimulo);
+          clearTimeout(timeoutSemResposta);
+          alert('Você saiu da tela durante o teste. Por isso, esta tentativa foi descartada — recomece quando puder ficar sem interrupções.');
+          window.location.href = '/testes/';
+        }
+      }, 1500);
+    }
+  } else {
+    clearTimeout(timeoutSaidaTelaPVT);
   }
 }
 
