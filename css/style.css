@@ -516,6 +516,16 @@ button.form-card:hover {
 
 .form-group__error.visible { display: block; }
 
+.tel-field { display: flex; gap: 8px; }
+.tel-field__pais {
+  width: auto;
+  flex: 0 0 auto;
+  padding: 12px 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.tel-field input { flex: 1 1 auto; min-width: 0; }
+
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;

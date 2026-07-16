@@ -54,7 +54,10 @@
             </div>
             <div class="form-group">
               <label for="telefone">Telefone *</label>
-              <input type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999" autocomplete="tel" />
+              <div class="tel-field">
+                <select id="tel-pais" aria-label="País"></select>
+                <input type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999" autocomplete="tel" />
+              </div>
               <div class="form-group__error" id="erro-telefone">Informe um telefone válido.</div>
             </div>
           </div>
@@ -99,6 +102,7 @@
   <script src="data/testes.js"></script>
   <script src="data/baterias.js"></script>
   <script src="js/bateria.js"></script>
+  <script src="js/telefone-mask.js"></script>
   <script>
     // Catálogo dos testes de desempenho — cresce conforme novos entram no ar.
     // Diferente de TEMAS (rastreios), não fica em data/testes.js porque não
@@ -145,15 +149,8 @@
       document.title = `${instrumento.nome} · O Seu Psico Testes`;
     }
 
-    // Máscara de telefone
-    const telInput = document.getElementById('telefone');
-    telInput.addEventListener('input', () => {
-      let v = telInput.value.replace(/\D/g, '').slice(0, 11);
-      if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
-      else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
-      else if (v.length > 0) v = `(${v}`;
-      telInput.value = v;
-    });
+    // Máscara de telefone com seletor de país
+    initTelefoneMask('telefone', 'tel-pais');
 
     function showError(id, input) {
       document.getElementById(id).classList.add('visible');
@@ -193,7 +190,7 @@
       if (nome.value.trim().length < 3) { showError('erro-nome', nome); valid = false; }
       const idadeVal = parseInt(idade.value);
       if (!idadeVal || idadeVal < 8 || idadeVal > 120) { showError('erro-idade', idade); valid = false; }
-      if (tel.value.replace(/\D/g,'').length < 10) { showError('erro-telefone', tel); valid = false; }
+      if (!telefoneValido('telefone', 'tel-pais')) { showError('erro-telefone', tel); valid = false; }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) { showError('erro-email', email); valid = false; }
 
       if (!valid) return;
@@ -203,7 +200,7 @@
       sessionStorage.setItem('psico_cadastro', JSON.stringify({
         nome: nome.value.trim(),
         idade: idadeVal,
-        telefone: tel.value.trim(),
+        telefone: telefoneParaEnvio('telefone', 'tel-pais'),
         email: email.value.trim(),
         tema: temaId,
         escalaIndex: 0,

@@ -61,7 +61,10 @@
 
           <div class="form-group">
             <label for="telefone">Telefone *</label>
-            <input type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999" autocomplete="tel" />
+            <div class="tel-field">
+              <select id="tel-pais" aria-label="País"></select>
+              <input type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999" autocomplete="tel" />
+            </div>
             <div class="form-group__error" id="erro-telefone">Informe um telefone válido.</div>
           </div>
 
@@ -97,6 +100,7 @@
     </div>
   </footer>
 
+  <script src="js/telefone-mask.js"></script>
   <script>
     let acaoAtual = null; // 'consulta' | 'exclusao'
 
@@ -127,16 +131,10 @@
       document.getElementById('escolha-acao').style.display = 'grid';
       document.getElementById('header-sub').textContent = 'Consulte os testes que você já fez ou solicite a exclusão dos seus dados — informando o e-mail e o telefone usados no cadastro.';
       document.getElementById('form-dados').reset();
+      document.getElementById('tel-pais').value = 'BR';
     }
 
-    const telInput = document.getElementById('telefone');
-    telInput.addEventListener('input', () => {
-      let v = telInput.value.replace(/\D/g, '').slice(0, 11);
-      if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
-      else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
-      else if (v.length > 0) v = `(${v}`;
-      telInput.value = v;
-    });
+    initTelefoneMask('telefone', 'tel-pais');
 
     function showError(id, input) {
       document.getElementById(id).classList.add('visible');
@@ -158,7 +156,7 @@
       clearError('erro-telefone', tel);
 
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) { showError('erro-email', email); valid = false; }
-      if (tel.value.replace(/\D/g,'').length < 10) { showError('erro-telefone', tel); valid = false; }
+      if (!telefoneValido('telefone', 'tel-pais')) { showError('erro-telefone', tel); valid = false; }
 
       if (!valid) return;
 
@@ -167,7 +165,7 @@
       btn.textContent = 'Processando...';
 
       const emailVal = email.value.trim();
-      const telVal = tel.value.trim();
+      const telVal = telefoneParaEnvio('telefone', 'tel-pais');
 
       if (acaoAtual === 'consulta') {
         try {
