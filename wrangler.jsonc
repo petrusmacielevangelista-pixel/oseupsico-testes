@@ -23,7 +23,9 @@
   },
   "routes": [
     { "pattern": "oseupsico.com.br/testes", "zone_name": "oseupsico.com.br" },
-    { "pattern": "oseupsico.com.br/testes/*", "zone_name": "oseupsico.com.br" }
+    { "pattern": "oseupsico.com.br/testes/*", "zone_name": "oseupsico.com.br" },
+    { "pattern": "www.oseupsico.com.br/testes", "zone_name": "oseupsico.com.br" },
+    { "pattern": "www.oseupsico.com.br/testes/*", "zone_name": "oseupsico.com.br" }
   ],
   "dev": {
     "port": 8788
