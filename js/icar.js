@@ -131,32 +131,136 @@ const ITENS = [
     opcoes: [c('circulo','m','verde'), c('quadrado','m','verde'), c('triangulo','m','verde'), c('circulo','g','verde')],
     correta: 0,
   },
+  { // 7: cor muda por linha (azul, coral, verde), forma e tamanho constantes
+    matriz: [
+      [c('circulo','m','azul'), c('circulo','m','azul'), c('circulo','m','azul')],
+      [c('circulo','m','coral'), c('circulo','m','coral'), c('circulo','m','coral')],
+      [c('circulo','m','verde'), c('circulo','m','verde'), null],
+    ],
+    opcoes: [c('circulo','m','verde'), c('circulo','m','coral'), c('quadrado','m','verde'), c('circulo','p','verde')],
+    correta: 0,
+  },
+  { // 8: tamanho diminui de cima pra baixo, em todas as colunas
+    matriz: [
+      [c('quadrado','g','coral'), c('quadrado','g','coral'), c('quadrado','g','coral')],
+      [c('quadrado','m','coral'), c('quadrado','m','coral'), c('quadrado','m','coral')],
+      [c('quadrado','p','coral'), c('quadrado','p','coral'), null],
+    ],
+    opcoes: [c('quadrado','p','coral'), c('quadrado','m','coral'), c('circulo','p','coral'), c('quadrado','g','coral')],
+    correta: 0,
+  },
+  { // 9: quadrado latino — cada linha é a anterior deslocada em 1
+    matriz: [
+      [c('circulo','m','azul'), c('quadrado','m','azul'), c('triangulo','m','azul')],
+      [c('quadrado','m','azul'), c('triangulo','m','azul'), c('circulo','m','azul')],
+      [c('triangulo','m','azul'), c('circulo','m','azul'), null],
+    ],
+    opcoes: [c('quadrado','m','azul'), c('triangulo','m','azul'), c('circulo','m','azul'), c('quadrado','p','azul')],
+    correta: 0,
+  },
+  { // 10: quantidade de pontos decresce da esquerda pra direita (3, 2, 1)
+    matriz: [
+      [c('pontos','m','coral',{n:3}), c('pontos','m','coral',{n:2}), c('pontos','m','coral',{n:1})],
+      [c('pontos','m','coral',{n:3}), c('pontos','m','coral',{n:2}), c('pontos','m','coral',{n:1})],
+      [c('pontos','m','coral',{n:3}), c('pontos','m','coral',{n:2}), null],
+    ],
+    opcoes: [c('pontos','m','coral',{n:1}), c('pontos','m','coral',{n:2}), c('pontos','m','coral',{n:3}), c('pontos','m','coral',{n:4})],
+    correta: 0,
+  },
+  { // 11: rotação do triângulo aumenta 90° por linha (não por coluna)
+    matriz: [
+      [c('triangulo','m','verde',{rotacao:0}), c('triangulo','m','verde',{rotacao:0}), c('triangulo','m','verde',{rotacao:0})],
+      [c('triangulo','m','verde',{rotacao:90}), c('triangulo','m','verde',{rotacao:90}), c('triangulo','m','verde',{rotacao:90})],
+      [c('triangulo','m','verde',{rotacao:180}), c('triangulo','m','verde',{rotacao:180}), null],
+    ],
+    opcoes: [c('triangulo','m','verde',{rotacao:180}), c('triangulo','m','verde',{rotacao:90}), c('triangulo','m','verde',{rotacao:270}), c('triangulo','m','verde',{rotacao:0})],
+    correta: 0,
+  },
+  { // 12: forma muda por coluna E cor muda por linha ao mesmo tempo
+    matriz: [
+      [c('circulo','m','azul'), c('quadrado','m','azul'), c('triangulo','m','azul')],
+      [c('circulo','m','coral'), c('quadrado','m','coral'), c('triangulo','m','coral')],
+      [c('circulo','m','verde'), c('quadrado','m','verde'), null],
+    ],
+    opcoes: [c('triangulo','m','verde'), c('triangulo','m','coral'), c('quadrado','m','verde'), c('triangulo','m','azul')],
+    correta: 0,
+  },
+  { // 13: tamanho varia em ciclo (P, G, M) repetido em cada linha
+    matriz: [
+      [c('quadrado','p','azul'), c('quadrado','g','azul'), c('quadrado','m','azul')],
+      [c('quadrado','p','azul'), c('quadrado','g','azul'), c('quadrado','m','azul')],
+      [c('quadrado','p','azul'), c('quadrado','g','azul'), null],
+    ],
+    opcoes: [c('quadrado','m','azul'), c('quadrado','g','azul'), c('quadrado','p','azul'), c('circulo','m','azul')],
+    correta: 0,
+  },
+  { // 14: cor alterna por coluna (azul, coral, verde), forma constante
+    matriz: [
+      [c('quadrado','m','azul'), c('quadrado','m','coral'), c('quadrado','m','verde')],
+      [c('quadrado','m','azul'), c('quadrado','m','coral'), c('quadrado','m','verde')],
+      [c('quadrado','m','azul'), c('quadrado','m','coral'), null],
+    ],
+    opcoes: [c('quadrado','m','verde'), c('quadrado','m','coral'), c('quadrado','m','azul'), c('circulo','m','verde')],
+    correta: 0,
+  },
+  { // 15: forma E tamanho mudam juntos por linha (círculo P, quadrado M, triângulo G)
+    matriz: [
+      [c('circulo','p','azul'), c('circulo','p','azul'), c('circulo','p','azul')],
+      [c('quadrado','m','azul'), c('quadrado','m','azul'), c('quadrado','m','azul')],
+      [c('triangulo','g','azul'), c('triangulo','g','azul'), null],
+    ],
+    opcoes: [c('triangulo','g','azul'), c('triangulo','m','azul'), c('quadrado','g','azul'), c('triangulo','g','coral')],
+    correta: 0,
+  },
+  { // 16: quantidade de pontos aumenta por linha (1, 2, 3) E cor muda junto
+    matriz: [
+      [c('pontos','m','azul',{n:1}), c('pontos','m','azul',{n:1}), c('pontos','m','azul',{n:1})],
+      [c('pontos','m','coral',{n:2}), c('pontos','m','coral',{n:2}), c('pontos','m','coral',{n:2})],
+      [c('pontos','m','verde',{n:3}), c('pontos','m','verde',{n:3}), null],
+    ],
+    opcoes: [c('pontos','m','verde',{n:3}), c('pontos','m','coral',{n:3}), c('pontos','m','verde',{n:2}), c('pontos','m','verde',{n:4})],
+    correta: 0,
+  },
 ];
 
 let itemAtual = 0;
 let acertos = 0;
 const respostas = [];
+let opcoesAtuais = []; // opções do item em exibição, já embaralhadas
+
+function embaralhar(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
 function renderItem() {
   const item = ITENS[itemAtual];
   document.getElementById('matriz-container').innerHTML = grade3x3SVG(item.matriz);
   document.getElementById('contador-item').textContent = `Item ${itemAtual + 1} de ${ITENS.length}`;
 
+  // A posição da resposta certa é embaralhada a cada item — sem isso,
+  // "correta" sempre caía na opção A em todos os itens (achado de
+  // auditoria), permitindo acertar o teste inteiro sem olhar a matriz.
+  opcoesAtuais = embaralhar(item.opcoes.map((op, i) => ({ op, correto: i === item.correta })));
+
   const opcoesEl = document.getElementById('opcoes-container');
   opcoesEl.innerHTML = '';
   const letras = ['A', 'B', 'C', 'D'];
-  item.opcoes.forEach((op, i) => {
+  opcoesAtuais.forEach((entry, i) => {
     const btn = document.createElement('button');
     btn.className = 'icar-opcao';
-    btn.innerHTML = opcaoSVG(op) + `<span>${letras[i]}</span>`;
+    btn.innerHTML = opcaoSVG(entry.op) + `<span>${letras[i]}</span>`;
     btn.onclick = () => escolherOpcao(i);
     opcoesEl.appendChild(btn);
   });
 }
 
 function escolherOpcao(indice) {
-  const item = ITENS[itemAtual];
-  const correto = indice === item.correta;
+  const correto = opcoesAtuais[indice].correto;
   if (correto) acertos++;
   respostas.push({ item: itemAtual, correto });
 
