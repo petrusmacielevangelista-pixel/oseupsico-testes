@@ -279,9 +279,11 @@ async function finalizarTarefa() {
   // Sem norma/percentil (itens originais, sem amostra de calibração) —
   // classificação puramente descritiva pela proporção de acertos.
   let classe, faixa;
-  if (proporcao >= 0.75) { classe = 'severe'; faixa = 'Alto desempenho'; }
+  // classe segue a convenção do site: 'minimal' = verde (bom), 'severe' = vermelho
+  // (ruim) — aqui acertos ALTOS são o resultado bom, então usam 'minimal', não 'severe'.
+  if (proporcao >= 0.75) { classe = 'minimal'; faixa = 'Alto desempenho'; }
   else if (proporcao >= 0.4) { classe = 'moderate'; faixa = 'Desempenho intermediário'; }
-  else { classe = 'minimal'; faixa = 'Desempenho abaixo do esperado neste conjunto de itens'; }
+  else { classe = 'severe'; faixa = 'Desempenho abaixo do esperado neste conjunto de itens'; }
 
   const resultado = { score: acertos, scoreMax: total, faixa, classe };
   const dados = JSON.parse(sessionStorage.getItem('psico_cadastro') || '{}');

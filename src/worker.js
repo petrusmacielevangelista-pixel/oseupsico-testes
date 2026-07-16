@@ -312,6 +312,12 @@ export default {
       return new Response(null, { status: 204, headers: CORS });
     }
 
+    // A página "Excluir meus dados" virou "Meus dados" (consulta + exclusão
+    // no mesmo lugar). Redireciona quem tinha o link antigo salvo.
+    if (pathname === '/excluir-dados' || pathname === '/excluir-dados.html') {
+      return Response.redirect(`${url.origin}${PREFIX}/meusdados`, 301);
+    }
+
     /* ── OAuth Decap CMS ── */
     if (pathname === '/auth') {
       const params = new URLSearchParams({
@@ -457,6 +463,27 @@ export default {
       const placeholders = ids.map(() => '?').join(',');
       await env.DB.prepare(`DELETE FROM participantes WHERE id IN (${placeholders})`).bind(...ids).run();
       return json({ ok: true, excluidos: ids.length });
+    }
+
+    /* ── API: autoatendimento de consulta de dados (público, LGPD art. 15) ──
+       A pessoa confirma e-mail + telefone; retorna SOMENTE os registros que
+       baterem com esses dois campos — nunca dados de outras pessoas. ── */
+    if (pathname === '/api/consulta' && request.method === 'POST') {
+      try {
+        const { email, telefone } = await request.json();
+        if (!email || !telefone) {
+          return json({ ok: false, error: 'Informe e-mail e telefone.' }, 400);
+        }
+
+        await initDB(env.DB);
+        const { results } = await env.DB.prepare(
+          'SELECT * FROM participantes WHERE email = ? AND telefone = ? ORDER BY criado_em DESC'
+        ).bind(email, telefone).all();
+
+        return json({ ok: true, registros: results });
+      } catch (e) {
+        return json({ ok: false, error: e.message }, 500);
+      }
     }
 
     /* ── API: autoatendimento de exclusão de dados (público, LGPD art. 18) ──

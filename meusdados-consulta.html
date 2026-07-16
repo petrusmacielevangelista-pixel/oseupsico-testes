@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meus testes · O Seu Psico Testes</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="admin-body">
+
+  <nav class="admin-navbar">
+    <div class="container">
+      <div class="admin-navbar__inner">
+        <div class="admin-navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="admin-navbar__logo-text">O Seu Psico</span>
+          <span class="admin-navbar__badge">Meus testes</span>
+        </div>
+        <span class="admin-logout" onclick="sair()">← Voltar</span>
+      </div>
+    </div>
+  </nav>
+
+  <main class="admin-main">
+    <div class="container">
+
+      <p style="font-size:0.85rem;color:var(--text-mid);margin-bottom:20px;">
+        Mostrando apenas os testes associados ao e-mail e telefone que você informou.
+      </p>
+
+      <!-- Tabela -->
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Teste</th>
+              <th>Faixa geral</th>
+              <th>Data</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="tabela-body">
+            <tr><td colspan="5" style="text-align:center;color:var(--text-light);padding:40px;">Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Modal de detalhes -->
+  <div class="modal-overlay" id="modal-overlay" onclick="fecharModal(event)">
+    <div class="modal">
+      <div class="modal__header">
+        <div class="modal__title" id="modal-title">Detalhes</div>
+        <button class="modal__close" onclick="fecharModal()">✕</button>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="data/testes.js"></script>
+  <script src="data/baterias.js"></script>
+  <script>
+    const raw = sessionStorage.getItem('psico_meusdados_consulta');
+    if (!raw) { window.location.href = '/testes/meusdados.html'; }
+
+    const dados = JSON.parse(raw || '{}');
+    const registros = dados.registros || [];
+
+    // Mesmo mapa de rótulos usado no admin — mantém a leitura consistente
+    // entre a visão da equipe e a visão da própria pessoa.
+    const IDENTIFICADORES_LABEL = {
+      igt: '🃏 Teste de Julgamento',
+      bart: '🎈 Decisão Progressiva',
+      icar: '🧩 Teste de Raciocínio Lógico',
+      stroop: '🎨 Teste de Atenção Seletiva',
+      tmt: '🔢 Teste de Velocidade Mental',
+      corsi: '🔲 Teste de Memória Espacial',
+      nback: '🧠 Teste de Memória de Trabalho',
+      flanker: '➡️ Teste de Concentração',
+      pvt: '⏱️ Teste de Atenção Sustentada',
+    };
+
+    function identificadorLabel(r) {
+      if (r.tipo === 'rastreio') {
+        const tema = TEMAS[r.identificador];
+        return tema ? `${tema.icon} ${tema.nome}` : r.identificador;
+      }
+      if (r.tipo === 'bateria') {
+        const bat = BATERIAS[r.identificador];
+        return bat ? `${bat.icon} ${bat.nome}` : r.identificador;
+      }
+      return IDENTIFICADORES_LABEL[r.identificador] || r.identificador;
+    }
+
+    function renderTabela() {
+      const tbody = document.getElementById('tabela-body');
+      if (!registros.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-light);padding:32px;">Nenhum registro encontrado.</td></tr>';
+        return;
+      }
+
+      const tipoLabel = { rastreio: 'Rastreio', desempenho: 'Desempenho', bateria: 'Bateria' };
+      const faixaLabel = { minimal: 'Mínima', mild: 'Leve', moderate: 'Moderada', severe: 'Grave', good: 'Boa', poor: 'Baixa' };
+
+      tbody.innerHTML = registros.map((r, i) => {
+        const data = r.criado_em ? new Date(r.criado_em).toLocaleDateString('pt-BR') : '—';
+        return `<tr>
+          <td>${tipoLabel[r.tipo] || r.tipo}</td>
+          <td title="${identificadorLabel(r).replace(/"/g, '&quot;')}">${identificadorLabel(r)}</td>
+          <td>${r.faixa_geral ? `<span class="result-summary__badge faixa--${r.faixa_geral}">${faixaLabel[r.faixa_geral] || r.faixa_geral}</span>` : '—'}</td>
+          <td>${data}</td>
+          <td><button class="admin-table__btn" onclick="abrirModal(${i})">Ver</button></td>
+        </tr>`;
+      }).join('');
+    }
+
+    function abrirModal(i) {
+      const r = registros[i];
+      let resultados = {};
+      try { resultados = typeof r.resultados === 'string' ? JSON.parse(r.resultados) : r.resultados; } catch {}
+
+      document.getElementById('modal-title').textContent = identificadorLabel(r);
+
+      let html = `
+        <div class="modal__row"><strong>Data</strong><span>${r.criado_em ? new Date(r.criado_em).toLocaleString('pt-BR') : '—'}</span></div>
+        <div class="modal__divider"></div>
+        <div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-light);margin-bottom:12px;">Resultado</div>
+      `;
+
+      if (r.tipo === 'rastreio') {
+        const faixaLabel = { minimal: 'Mínima', mild: 'Leve', moderate: 'Moderada', severe: 'Grave' };
+        Object.entries(resultados).forEach(([escalaId, res]) => {
+          const escala = ESCALAS[escalaId];
+          html += `
+            <div class="modal__scale-result">
+              <span>${escala ? escala.nomeCompleto : escalaId}</span>
+              <span><strong>${res.score}/${res.scoreMax}</strong> &nbsp; <span class="result-summary__badge faixa--${res.classe}">${res.faixa || faixaLabel[res.classe]}</span></span>
+            </div>
+          `;
+        });
+      } else if (r.tipo === 'bateria') {
+        const bat = BATERIAS[r.identificador];
+        Object.entries(resultados).forEach(([itemId, res]) => {
+          const nomeItem = bat?.itens.find(it => (it.escalaId || it.instrumentoId) === itemId)?.nome || itemId;
+          html += `
+            <div class="modal__scale-result">
+              <span>${nomeItem}</span>
+              <span><strong>${res.score}${res.scoreMax ? '/' + res.scoreMax : ''}</strong> &nbsp; <span class="result-summary__badge faixa--${res.classe}">${res.faixa || res.classe}</span></span>
+            </div>
+          `;
+        });
+      } else {
+        html += `
+          <div class="modal__scale-result">
+            <span>Escore</span>
+            <span><strong>${resultados.score}</strong> &nbsp; <span class="result-summary__badge faixa--${resultados.classe}">${resultados.faixa}</span></span>
+          </div>
+        `;
+      }
+
+      document.getElementById('modal-body').innerHTML = html;
+      document.getElementById('modal-overlay').classList.add('open');
+    }
+
+    function fecharModal(e) {
+      if (!e || e.target === document.getElementById('modal-overlay')) {
+        document.getElementById('modal-overlay').classList.remove('open');
+      }
+    }
+
+    function sair() {
+      sessionStorage.removeItem('psico_meusdados_consulta');
+      window.location.href = '/testes/';
+    }
+
+    renderTabela();
+  </script>
+</body>
+</html>

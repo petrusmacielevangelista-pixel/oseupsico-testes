@@ -383,6 +383,18 @@ ul { list-style: none; }
   box-shadow: var(--shadow-md);
 }
 
+button.form-card:hover {
+  border-color: var(--yellow);
+  box-shadow: 0 8px 32px rgba(245,197,24,0.15);
+  transform: translateY(-4px);
+  transition: all var(--transition);
+}
+
+.meusdados-escolha { display: grid; grid-template-columns: 1fr 1fr; }
+@media (max-width: 480px) {
+  .meusdados-escolha { grid-template-columns: 1fr; }
+}
+
 .form-card__title {
   font-family: var(--font-display);
   font-size: 1.4rem;

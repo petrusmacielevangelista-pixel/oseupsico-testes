@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meus dados · O Seu Psico Testes</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar__inner">
+        <a href="/testes/" class="navbar__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="navbar__logo-text">O Seu Psico<span></span></span>
+          <span class="navbar__badge">Testes</span>
+        </a>
+        <a href="/testes/" class="navbar__back">← Voltar</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-header">
+    <div class="container">
+      <div class="page-header__theme-icon">🔒</div>
+      <div class="page-header__eyebrow">Privacidade</div>
+      <h1 class="page-header__title">Meus dados</h1>
+      <p class="page-header__sub" id="header-sub">Consulte os testes que você já fez ou solicite a exclusão dos seus dados — informando o e-mail e o telefone usados no cadastro.</p>
+    </div>
+  </section>
+
+  <section class="form-section">
+    <div class="container">
+
+      <!-- Etapa 1: escolha da ação -->
+      <div id="escolha-acao" class="meusdados-escolha" style="max-width:720px;margin:0 auto;gap:20px;">
+        <button class="form-card" style="cursor:pointer;text-align:center;border:1.5px solid var(--border);transition:border-color var(--transition);font-family:inherit;width:100%;" onclick="escolherAcao('consulta')">
+          <div style="font-size:2.2rem;margin-bottom:12px;">🔍</div>
+          <div style="font-weight:700;font-size:1.05rem;margin-bottom:6px;">Consultar meus testes</div>
+          <div style="font-size:0.85rem;color:var(--text-mid);">Veja os resultados dos testes que você já fez.</div>
+        </button>
+        <button class="form-card" style="cursor:pointer;text-align:center;border:1.5px solid var(--border);transition:border-color var(--transition);font-family:inherit;width:100%;" onclick="escolherAcao('exclusao')">
+          <div style="font-size:2.2rem;margin-bottom:12px;">🗑️</div>
+          <div style="font-weight:700;font-size:1.05rem;margin-bottom:6px;">Excluir meus dados</div>
+          <div style="font-size:0.85rem;color:var(--text-mid);">Apaga permanentemente os registros associados a você.</div>
+        </button>
+      </div>
+
+      <!-- Etapa 2: formulário (comum às duas ações) -->
+      <div class="form-card" id="form-wrap" style="display:none;max-width:520px;">
+        <button type="button" onclick="voltarEscolha()" style="background:none;border:none;color:var(--text-mid);font-size:0.85rem;cursor:pointer;margin-bottom:16px;padding:0;">← Voltar</button>
+
+        <form id="form-dados" novalidate>
+          <div class="form-group">
+            <label for="email">E-mail *</label>
+            <input type="email" id="email" name="email" placeholder="seu@email.com" autocomplete="email" />
+            <div class="form-group__error" id="erro-email">Informe um e-mail válido.</div>
+          </div>
+
+          <div class="form-group">
+            <label for="telefone">Telefone *</label>
+            <input type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999" autocomplete="tel" />
+            <div class="form-group__error" id="erro-telefone">Informe um telefone válido.</div>
+          </div>
+
+          <button type="submit" class="btn btn--yellow btn--full btn--lg" id="btn-submit" style="margin-top:8px;">
+            Continuar →
+          </button>
+
+          <p class="form-disclaimer" id="form-disclaimer"></p>
+        </form>
+
+        <div id="msg-sucesso" class="form-card__sucesso" style="display:none;">
+          <div class="form-card__sucesso-icon">✅</div>
+          <p id="msg-sucesso-texto"></p>
+        </div>
+
+        <div id="msg-vazio" style="display:none;text-align:center;padding:16px 0;">
+          <p style="color:var(--text-mid);font-size:0.9rem;">Nenhum teste encontrado com esse e-mail e telefone.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <div class="footer__logo">
+          <img src="assets/logo.png" alt="O Seu Psico" />
+          <span class="footer__logo-text">O Seu Psico</span>
+        </div>
+        <p class="footer__disclaimer">Dúvidas sobre seus dados? Consulte nossa <a href="/politica-de-privacidade.html">Política de Privacidade</a>.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let acaoAtual = null; // 'consulta' | 'exclusao'
+
+    function escolherAcao(acao) {
+      acaoAtual = acao;
+      document.getElementById('escolha-acao').style.display = 'none';
+      document.getElementById('form-wrap').style.display = 'block';
+      document.getElementById('form-dados').style.display = 'block';
+      document.getElementById('msg-sucesso').style.display = 'none';
+      document.getElementById('msg-vazio').style.display = 'none';
+
+      const btn = document.getElementById('btn-submit');
+      const disclaimer = document.getElementById('form-disclaimer');
+      if (acao === 'consulta') {
+        btn.textContent = 'Consultar meus testes →';
+        disclaimer.textContent = 'Mostraremos apenas os registros que corresponderem exatamente a este e-mail e telefone.';
+        document.getElementById('header-sub').textContent = 'Informe o e-mail e o telefone que você usou ao fazer um teste pra ver seus resultados.';
+      } else {
+        btn.textContent = 'Solicitar exclusão →';
+        disclaimer.textContent = 'Essa ação é imediata e não pode ser desfeita. Se você fez mais de um teste com os mesmos dados, todos os registros correspondentes serão apagados.';
+        document.getElementById('header-sub').textContent = 'Informe o e-mail e o telefone que você usou ao fazer um teste. Se encontrarmos um registro correspondente, ele será apagado imediatamente do nosso banco de dados.';
+      }
+    }
+
+    function voltarEscolha() {
+      acaoAtual = null;
+      document.getElementById('form-wrap').style.display = 'none';
+      document.getElementById('escolha-acao').style.display = 'grid';
+      document.getElementById('header-sub').textContent = 'Consulte os testes que você já fez ou solicite a exclusão dos seus dados — informando o e-mail e o telefone usados no cadastro.';
+      document.getElementById('form-dados').reset();
+    }
+
+    const telInput = document.getElementById('telefone');
+    telInput.addEventListener('input', () => {
+      let v = telInput.value.replace(/\D/g, '').slice(0, 11);
+      if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+      else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+      else if (v.length > 0) v = `(${v}`;
+      telInput.value = v;
+    });
+
+    function showError(id, input) {
+      document.getElementById(id).classList.add('visible');
+      input.classList.add('error');
+    }
+    function clearError(id, input) {
+      document.getElementById(id).classList.remove('visible');
+      input.classList.remove('error');
+    }
+
+    document.getElementById('form-dados').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      let valid = true;
+
+      const email = document.getElementById('email');
+      const tel = document.getElementById('telefone');
+
+      clearError('erro-email', email);
+      clearError('erro-telefone', tel);
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) { showError('erro-email', email); valid = false; }
+      if (tel.value.replace(/\D/g,'').length < 10) { showError('erro-telefone', tel); valid = false; }
+
+      if (!valid) return;
+
+      const btn = document.getElementById('btn-submit');
+      btn.disabled = true;
+      btn.textContent = 'Processando...';
+
+      const emailVal = email.value.trim();
+      const telVal = tel.value.trim();
+
+      if (acaoAtual === 'consulta') {
+        try {
+          const res = await fetch('/testes/api/consulta', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: emailVal, telefone: telVal }),
+          });
+          const data = await res.json();
+          if (data.ok && data.registros && data.registros.length > 0) {
+            sessionStorage.setItem('psico_meusdados_consulta', JSON.stringify({ email: emailVal, telefone: telVal, registros: data.registros }));
+            window.location.href = '/testes/meusdados-consulta.html';
+            return;
+          }
+          document.getElementById('form-dados').style.display = 'none';
+          document.getElementById('msg-vazio').style.display = 'block';
+        } catch (err) {
+          console.error('Erro ao consultar dados:', err);
+          document.getElementById('form-dados').style.display = 'none';
+          document.getElementById('msg-vazio').style.display = 'block';
+        }
+      } else {
+        try {
+          await fetch('/testes/api/exclusao-solicitada', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: emailVal, telefone: telVal }),
+          });
+        } catch (err) {
+          console.error('Erro ao solicitar exclusão:', err);
+        }
+        document.getElementById('msg-sucesso-texto').textContent = 'Solicitação processada. Se havia algum registro com esses dados, ele já foi removido do nosso banco.';
+        document.getElementById('form-dados').style.display = 'none';
+        document.getElementById('msg-sucesso').style.display = 'block';
+      }
+
+      btn.disabled = false;
+    });
+  </script>
+</body>
+</html>
