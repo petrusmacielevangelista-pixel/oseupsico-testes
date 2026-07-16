@@ -1359,6 +1359,25 @@ button.form-card:hover {
   .scale-nav .btn { width: 100%; }
 }
 
+/* ── Linhas/grades de opção de resposta (Stroop, Flanker, BART) ──
+   .btn usa white-space:nowrap + padding grande — em telas estreitas,
+   3-4 botões lado a lado (ou 2 com min-width alto) não cabem e a
+   página estoura horizontalmente (achado de auditoria mobile). Essas
+   classes dão às páginas de tarefa um jeito de encolher/quebrar linha
+   em vez de vazar. */
+.opcoes-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; max-width: 420px; margin: 0 auto; }
+.opcoes-2 { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+@media (max-width: 480px) {
+  .opcoes-4 { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .opcoes-4 .btn, .opcoes-2 .btn {
+    min-width: 0 !important;
+    padding: 12px 10px;
+    font-size: 0.82rem;
+    white-space: normal;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }

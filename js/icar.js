@@ -68,7 +68,10 @@ function grade3x3SVG(matriz, tamanhoCelula = 90) {
 function opcaoSVG(cell, tamanho = 70) {
   let svg = `<rect x="0" y="0" width="${tamanho}" height="${tamanho}" rx="8" fill="#F1EFE8" />`;
   svg += celulaSVG(cell, tamanho / 2, tamanho / 2, tamanho);
-  return `<svg viewBox="0 0 ${tamanho} ${tamanho}" width="70" height="70">${svg}</svg>`;
+  // width="100%" (em vez de fixo em px) — em telas muito estreitas, 4
+  // opções de 70px lado a lado podem não caber; assim o SVG encolhe
+  // junto com a célula da grade em vez de forçar overflow horizontal.
+  return `<svg viewBox="0 0 ${tamanho} ${tamanho}" width="100%" style="max-width:70px;display:block;">${svg}</svg>`;
 }
 
 /* ── Banco de itens (originais) ──
