@@ -24,7 +24,7 @@ const CORES = [
   { nome: 'amarelo', hex: '#EAB308' },
 ];
 
-const N_TENTATIVAS = 24; // 12 congruentes + 12 incongruentes, embaralhadas
+const N_TENTATIVAS = 48; // 24 congruentes + 24 incongruentes, embaralhadas — dentro da faixa comum (40-100) usada em Stroop computadorizado, evitando o extremo baixo de versões de triagem rápida
 
 function gerarTentativas() {
   const tentativas = [];

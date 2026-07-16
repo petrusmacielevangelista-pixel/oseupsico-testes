@@ -2,8 +2,11 @@
    BART — Balloon Analogue Risk Task
    Baseado em Lejuez et al. (2002), J Exp Psychol Appl, 8(2), 75-84.
 
-   Protocolo: 20 balões, probabilidade de estouro 1/(129-bombaAtual)
-   (breakpoint 1-128, ponto médio de estouro = 64 bombas).
+   Protocolo: 30 balões (versão de 1 cor — a mais citada como padrão
+   na literatura que adapta o desenho original de 3 cores/30 balões
+   cada de Lejuez et al. 2002), probabilidade de estouro
+   1/(129-bombaAtual) (breakpoint 1-128, ponto médio de estouro = 64
+   bombas).
    Cada bomba vale R$ 0,05. Ganhos de um balão só são "guardados" se
    a pessoa parar antes de estourar; balão estourado perde os ganhos
    daquele balão (mas não os já guardados de balões anteriores).
@@ -18,7 +21,7 @@
 
 'use strict';
 
-const TOTAL_BALOES = 20;
+const TOTAL_BALOES = 30;
 const MAX_BOMBAS = 128;
 const VALOR_BOMBA = 0.05;
 
@@ -151,6 +154,7 @@ function calcularResultado() {
     score: Math.round(adjustedAvg * 10) / 10,
     faixa, classe,
     nEstourados,
+    totalBaloes: TOTAL_BALOES,
     saldoFinal: Math.round(state.saldo * 100) / 100,
   };
 }

@@ -79,7 +79,7 @@
     if (!raw) { window.location.href = '/testes/'; }
 
     const dados = JSON.parse(raw);
-    const { nome, score, faixa, classe, nEstourados, saldoFinal } = dados;
+    const { nome, score, faixa, classe, nEstourados, totalBaloes, saldoFinal } = dados;
 
     document.getElementById('result-nome').textContent = `Olá, ${nome}!`;
     document.getElementById('result-score').textContent = score;
@@ -96,7 +96,7 @@
     document.getElementById('result-interpretacao').textContent = interpretacoes[classe] || '';
 
     document.getElementById('result-saldo').textContent = 'R$ ' + saldoFinal.toFixed(2).replace('.', ',');
-    document.getElementById('result-estourados').textContent = `${nEstourados} de 20 balões estouraram`;
+    document.getElementById('result-estourados').textContent = `${nEstourados} de ${totalBaloes || 30} balões estouraram`;
 
     document.getElementById('btn-compartilhar').addEventListener('click', async () => {
       const texto = 'Acabei de fazer um teste de autoconhecimento no O Seu Psico e achei bem interessante! Dá uma olhada:';

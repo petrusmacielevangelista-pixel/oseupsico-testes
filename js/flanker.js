@@ -12,7 +12,7 @@
 
 'use strict';
 
-const N_TENTATIVAS_FLANKER = 24; // 12 congruentes + 12 incongruentes
+const N_TENTATIVAS_FLANKER = 48; // 24 congruentes + 24 incongruentes — dentro da faixa comum usada em tarefas flanker computadorizadas, evitando o extremo baixo de versões de triagem rápida
 
 function gerarTentativasFlanker() {
   const tentativas = [];

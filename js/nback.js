@@ -13,7 +13,7 @@
 'use strict';
 
 const LETRAS = ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'K'];
-const N_TENTATIVAS = 22; // 20 avaliáveis (as 2 primeiras não têm referência 2-back)
+const N_TENTATIVAS = 32; // 30 avaliáveis (as 2 primeiras não têm referência 2-back) — dentro do range recomendado (30+) pra uma estimativa de d' mais estável
 const N_BACK = 2;
 
 function gerarSequencia() {
