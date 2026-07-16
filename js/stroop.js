@@ -75,26 +75,46 @@ function responder(corEscolhidaNome) {
   }
 }
 
+// Exclui respostas anticipatórias (clique acidental antes de processar o
+// estímulo) e lapsos de atenção (pessoa se distraiu sem trocar de aba, o
+// que não é pego pelo detector de "saiu da tela") — prática padrão em
+// tarefas de TR (Whelan, 2008). Limiares dentro do range comum na
+// literatura (~200ms piso, ~1500-3000ms teto).
+const RT_MIN_VALIDO = 200;
+const RT_MAX_VALIDO = 3000;
+
 function calcularResultado() {
   const congruentesCorretas = respostas.filter(r => r.congruente && r.correto);
   const incongruentesCorretas = respostas.filter(r => !r.congruente && r.correto);
   const acertos = respostas.filter(r => r.correto).length;
 
-  const mediaRT = arr => arr.length ? arr.reduce((s, r) => s + r.rt, 0) / arr.length : 0;
-  const rtCongruente = mediaRT(congruentesCorretas);
-  const rtIncongruente = mediaRT(incongruentesCorretas);
-  const interferencia = Math.round(rtIncongruente - rtCongruente);
+  const semOutliers = arr => arr.filter(r => r.rt >= RT_MIN_VALIDO && r.rt <= RT_MAX_VALIDO);
+  // Se a filtragem zerar o grupo (poucas tentativas corretas), usa o
+  // conjunto original em vez de perder o dado por completo.
+  const congruentesValidas = semOutliers(congruentesCorretas).length ? semOutliers(congruentesCorretas) : congruentesCorretas;
+  const incongruentesValidas = semOutliers(incongruentesCorretas).length ? semOutliers(incongruentesCorretas) : incongruentesCorretas;
+
+  const mediaRT = arr => arr.length ? arr.reduce((s, r) => s + r.rt, 0) / arr.length : null;
+  const rtCongruente = mediaRT(congruentesValidas);
+  const rtIncongruente = mediaRT(incongruentesValidas);
+  // Sem tentativas corretas suficientes em algum dos grupos — não dá pra
+  // calcular interferência de forma confiável.
+  const interferencia = (rtCongruente === null || rtIncongruente === null)
+    ? null
+    : Math.round(rtIncongruente - rtCongruente);
 
   let classe, faixa;
-  if (interferencia < 100) { classe = 'minimal'; faixa = 'Interferência baixa'; }
+  if (interferencia === null) {
+    classe = 'moderate'; faixa = 'Poucas respostas corretas pra calcular a interferência com confiança';
+  } else if (interferencia < 100) { classe = 'minimal'; faixa = 'Interferência baixa'; }
   else if (interferencia <= 250) { classe = 'moderate'; faixa = 'Interferência dentro do típico'; }
   else { classe = 'severe'; faixa = 'Interferência acima do típico'; }
 
   return {
     score: interferencia, faixa, classe,
     acuracia: Math.round((acertos / respostas.length) * 100),
-    rtCongruente: Math.round(rtCongruente),
-    rtIncongruente: Math.round(rtIncongruente),
+    rtCongruente: rtCongruente === null ? null : Math.round(rtCongruente),
+    rtIncongruente: rtIncongruente === null ? null : Math.round(rtIncongruente),
   };
 }
 

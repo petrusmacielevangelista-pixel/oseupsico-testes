@@ -79,7 +79,7 @@
     const { nome, score, faixa, classe, acuracia, rtCongruente, rtIncongruente } = dados;
 
     document.getElementById('result-nome').textContent = `Olá, ${nome}!`;
-    document.getElementById('result-score').textContent = `${score >= 0 ? '+' : ''}${score} ms`;
+    document.getElementById('result-score').textContent = score === null ? '—' : `${score >= 0 ? '+' : ''}${score} ms`;
 
     const faixaEl = document.getElementById('result-faixa');
     faixaEl.textContent = faixa;
@@ -87,12 +87,14 @@
 
     const interpretacoes = {
       minimal: 'Sua diferença de tempo entre setas congruentes e incongruentes foi pequena — boa resistência à distração das setas ao redor.',
-      moderate: 'Sua diferença de tempo ficou na faixa mais comumente observada nesse tipo de tarefa.',
+      moderate: score === null
+        ? 'Você teve poucas respostas corretas em uma das condições, o que não permite calcular a interferência com confiança.'
+        : 'Sua diferença de tempo ficou na faixa mais comumente observada nesse tipo de tarefa.',
       severe: 'Sua diferença de tempo foi maior que o típico — as setas ao redor interferiram mais na sua velocidade de resposta.',
     };
     document.getElementById('result-interpretacao').textContent = interpretacoes[classe] || '';
     document.getElementById('result-detalhes').innerHTML =
-      `<strong>Acurácia:</strong> ${acuracia}% &nbsp;|&nbsp; TR congruente: ${rtCongruente}ms &nbsp;|&nbsp; TR incongruente: ${rtIncongruente}ms`;
+      `<strong>Acurácia:</strong> ${acuracia}% &nbsp;|&nbsp; TR congruente: ${rtCongruente === null ? '—' : rtCongruente + 'ms'} &nbsp;|&nbsp; TR incongruente: ${rtIncongruente === null ? '—' : rtIncongruente + 'ms'}`;
 
     document.getElementById('btn-compartilhar').addEventListener('click', async () => {
       const texto = 'Acabei de fazer um teste de autoconhecimento no O Seu Psico e achei bem interessante! Dá uma olhada:';

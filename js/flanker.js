@@ -65,25 +65,40 @@ function responderFlanker(direcao) {
   }
 }
 
+// Exclui respostas anticipatórias e lapsos de atenção (pessoa se
+// distraiu sem trocar de aba, o que não é pego pelo detector de "saiu
+// da tela") — mesma lógica usada no Stroop (Whelan, 2008).
+const RT_MIN_VALIDO_FLANKER = 200;
+const RT_MAX_VALIDO_FLANKER = 3000;
+
 function calcularResultadoFlanker() {
   const congruentesCorretas = respostasFlanker.filter(r => r.congruente && r.correto);
   const incongruentesCorretas = respostasFlanker.filter(r => !r.congruente && r.correto);
   const acertos = respostasFlanker.filter(r => r.correto).length;
 
-  const mediaRT = arr => arr.length ? arr.reduce((s, r) => s + r.rt, 0) / arr.length : 0;
-  const rtCongruente = mediaRT(congruentesCorretas);
-  const rtIncongruente = mediaRT(incongruentesCorretas);
-  const efeitoFlanker = Math.round(rtIncongruente - rtCongruente);
+  const semOutliers = arr => arr.filter(r => r.rt >= RT_MIN_VALIDO_FLANKER && r.rt <= RT_MAX_VALIDO_FLANKER);
+  const congruentesValidas = semOutliers(congruentesCorretas).length ? semOutliers(congruentesCorretas) : congruentesCorretas;
+  const incongruentesValidas = semOutliers(incongruentesCorretas).length ? semOutliers(incongruentesCorretas) : incongruentesCorretas;
+
+  const mediaRT = arr => arr.length ? arr.reduce((s, r) => s + r.rt, 0) / arr.length : null;
+  const rtCongruente = mediaRT(congruentesValidas);
+  const rtIncongruente = mediaRT(incongruentesValidas);
+  const efeitoFlanker = (rtCongruente === null || rtIncongruente === null)
+    ? null
+    : Math.round(rtIncongruente - rtCongruente);
 
   let classe, faixa;
-  if (efeitoFlanker < 50) { classe = 'minimal'; faixa = 'Interferência baixa'; }
+  if (efeitoFlanker === null) {
+    classe = 'moderate'; faixa = 'Poucas respostas corretas pra calcular a interferência com confiança';
+  } else if (efeitoFlanker < 50) { classe = 'minimal'; faixa = 'Interferência baixa'; }
   else if (efeitoFlanker <= 150) { classe = 'moderate'; faixa = 'Interferência dentro do típico'; }
   else { classe = 'severe'; faixa = 'Interferência acima do típico'; }
 
   return {
     score: efeitoFlanker, faixa, classe,
     acuracia: Math.round((acertos / respostasFlanker.length) * 100),
-    rtCongruente: Math.round(rtCongruente), rtIncongruente: Math.round(rtIncongruente),
+    rtCongruente: rtCongruente === null ? null : Math.round(rtCongruente),
+    rtIncongruente: rtIncongruente === null ? null : Math.round(rtIncongruente),
   };
 }
 

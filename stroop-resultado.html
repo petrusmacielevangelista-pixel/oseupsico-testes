@@ -47,7 +47,7 @@
 
       <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:24px 28px;max-width:720px;margin:0 auto 28px;">
         <p style="font-size:0.85rem;color:var(--text-mid);line-height:1.75;margin:0;">
-          ⚠️ <strong>Importante:</strong> a faixa de referência usada (efeito de interferência típico ≈ 180ms) vem da literatura sobre o paradigma de Stroop, mas não é um ponto de corte clínico validado. Fatores como velocidade do seu dispositivo, conexão e ritmo pessoal também influenciam o tempo medido. Este teste não substitui uma avaliação neuropsicológica formal.
+          ⚠️ <strong>Importante:</strong> a faixa de referência usada (efeito de interferência comumente observado entre 100-200ms na literatura sobre o paradigma de Stroop) é uma referência descritiva, não um ponto de corte clínico validado. Fatores como velocidade do seu dispositivo, conexão e ritmo pessoal também influenciam o tempo medido. Este teste não substitui uma avaliação neuropsicológica formal.
         </p>
       </div>
 
@@ -79,7 +79,7 @@
     const { nome, score, faixa, classe, acuracia, rtCongruente, rtIncongruente } = dados;
 
     document.getElementById('result-nome').textContent = `Olá, ${nome}!`;
-    document.getElementById('result-score').textContent = `${score >= 0 ? '+' : ''}${score} ms`;
+    document.getElementById('result-score').textContent = score === null ? '—' : `${score >= 0 ? '+' : ''}${score} ms`;
 
     const faixaEl = document.getElementById('result-faixa');
     faixaEl.textContent = faixa;
@@ -87,12 +87,14 @@
 
     const interpretacoes = {
       minimal: 'Sua diferença de tempo entre nomear cores incongruentes e congruentes foi pequena, sugerindo boa resistência à interferência da palavra.',
-      moderate: 'Sua diferença de tempo ficou na faixa mais comumente observada nesse tipo de tarefa.',
+      moderate: score === null
+        ? 'Você teve poucas respostas corretas em uma das condições, o que não permite calcular a interferência com confiança.'
+        : 'Sua diferença de tempo ficou na faixa mais comumente observada nesse tipo de tarefa.',
       severe: 'Sua diferença de tempo foi maior que o típico — a palavra escrita interferiu mais na sua velocidade de nomear a cor.',
     };
     document.getElementById('result-interpretacao').textContent = interpretacoes[classe] || '';
     document.getElementById('result-detalhes').innerHTML =
-      `<strong>Acurácia:</strong> ${acuracia}% &nbsp;|&nbsp; TR congruente: ${rtCongruente}ms &nbsp;|&nbsp; TR incongruente: ${rtIncongruente}ms`;
+      `<strong>Acurácia:</strong> ${acuracia}% &nbsp;|&nbsp; TR congruente: ${rtCongruente === null ? '—' : rtCongruente + 'ms'} &nbsp;|&nbsp; TR incongruente: ${rtIncongruente === null ? '—' : rtIncongruente + 'ms'}`;
 
     document.getElementById('btn-compartilhar').addEventListener('click', async () => {
       const texto = 'Acabei de fazer um teste de autoconhecimento no O Seu Psico e achei bem interessante! Dá uma olhada:';
