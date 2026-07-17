@@ -311,7 +311,7 @@ const ESCALAS = {
     publico: 'Adultos (18+)',
     minAge: 18,
     maxAge: 999,
-    instrucao: 'Com que frequência você experienciou cada um dos seguintes sintomas <strong>nos últimos 6 meses</strong>? As <strong>6 primeiras perguntas</strong> compõem a Parte A e determinam o resultado do rastreio. As demais fornecem informação clínica complementar.',
+    instrucao: 'Com que frequência você experienciou cada um dos seguintes sintomas <strong>nos últimos 6 meses</strong>? <strong>6 destas 18 perguntas</strong> compõem a Parte A oficial e determinam o resultado do rastreio — não são necessariamente as primeiras da lista. As demais fornecem informação clínica complementar.',
     opcoes: [
       { label: 'Nunca', valor: 0 },
       { label: 'Raramente', valor: 1 },
