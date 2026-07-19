@@ -162,7 +162,7 @@ function gerarHTML(dados) {
     </tr>
   `).join('');
 
-  const waMsg = encodeURIComponent('Olá! Fiz um teste no O Seu Psico e gostaria de conversar com um psicólogo.');
+  const waMsg = encodeURIComponent('Olá! Fiz um teste no O Seu Psico e gostaria de agendar uma consulta.');
   const waLink = `https://wa.me/${WHATSAPP_NUMERO}?text=${waMsg}`;
 
   return `<!DOCTYPE html>
@@ -187,12 +187,27 @@ function gerarHTML(dados) {
         <tr>
           <td style="padding:40px 40px 24px;">
             <p style="font-size:14px;color:#888;margin:0 0 8px;">Olá, <strong style="color:#1A1A1A;">${nome}</strong> 👋</p>
-            <p style="font-size:15px;color:#555;line-height:1.7;margin:0 0 20px;">
-              Você concluiu um teste em nossa plataforma — e isso já é um passo importante rumo ao autoconhecimento. Esperamos que essas informações te ajudem a entender um pouco mais sobre você mesmo(a), do seu jeito e no seu tempo.
-            </p>
             <p style="font-size:15px;color:#555;line-height:1.7;margin:0 0 28px;">
-              Cuidar da saúde mental é um processo contínuo, e um teste sozinho é só o começo da conversa. Se quiser ir além do que descobriu hoje, temos psicólogos prontos pra te acompanhar nessa jornada — sempre que fizer sentido pra você.
+              Você concluiu um teste em nossa plataforma — um passo importante rumo ao autoconhecimento. Se quiser ir além, agende uma consulta com um de nossos psicólogos.
             </p>
+
+            <!-- Ver resultado -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#FFF9E6;border-radius:12px;margin:0 0 28px;">
+              <tr>
+                <td style="padding:20px 24px;">
+                  <p style="font-size:15px;color:#555;margin:0 0 14px;line-height:1.6;">
+                    🔎 Por privacidade, não incluímos seu resultado neste e-mail. Mas ele fica guardado — acesse quando quiser confirmando seu e-mail e telefone.
+                  </p>
+                  <table cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="background:#1A1A1A;border-radius:40px;padding:12px 24px;">
+                        <a href="https://oseupsico.com.br/testes/meusdados.html" style="font-size:14px;font-weight:700;color:#fff;text-decoration:none;">Ver meu resultado →</a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
 
             <p style="font-size:13px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:1px;margin:0 0 8px;">Separamos mais alguns testes que podem te interessar</p>
             <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
@@ -200,14 +215,14 @@ function gerarHTML(dados) {
             </table>
 
             <p style="font-size:15px;color:#555;line-height:1.7;margin:0 0 20px;">
-              Caso queira falar com um psicólogo, saiba que sempre pode contar conosco.
+              Quando fizer sentido pra você, é só chamar — agendamos sua consulta pelo WhatsApp.
             </p>
 
             <!-- CTA -->
             <table cellpadding="0" cellspacing="0" style="margin:0 0 20px;">
               <tr>
                 <td style="background:#25D366;border-radius:40px;padding:14px 28px;">
-                  <a href="${waLink}" style="font-size:15px;font-weight:700;color:#fff;text-decoration:none;">💬 Falar com um psicólogo no WhatsApp →</a>
+                  <a href="${waLink}" style="font-size:15px;font-weight:700;color:#fff;text-decoration:none;">📅 Agendar minha consulta →</a>
                 </td>
               </tr>
             </table>
@@ -219,7 +234,7 @@ function gerarHTML(dados) {
                   <p style="font-size:14px;color:#555;margin:0 0 10px;line-height:1.6;">
                     📸 Acompanhe conteúdos sobre saúde mental e bem-estar no nosso Instagram!
                   </p>
-                  <a href="https://instagram.com/oseupsico" style="font-size:14px;font-weight:700;color:#1A1A1A;text-decoration:none;">Seguir @oseupsico →</a>
+                  <a href="https://instagram.com/oseupsico" style="font-size:14px;font-weight:700;color:#1A1A1A;text-decoration:none;">Seguir @oseupsico no Instagram →</a>
                 </td>
               </tr>
             </table>
