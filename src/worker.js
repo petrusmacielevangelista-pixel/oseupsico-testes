@@ -204,10 +204,22 @@ function gerarHTML(dados) {
             </p>
 
             <!-- CTA -->
-            <table cellpadding="0" cellspacing="0" style="margin:0 0 28px;">
+            <table cellpadding="0" cellspacing="0" style="margin:0 0 20px;">
               <tr>
                 <td style="background:#25D366;border-radius:40px;padding:14px 28px;">
                   <a href="${waLink}" style="font-size:15px;font-weight:700;color:#fff;text-decoration:none;">💬 Falar com um psicólogo no WhatsApp →</a>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Instagram -->
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#FAFAFA;border-radius:12px;margin:0 0 28px;">
+              <tr>
+                <td style="padding:18px 20px;">
+                  <p style="font-size:14px;color:#555;margin:0 0 10px;line-height:1.6;">
+                    📸 Acompanhe conteúdos sobre saúde mental e bem-estar no nosso Instagram!
+                  </p>
+                  <a href="https://instagram.com/oseupsico" style="font-size:14px;font-weight:700;color:#1A1A1A;text-decoration:none;">Seguir @oseupsico →</a>
                 </td>
               </tr>
             </table>
