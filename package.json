@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
+    "testar": "node qa/regressao.mjs",
+    "fumaca": "node qa/fumaca.mjs",
+    "publicar": "node qa/publicar.mjs",
     "db:create": "wrangler d1 create oseupsico-testes-db",
     "db:init": "wrangler d1 execute oseupsico-testes-db --local --command \"CREATE TABLE IF NOT EXISTS participantes (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, email TEXT NOT NULL, telefone TEXT NOT NULL, idade INTEGER NOT NULL, tema TEXT NOT NULL, faixa_geral TEXT NOT NULL, resultados TEXT NOT NULL, criado_em TEXT DEFAULT (datetime('now')));\"",
     "db:init:prod": "wrangler d1 execute oseupsico-testes-db --command \"CREATE TABLE IF NOT EXISTS participantes (id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, email TEXT NOT NULL, telefone TEXT NOT NULL, idade INTEGER NOT NULL, tema TEXT NOT NULL, faixa_geral TEXT NOT NULL, resultados TEXT NOT NULL, criado_em TEXT DEFAULT (datetime('now')));\""

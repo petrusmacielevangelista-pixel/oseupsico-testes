@@ -8,3 +8,6 @@ wrangler.jsonc
 .gitignore
 *.sql
 *.md
+
+qa/
+wrangler.teste.jsonc

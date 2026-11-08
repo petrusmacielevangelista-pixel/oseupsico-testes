@@ -1,0 +1,13 @@
+{
+  // Config SÓ para a regressão local (qa/regressao.mjs): Worker rodando na máquina com banco D1
+  // simulado e descartável. Sem rotas, sem cron, sem segredos reais — nada disso toca produção.
+  "name": "oseupsico-testes-qa",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-06-23",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "directory": ".", "binding": "ASSETS" },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "qa-local", "database_id": "00000000-0000-0000-0000-000000000000" }
+  ],
+  "vars": { "ADMIN_USER": "admin-qa", "ADMIN_PASS": "senha-qa-local" }
+}
